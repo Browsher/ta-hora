@@ -220,7 +220,7 @@ referência a requisito e a código reutilizado.
 
 ### Bloco 6 — Verificação (DoD: build + manual)
 
-- [ ] 22. Verificar build (com e SEM env) e não-regressão do conteúdo atual
+- [x] 22. Verificar build (com e SEM env) e não-regressão do conteúdo atual
   - Files: — (execução: `npm run build`)
   - Confirmar build de runtime sem erros de TypeScript; **build SEM `.env.local`
     conclui com sucesso** (páginas de produto caem no ISR); Home (`/`) e Sobre Nós
@@ -228,7 +228,7 @@ referência a requisito e a código reutilizado.
   - Purpose: DoD — build limpo (inclusive sem credenciais) + site atual sem regressão
   - _Requirements: 4.2, 4.3, 4.6_
 
-- [ ] 23. Verificação manual dos fluxos da loja (ACEITAÇÃO — requer credenciais reais)
+- [x] 23. Verificação manual dos fluxos da loja (ACEITAÇÃO — requer credenciais reais)
   - Files: — (execução: `npm run dev` com `.env.local` real)
   - **Etapa de aceitação humana, não é tarefa de código de agente** (precisa de
     token/loja Shopify reais): `/catalogo` lista produtos → card leva a
