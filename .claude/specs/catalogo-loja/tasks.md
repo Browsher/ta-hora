@@ -50,7 +50,7 @@ referência a requisito e a código reutilizado.
 
 ### Bloco 2 — Camada de dados `lib/shopify/`
 
-- [ ] 4. Criar tipos da loja em `lib/shopify/types.ts`
+- [x] 4. Criar tipos da loja em `lib/shopify/types.ts`
   - File: `lib/shopify/types.ts`
   - Definir `Money` (cru: `amount`/`currencyCode`), `ProductImage`, `Spec`,
     `ProductCard`, `Product`, e o tipo de preço formatado
@@ -58,7 +58,7 @@ referência a requisito e a código reutilizado.
   - Purpose: contrato de tipos para a camada de dados e a UI
   - _Requirements: 2.2, 3.2_
 
-- [ ] 5. Criar mapa de metafields de specs em `lib/shopify/specs.ts`
+- [x] 5. Criar mapa de metafields de specs em `lib/shopify/specs.ts`
   - File: `lib/shopify/specs.ts`
   - Exportar `SPEC_METAFIELDS: { namespace; key; label }[]` com placeholders
     (`specs/resolucao→"Resolução"`, `specs/conexao→"Conexão"`,
@@ -66,7 +66,7 @@ referência a requisito e a código reutilizado.
   - Purpose: declarar quais metafields são "specs" e seus rótulos legíveis
   - _Requirements: 3.2_
 
-- [ ] 6. Criar cliente Storefront em `lib/shopify/client.ts`
+- [x] 6. Criar cliente Storefront em `lib/shopify/client.ts`
   - File: `lib/shopify/client.ts`
   - `import "server-only"` na 1ª linha; `storefrontFetch<T>(query, variables?, opts?)`;
     ler env (domínio/token/versão com default `2025-01`); montar endpoint
@@ -75,14 +75,14 @@ referência a requisito e a código reutilizado.
   - Purpose: executar GraphQL server-side com o token de env
   - _Requirements: 1.1, 1.3, 1.5_
 
-- [ ] 7. Adicionar tratamento de erro/env ausente em `client.ts`
+- [x] 7. Adicionar tratamento de erro/env ausente em `client.ts`
   - File: `lib/shopify/client.ts` (continua da tarefa 6)
   - Lançar erro explícito se domínio/token ausentes; tratar `!res.ok` e
     `json.errors` lançando `Error` **sem** interpolar o token
   - Purpose: falha segura e sem vazar credencial
   - _Requirements: 1.2, 1.4_
 
-- [ ] 8. Criar documentos GraphQL em `lib/shopify/queries.ts`
+- [x] 8. Criar documentos GraphQL em `lib/shopify/queries.ts`
   - File: `lib/shopify/queries.ts`
   - `import "server-only"` na 1ª linha (defesa em profundidade); `PRODUCTS_QUERY`
     (`products(first)`: id, handle, title, featuredImage, priceRange.minVariantPrice);
@@ -92,7 +92,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: lib/shopify/specs.ts_
   - _Requirements: 2.1, 3.1, 3.2_
 
-- [ ] 9. Criar `formatMoney` em `lib/shopify/normalize.ts`
+- [x] 9. Criar `formatMoney` em `lib/shopify/normalize.ts`
   - File: `lib/shopify/normalize.ts`
   - `formatMoney(m: Money)` **respeita o `currencyCode`** (não fixa BRL): mapear
     código → símbolo (BRL→"R$"; demais→símbolo/código); número no padrão pt-BR
@@ -101,7 +101,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: components/ui/PriceTag.tsx_
   - _Requirements: 2.2, 3.2_
 
-- [ ] 10. Adicionar normalizadores em `lib/shopify/normalize.ts`
+- [x] 10. Adicionar normalizadores em `lib/shopify/normalize.ts`
   - File: `lib/shopify/normalize.ts` (continua da tarefa 9)
   - `normalizeProductCard(raw)` e `normalizeProduct(raw)`; extrair `specs: Spec[]`
     via `SPEC_METAFIELDS`, **omitindo** metafields nulos/ausentes
@@ -109,7 +109,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: lib/shopify/specs.ts, lib/shopify/types.ts_
   - _Requirements: 3.2_
 
-- [ ] 11. Criar API de dados em `lib/shopify/products.ts`
+- [x] 11. Criar API de dados em `lib/shopify/products.ts`
   - File: `lib/shopify/products.ts`
   - `import "server-only"` na 1ª linha (defesa em profundidade);
     `getProducts(): Promise<ProductCard[]>` e
