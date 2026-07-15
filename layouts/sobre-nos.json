@@ -1,0 +1,174 @@
+{
+  "id": "23b7f51e-0f35-479c-9293-eeb413a55ef2",
+  "name": "Sobre-nos",
+  "template": "",
+  "updatedAt": "2026-07-15T17:02:31.081Z",
+  "sections": [
+    {
+      "id": "f1a5614d-9de7-4fe5-84a9-8b77044a7a65",
+      "component": "Navbar",
+      "type": "flutuante",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "navPosition": "fixa",
+        "linkCount": 4,
+        "ctaVisible": true,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "link1Label": "Catálogo",
+        "link2Label": "Sobre Nós",
+        "link3Label": "Rastreio",
+        "link4Label": "Suporte",
+        "ctaLabel": "Quero Comprar",
+        "sectionBg": null,
+        "link2Href": "/sobre-nos"
+      },
+      "paddingTop": 0,
+      "paddingBottom": 0
+    },
+    {
+      "id": "7270ecc0-e383-4f91-b62e-63205eacfa52",
+      "component": "Hero",
+      "type": "centralizado",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "badgeVisible": false,
+        "primaryButtonVisible": false,
+        "ctaSecVisible": false,
+        "statsVisible": false,
+        "statCount": 3,
+        "headline": "Você já nos %%conhece%%",
+        "subheadline": "Estamos há anos nos maiores marketplaces do Brasil. O Ta Hora é o nosso próximo passo e o seu, com vantagens que antes não eram possíveis."
+      }
+    },
+    {
+      "id": "2deeb07a-d8e5-45c0-aba5-0406f952a2be",
+      "component": "BenefitsCard",
+      "type": "split",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "benefitCount": 5,
+        "ctaVisible": false,
+        "rightContent": "numero",
+        "sectionLabel": "POR QUE CONFIAR NA GENTE",
+        "headline": "A %%mesma loja%% que você já conhece",
+        "benefit1": "Anos de experiência nos maiores marketplaces do Brasil",
+        "benefit2": "Reputação sólida em quase todos os e-commerces nacionais",
+        "benefit3": "Agora com descontos maiores, direto com você",
+        "benefit4": "Condições de compra que só a nossa plataforma tem",
+        "highlightNumber": "4 anos",
+        "highlightCaption": "Dentro desse mercado"
+      }
+    },
+    {
+      "id": "5429eb44-b9fe-44e2-a09f-b9011c7b242c",
+      "component": "Features",
+      "type": "flat",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "labelVisible": true,
+        "sectionDescVisible": true,
+        "iconVisible": true,
+        "itemDescVisible": true,
+        "iconType": "emoji",
+        "itemCount": 4,
+        "item1Title": "Preços melhores",
+        "item1Icon": "🏷️",
+        "item1Description": "Sem o intermediário do marketplace, repassamos o desconto direto pra você.\n",
+        "item2Icon": "🤝",
+        "item2Title": "Atendimento direto",
+        "item2Description": "Fale com a gente sem intermediários suporte próximo e rápido.",
+        "item3Icon": "🛡️",
+        "item3Title": "Compra segura",
+        "item3Description": "A mesma confiança que você já conhece dos marketplaces, agora aqui.",
+        "item4Icon": "🚚",
+        "item4Title": "Entrega pra todo Brasil",
+        "item4Description": "Enviamos pra todo o país, com o cuidado e respeito que nosso cliente merece.",
+        "sectionLabel": "VANTAGENS",
+        "headline": "O que você ganha %%comprando aqui%%",
+        "sectionDesc": "Tudo que os marketplaces não deixavam a gente fazer por você.\n"
+      }
+    },
+    {
+      "id": "489497a0-3863-42be-b1c3-bc2e75f34128",
+      "component": "Marketplaces",
+      "type": "grade",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "marketplaceCount": 3,
+        "nameVisible": true,
+        "phraseVisible": true,
+        "marketplace1Logo": "/uploads/mercado-libre-thumbnail--1538x1510--b612412b.webp",
+        "marketplace1Href": "https://www.mercadolivre.com.br/pagina/cftv_ch",
+        "marketplace2Logo": "/uploads/images.png",
+        "marketplace3Logo": "/uploads/tik-tok-ecommerce-fundo-preto.png",
+        "marketplace3Name": "TikTok",
+        "descriptionVisible": true,
+        "descriptionText": "Mais de 10 mil vendas em marketplaces e agora com site propio!"
+      }
+    },
+    {
+      "id": "b5f75f72-ce40-4bf3-9b13-3b1296f9c721",
+      "component": "CTAFinal",
+      "type": "centralizado",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "sectionLabel": "NÃO PERCA ESSA OPORTUNIDADE",
+        "headline": "%%Faça%% parte dessa %%nova fase%%",
+        "ctaLabel": "Aproveitar agora",
+        "subtitle": "Descontos maiores e vantagens exclusivas, direto na nossa plataforma."
+      }
+    },
+    {
+      "id": "a6e2b84b-e484-4840-8912-d73106974559",
+      "component": "Footer",
+      "type": "compacto",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "columnCount": 2,
+        "showSocial": false,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "column1Link1Label": "Catálogo",
+        "column1Link2Label": "Sobre Nós",
+        "column1Link3Label": "Rastreio",
+        "column1Link4Label": "Suporte",
+        "column2Link1Label": "Seja um Afiliado",
+        "column2Link2Label": "Política de privacidade",
+        "column2Link3Label": "Termos de uso",
+        "column2Link4Label": "",
+        "column1Link2Href": "/sobre-nos"
+      },
+      "paddingBottom": 0,
+      "paddingTop": 40
+    }
+  ],
+  "kind": "site-page",
+  "siteId": "62216173-2ea7-4853-be5d-10856b856495",
+  "slug": "sobre-nos",
+  "isHome": false,
+  "order": 1,
+  "globalSettings": {
+    "estilo": "elegante",
+    "paleta": {
+      "fundo": "#000000",
+      "superficie": "#141210",
+      "card": "#1c1508",
+      "borda": "#252015",
+      "texto": "#E8DCC8",
+      "textoSecundario": "rgba(232, 220, 200, 0.7)",
+      "textoFraco": "rgba(232, 220, 200, 0.55)",
+      "destaque": "#ff8903",
+      "destaqueTexto": "#ffffff"
+    }
+  }
+}

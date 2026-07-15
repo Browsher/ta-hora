@@ -1,0 +1,262 @@
+{
+  "id": "651d07cf-510e-4ebe-b30a-4434012f3d85",
+  "name": "Home",
+  "template": "",
+  "updatedAt": "2026-07-15T14:01:18.452Z",
+  "sections": [
+    {
+      "id": "f1a5614d-9de7-4fe5-84a9-8b77044a7a65",
+      "component": "Navbar",
+      "type": "flutuante",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "navPosition": "fixa",
+        "linkCount": 4,
+        "ctaVisible": true,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "link1Label": "Catálogo",
+        "link2Label": "Sobre Nós",
+        "link3Label": "Rastreio",
+        "link4Label": "Suporte",
+        "ctaLabel": "Quero Comprar",
+        "sectionBg": null,
+        "link2Href": "/sobre-nos"
+      },
+      "paddingTop": 0,
+      "paddingBottom": 0
+    },
+    {
+      "id": "05d93927-a737-42e8-a126-96f288997a33",
+      "component": "Hero",
+      "type": "split",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "rightContent": "imagem",
+        "badgeVisible": true,
+        "ctaSecVisible": true,
+        "statsVisible": true,
+        "statCount": 2,
+        "badgeText": "Frete grátis acima de R$ 199",
+        "headline": "O %%melhor preço%% em eletrônicos originais",
+        "subheadline": "Entrega rápida pra todo o Brasil e parcelamento em até 12x.",
+        "stat1Value": "+10000"
+      },
+      "paddingTop": 80,
+      "paddingBottom": 160,
+      "effects": {
+        "preset": "personalizado",
+        "counter": true,
+        "background": {
+          "type": "beam",
+          "intensity": "medio"
+        },
+        "sectionEntry": "subir"
+      }
+    },
+    {
+      "id": "55272653-3ac4-4415-9fcc-f5060043f3eb",
+      "component": "Features",
+      "type": "flat",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "labelVisible": true,
+        "sectionDescVisible": false,
+        "iconVisible": true,
+        "itemDescVisible": true,
+        "iconType": "emoji",
+        "itemCount": 4,
+        "sectionLabel": "Por que comprar na Ta Hora",
+        "headline": "Tudo que você precisa, com %%confiança%%",
+        "item1Icon": "🚚",
+        "item1Title": "Entrega rápida",
+        "item1Description": "Enviamos pra todo o Brasil e você acompanha em rastreio.",
+        "item2Title": "Compra segura",
+        "item2Description": "Site protegido e pagamento processado pela Shopify.",
+        "item3Icon": "💳",
+        "item3Title": "Parcele em até 12x",
+        "item3Description": "Em até 12x no cartão ou pague no PIX com desconto.",
+        "item4Icon": "✅",
+        "item4Title": "Produtos originais",
+        "item4Description": "Só itens originais, lacrados e com nota fiscal.",
+        "sectionBg": "linear-gradient(to top, #e59701, #834506)"
+      },
+      "paddingTop": 0,
+      "paddingBottom": 0,
+      "effects": {
+        "preset": "personalizado",
+        "sectionEntry": "subir"
+      }
+    },
+    {
+      "id": "288b19de-0ab6-4e9c-bb47-a20b9ae7a85a",
+      "component": "ProductGrid",
+      "type": "grid",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "gridWidth": "centralizado",
+        "headline": "%%Escolha%% o modelo ideal para você",
+        "product1Name": "Produto 01",
+        "product2Name": "Produto 02",
+        "product3Name": "Produto 03"
+      },
+      "effects": {
+        "preset": "personalizado",
+        "sectionEntry": "subir"
+      }
+    },
+    {
+      "id": "6ceb497d-5f9c-450d-8930-50bda4f3bd29",
+      "component": "HowItWorks",
+      "type": "lista",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "stepCount": 5,
+        "showLine": true,
+        "cardBackground": true,
+        "numberStyle": "ghost",
+        "alternating": true,
+        "ctaVisible": true,
+        "headline": "%%Ganhe indicando%% em 5 passos simples",
+        "sectionDesc": "Ganhe dinheiro indicando amigos pra comprar no site, venha fazer parte do nosso grupo de afiliados.",
+        "step2Description": "Cadastre sua chave PIX e pronto.",
+        "step3Title": "Indique",
+        "step3Description": "Indique amigos pra comprar com seu link exclusivo",
+        "step4Title": "Ganhe",
+        "step4Description": "Ganhe a cada 3 indicações que viram compra.",
+        "step5Title": "Saque",
+        "step5Description": "Saque no PIX ou use como crédito na loja.",
+        "ctaLabel": "Quero ser afiliado"
+      },
+      "effects": {
+        "preset": "personalizado",
+        "sectionEntry": "subir"
+      }
+    },
+    {
+      "id": "947f4353-bfc1-4638-8016-ef3531b3ac74",
+      "component": "Testimonials",
+      "type": "carrossel",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "testimonialCount": 5,
+        "showRating": true,
+        "showAvatar": false,
+        "avatarStyle": "foto",
+        "showRole": true,
+        "autoplay": true,
+        "showArrows": true,
+        "showDots": true,
+        "testimonial1Text": "Comprei um fone bluetooth, chegou antes do prazo e muito bem embalado. Original e com nota fiscal. Recomendo!",
+        "testimonial1Name": "Rodrigo M.",
+        "testimonial1Role": "São Paulo",
+        "testimonial2Text": "Já é minha terceira compra na Ta Hora. Preço justo, entrega rápida e o suporte responde na hora.",
+        "testimonial2Name": "Juliana P.",
+        "testimonial2Role": "Rio de Janeiro",
+        "testimonial3Text": "Parcelei minha câmera em 12x e recebi certinho. Loja confiável, virei cliente fiel.",
+        "testimonial3Name": "Marcos A.",
+        "testimonial3Role": "São Paulo",
+        "testimonial4Text": "Tava com receio de comprar online, mas foi tudo tranquilo. Rastreei o pedido o tempo todo e chegou perfeito.",
+        "testimonial4Name": "Camila R.",
+        "testimonial4Role": "Minas Gerais",
+        "testimonial5Text": "Melhor custo-benefício em acessórios que já achei. Produtos originais e entrega super rápida.",
+        "testimonial5Name": "Felipe S.",
+        "testimonial5Role": "São Paulo"
+      },
+      "effects": {
+        "preset": "personalizado",
+        "sectionEntry": "subir"
+      }
+    },
+    {
+      "id": "353e2d21-2c57-4b35-bcfc-e4b0d6990fb4",
+      "component": "FAQ",
+      "type": "accordion",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "faq1Question": "Qual o prazo de entrega?",
+        "faq1Answer": "Depende da sua região, em média 3 a 10 dias úteis após a confirmação do pagamento. Você acompanha tudo pelo código de rastreio.",
+        "faq2Question": "Posso trocar ou devolver o produto?",
+        "faq2Answer": "Sim. Você tem até 7 dias após o recebimento para solicitar troca ou devolução, conforme o CDC.",
+        "faq3Question": "Os produtos têm garantia?",
+        "faq3Answer": "Todos são originais, acompanham nota fiscal e têm garantia do fabricante.",
+        "faq4Question": "Quais as formas de pagamento?",
+        "faq4Answer": "Cartão de crédito em até 12x, PIX com desconto e boleto bancário."
+      },
+      "effects": {
+        "preset": "personalizado",
+        "sectionEntry": "subir"
+      }
+    },
+    {
+      "id": "ab02887f-a689-4dda-b2e5-1a22bb410484",
+      "component": "CTAFinal",
+      "type": "centralizado",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "sectionLabel": "Ofertas por tempo limitado",
+        "headline": "%%Aproveite agora%% e receba em casa",
+        "subtitle": "+20 mil clientes já compraram com frete rápido e garantia. Sua vez chegou.",
+        "sectionBg": "linear-gradient(to top, #e59701, #834506)",
+        "ctaLabel": "Ver ofertas"
+      },
+      "effects": {
+        "preset": "personalizado",
+        "sectionEntry": "fade"
+      }
+    },
+    {
+      "id": "a6e2b84b-e484-4840-8912-d73106974559",
+      "component": "Footer",
+      "type": "compacto",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "columnCount": 2,
+        "showSocial": false,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "column1Link1Label": "Catálogo",
+        "column1Link2Label": "Sobre Nós",
+        "column1Link3Label": "Rastreio",
+        "column1Link4Label": "Suporte",
+        "column2Link1Label": "Seja um Afiliado",
+        "column2Link2Label": "Política de privacidade",
+        "column2Link3Label": "Termos de uso",
+        "column2Link4Label": "",
+        "column1Link2Href": "/sobre-nos"
+      },
+      "paddingBottom": 0,
+      "paddingTop": 40
+    }
+  ],
+  "kind": "site-page",
+  "siteId": "62216173-2ea7-4853-be5d-10856b856495",
+  "slug": "",
+  "isHome": true,
+  "order": 0,
+  "globalSettings": {
+    "estilo": "elegante",
+    "paleta": {
+      "fundo": "#000000",
+      "superficie": "#141210",
+      "card": "#1c1508",
+      "borda": "#252015",
+      "texto": "#E8DCC8",
+      "textoSecundario": "rgba(232, 220, 200, 0.7)",
+      "textoFraco": "rgba(232, 220, 200, 0.55)",
+      "destaque": "#ff8903",
+      "destaqueTexto": "#ffffff"
+    }
+  }
+}

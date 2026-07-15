@@ -1,0 +1,328 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-gradient: gradient 8s ease infinite;
+}
+
+/* ── Sistema de cores central (piloto) ────────────────────────────────────────
+   Fonte única das cores do site. Os componentes leem via var(--cor-*) em vez de
+   valores chumbados espalhados. Um futuro sistema de "Estilos" troca a paleta do
+   site inteiro sobrescrevendo estas variáveis aqui.
+
+   Sobrescrita por seção (cascata natural de variáveis CSS): como estas variáveis
+   herdam, uma seção pode redefinir uma delas no seu próprio wrapper — ex:
+   style={{ "--cor-destaque": "#3B82F6" }} — e só os filhos daquela seção mudam,
+   sem tocar no resto. Foi por isso que --cor-destaque e os fundos ficaram aqui
+   como variáveis (e não como Context React): sobrevivem ao export estático e
+   permitem esse override local no futuro.
+
+   Fundo transparente por seção (Passo 2): --cor-fundo alimenta o body (o "chão"
+   da página). Uma seção que queira desligar esse fundo — para um futuro sistema
+   de fundo próprio assumir — só precisa pintar seu wrapper com um valor próprio
+   ou com `background: transparent`; como o wrapper fica POR CIMA do body, ele
+   vence naturalmente (é a mesma mecânica do campo "Fundo da seção" do
+   Personalizar, que continua tendo prioridade sobre o global).                  */
+:root {
+  --cor-fundo:            #0D0A08;                                     /* fundo da página (body) */
+  --cor-superficie:       #141210;                                    /* superfícies elevadas (navbar, cards planos) */
+  --cor-card:             linear-gradient(160deg, #1c1508 0%, #110e06 100%); /* fundo de card (gradiente) */
+  --cor-borda:            #252015;                                    /* borda estrutural neutra (cards usam accent+alpha à parte) */
+  --cor-texto:            #E8DCC8;                                     /* texto e títulos primários */
+  --cor-texto-secundario: rgba(232, 220, 200, 0.7);                   /* texto de apoio — base bege, opacidade média (unifica os vários improvisados) */
+  --cor-texto-fraco:      rgba(232, 220, 200, 0.55);                  /* legendas/placeholders — base bege, opacidade menor */
+  --cor-destaque:         #D4A017;                                    /* cor de destaque (accent) */
+  --cor-destaque-texto:   #000000;                                    /* par do accent: cor do texto/ícone SOBRE o accent — cada tema define os dois */
+}
+
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--cor-destaque) 19%, transparent);
+  color: var(--cor-texto);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cor-fundo);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cor-borda);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--cor-borda) 80%, var(--cor-destaque));
+}
+
+/* ── Animated backgrounds ─────────────────────────────────────────────────── */
+
+/* Aurora blobs */
+@keyframes ab-a1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(180px, -120px) scale(1.08); }
+  66%      { transform: translate(-100px, 85px) scale(0.94); }
+}
+@keyframes ab-a2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-150px, 110px) scale(1.06); }
+  80%      { transform: translate(110px, -75px) scale(0.91); }
+}
+@keyframes ab-a3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(85px, 150px) scale(1.1); }
+}
+
+/* Mesh orbs */
+@keyframes ab-m1 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(70px, -55px); }
+}
+@keyframes ab-m2 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-65px, 50px); }
+}
+@keyframes ab-m3 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(55px, 70px); }
+}
+@keyframes ab-m4 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-60px, -65px); }
+}
+
+/* ── Intensity variants ──────────────────────────────────────────────────── */
+
+/* Aurora suave — translate ≈ ⅓ of medio */
+@keyframes ab-a1-s {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(60px, -40px) scale(1.03); }
+  66%      { transform: translate(-33px, 28px) scale(0.98); }
+}
+@keyframes ab-a2-s {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-50px, 37px) scale(1.02); }
+  80%      { transform: translate(37px, -25px) scale(0.97); }
+}
+@keyframes ab-a3-s {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(28px, 50px) scale(1.04); }
+}
+
+/* Aurora intenso — translate 1.5× of medio */
+@keyframes ab-a1-i {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(270px, -180px) scale(1.12); }
+  66%      { transform: translate(-150px, 128px) scale(0.91); }
+}
+@keyframes ab-a2-i {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-225px, 165px) scale(1.09); }
+  80%      { transform: translate(165px, -113px) scale(0.87); }
+}
+@keyframes ab-a3-i {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(128px, 225px) scale(1.15); }
+}
+
+/* Mesh suave — translate ≈ ⅓ of medio */
+@keyframes ab-m1-s {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(23px, -18px); }
+}
+@keyframes ab-m2-s {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-22px, 17px); }
+}
+@keyframes ab-m3-s {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(18px, 23px); }
+}
+@keyframes ab-m4-s {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-20px, -22px); }
+}
+
+/* Mesh intenso — translate 1.5× of medio */
+@keyframes ab-m1-i {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(105px, -83px); }
+}
+@keyframes ab-m2-i {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-98px, 75px); }
+}
+@keyframes ab-m3-i {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(83px, 105px); }
+}
+@keyframes ab-m4-i {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-90px, -98px); }
+}
+
+/* ── Global effects — cursor ─────────────────────────────────────────────── */
+
+.cursor-ponto,
+.cursor-circulo {
+  cursor: none;
+}
+.cursor-ponto *,
+.cursor-circulo * {
+  cursor: none !important;
+}
+.cursor-ponto::after {
+  content: '';
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  left: var(--cx, -100px);
+  top: var(--cy, -100px);
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  /* branco + difference: auto-inverte contra qualquer fundo (tema claro/escuro) */
+  z-index: 9999;
+}
+.cursor-circulo::after {
+  content: '';
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  pointer-events: none;
+  left: var(--cx, -100px);
+  top: var(--cy, -100px);
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  /* branco + difference: auto-inverte contra qualquer fundo (tema claro/escuro) */
+  transition: left 80ms ease-out, top 80ms ease-out;
+  z-index: 9999;
+}
+
+/* ── Button hover effects ─────────────────────────────────────────────────── */
+
+.btn-effect-fill-sutil {
+  position: relative;
+  overflow: hidden;
+}
+.btn-effect-fill-sutil::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transition: background 250ms ease;
+  pointer-events: none;
+}
+.btn-effect-fill-sutil:hover::before {
+  background: color-mix(in srgb, var(--cor-destaque-texto) 8%, transparent);
+}
+
+.btn-effect-slide-fill {
+  position: relative;
+  overflow: hidden;
+}
+.btn-effect-slide-fill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--cor-destaque-texto) 12%, transparent);
+  transform: translateX(-100%);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.btn-effect-slide-fill:hover::before {
+  transform: translateX(0);
+}
+
+.btn-effect-glow {
+  transition: box-shadow 250ms ease;
+}
+.btn-effect-glow:hover {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--cor-destaque) 50%, transparent);
+}
+
+.btn-effect-magnetic {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-effect-magnetic:hover {
+  transform: translateY(-3px) scale(1.04);
+}
+
+/* ── Icon hover effects ───────────────────────────────────────────────────── */
+
+@keyframes icon-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.icon-effect-spin:hover {
+  animation: icon-spin 1s linear infinite;
+}
+
+/* ── Footer link hover effects ───────────────────────────────────────────────── */
+
+.footer-links-cor a[href] {
+  transition: color 0.2s ease;
+}
+.footer-links-cor a[href]:hover {
+  color: var(--footer-accent, var(--cor-destaque)) !important;
+}
+
+.footer-links-sublinhado a[href] {
+  transition: text-decoration-color 0.2s ease;
+  text-decoration-color: transparent;
+}
+.footer-links-sublinhado a[href]:hover {
+  text-decoration: underline !important;
+  text-decoration-color: currentColor !important;
+}
+
+/* Reduced motion: disable all animated background movement */
+@media (prefers-reduced-motion: reduce) {
+  [data-ab-aurora],
+  [data-ab-mesh] {
+    animation: none !important;
+  }
+  .btn-effect-fill-sutil::before,
+  .btn-effect-slide-fill::before {
+    transition: none;
+  }
+  .btn-effect-glow {
+    transition: none;
+  }
+  .btn-effect-magnetic {
+    transition: none;
+  }
+  .btn-effect-magnetic:hover {
+    transform: none;
+  }
+  .icon-effect-spin:hover {
+    animation: none;
+  }
+}
