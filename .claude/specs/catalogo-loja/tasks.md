@@ -124,7 +124,7 @@ referência a requisito e a código reutilizado.
 > de `lib/shopify/types.ts` via **`import type`** (apagado na compilação — nunca
 > arrasta runtime de servidor pro bundle do cliente).
 
-- [ ] 12. Criar `ProductCardLink` em `components/loja/ProductCardLink.tsx`
+- [x] 12. Criar `ProductCardLink` em `components/loja/ProductCardLink.tsx`
   - File: `components/loja/ProductCardLink.tsx` ("use client")
   - `import type` do tipo `ProductCard`; `<Link href={\`/produtos/${handle}\`}>`
     envolvendo `ImageSlot` (`alt={image?.altText ?? title}`, `aspect-ratio`) +
@@ -133,7 +133,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: components/ui/ImageSlot.tsx, components/ui/Text.tsx, components/ui/PriceTag.tsx, lib/shopify/types.ts_
   - _Requirements: 2.2, 2.3, 2.4_
 
-- [ ] 13. Criar `CatalogGrid` em `components/loja/CatalogGrid.tsx`
+- [x] 13. Criar `CatalogGrid` em `components/loja/CatalogGrid.tsx`
   - File: `components/loja/CatalogGrid.tsx`
   - `import type` do tipo `ProductCard`; grid `auto-fit` (padrão do `ProductGrid`);
     mapear `products` → `ProductCardLink`; **estado vazio** amigável quando
@@ -142,7 +142,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: components/loja/ProductCardLink.tsx, components/sections/ProductGrid/ProductGrid.tsx (padrão de grid), lib/shopify/types.ts_
   - _Requirements: 2.1, 2.5, 2.6_
 
-- [ ] 14. Criar `ProductGallery` em `components/loja/ProductGallery.tsx`
+- [x] 14. Criar `ProductGallery` em `components/loja/ProductGallery.tsx`
   - File: `components/loja/ProductGallery.tsx` ("use client")
   - `import type` do tipo `ProductImage`; imagem principal + thumbnails; troca via
     `useState`; `alt={img.altText ?? title}`
@@ -150,7 +150,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: components/ui/ImageSlot.tsx, lib/shopify/types.ts_
   - _Requirements: 3.2, 3.4, Usability_
 
-- [ ] 15. Criar `ProductSpecs` em `components/loja/ProductSpecs.tsx`
+- [x] 15. Criar `ProductSpecs` em `components/loja/ProductSpecs.tsx`
   - File: `components/loja/ProductSpecs.tsx`
   - `import type` do tipo `Spec`; renderizar `specs: Spec[]` como pares rótulo/valor
     (tema `--cor-*`); lista vazia → não renderiza a seção
@@ -158,7 +158,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: components/ui/Text.tsx, lib/shopify/types.ts_
   - _Requirements: 3.2_
 
-- [ ] 16. Criar `AddToCartPlaceholder` em `components/loja/AddToCartPlaceholder.tsx`
+- [x] 16. Criar `AddToCartPlaceholder` em `components/loja/AddToCartPlaceholder.tsx`
   - File: `components/loja/AddToCartPlaceholder.tsx` ("use client")
   - `<button type="button" disabled aria-disabled>` estilizado com tema/`tokens`
     (visual do CtaButton sólido); **inerte** (sem handler, não navega); `// TODO: carrinho`
