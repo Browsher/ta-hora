@@ -20,8 +20,15 @@
 ```bash
 npm install
 npm run dev     # desenvolvimento local
-npm run build   # gera out/ (site estático) — deploy em qualquer host estático
+npm run build   # build de runtime (SSR/ISR) — NÃO gera mais out/ estático
+npm start       # roda o build de produção localmente
 ```
+
+> **Atualizado (spec `catalogo-loja`):** o `output: "export"` foi removido — o
+> build agora é de **runtime (SSR/ISR)** para servir dados frescos da Shopify. As
+> rotas da loja (`/catalogo`, `/produtos/[handle]`) precisam de `.env.local` com o
+> token da Storefront API; as páginas de conteúdo seguem pré-renderizadas (SSG).
+> Deploy alvo: **Vercel**.
 
 ## Modelo de build — atual vs. loja (LEIA ANTES DE PLANEJAR)
 

@@ -168,7 +168,7 @@ referência a requisito e a código reutilizado.
 
 ### Bloco 4 — Rotas
 
-- [ ] 17. Criar rota da vitrine em `app/catalogo/page.tsx`
+- [x] 17. Criar rota da vitrine em `app/catalogo/page.tsx`
   - File: `app/catalogo/page.tsx` (Server Component)
   - `export const revalidate = 300`; `getProducts()` em `try/catch`; erro →
     bloco de erro amigável; sucesso → `<CatalogGrid products />`; `<main>` com fundo do tema
@@ -176,7 +176,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: lib/shopify/products.ts, components/loja/CatalogGrid.tsx_
   - _Requirements: 2.1, 2.5, 2.6, 4.1, 4.4_
 
-- [ ] 18. Criar rota de produto em `app/produtos/[handle]/page.tsx`
+- [x] 18. Criar rota de produto em `app/produtos/[handle]/page.tsx`
   - File: `app/produtos/[handle]/page.tsx` (Server Component)
   - `export const revalidate = 300`; `export const dynamicParams = true`; tratar os
     **dois modos de falha DISTINTOS**: (a) fetch em `try/catch` → **Shopify offline**
@@ -188,7 +188,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: lib/shopify/products.ts, components/loja/*, components/ui/PriceTag.tsx, components/ui/Heading.tsx_
   - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6, 4.1, 4.4_
 
-- [ ] 19. Adicionar `generateMetadata` e `generateStaticParams` **tolerantes** em `app/produtos/[handle]/page.tsx`
+- [x] 19. Adicionar `generateMetadata` e `generateStaticParams` **tolerantes** em `app/produtos/[handle]/page.tsx`
   - File: `app/produtos/[handle]/page.tsx` (continua da tarefa 18)
   - `generateStaticParams` chama a Shopify em `try/catch` → **em erro retorna `[]`**
     (deixa tudo pro ISR on-demand; build sem `.env.local` NÃO quebra);
@@ -200,7 +200,7 @@ referência a requisito e a código reutilizado.
 
 ### Bloco 5 — Navegação e documentação
 
-- [ ] 20. Religar o link "Catálogo" na Navbar e no Footer (aditivo)
+- [x] 20. Religar o link "Catálogo" na Navbar e no Footer (aditivo)
   - Files: `layouts/_home.json`, `layouts/sobre-nos.json`
   - Nos DOIS arquivos: adicionar `link1Href: "/catalogo"` na seção Navbar (o
     `link1Label` "Catálogo" já existe) e `column1Link1Href: "/catalogo"` na seção
@@ -210,7 +210,7 @@ referência a requisito e a código reutilizado.
   - _Leverage: components/sections/Navbar/Navbar.tsx, components/sections/Footer/Footer.tsx_
   - _Requirements: 2.7_
 
-- [ ] 21. Atualizar documentação do modelo de build (runtime)
+- [x] 21. Atualizar documentação do modelo de build (runtime)
   - Files: `README.md`, `.claude/steering/tech.md`
   - README: o build não gera mais `out/` estático; deploy é runtime na Vercel
     (`npm start` p/ produção local). tech.md → seção "Comandos": ajustar o
