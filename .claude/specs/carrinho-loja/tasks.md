@@ -51,7 +51,7 @@ de arquivo explícitos.
 
 ### Bloco 1 — Fundação: cache e tipos
 
-- [ ] 1. Estender `StorefrontFetchOptions` para expressar "sem cache" em `lib/shopify/client.ts`
+- [x] 1. Estender `StorefrontFetchOptions` para expressar "sem cache" em `lib/shopify/client.ts`
   - File: `lib/shopify/client.ts` (modificar)
   - Trocar a interface por união discriminada: `{ semCache?: false; revalidate?: number } | { semCache: true; revalidate?: never }`
   - Ramificar: `semCache` → `{ cache: "no-store" }`; senão → `{ next: { revalidate: opts?.revalidate ?? 300 } }` (nunca os dois — é conflito no Next)
@@ -61,7 +61,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/client.ts` (linha 54)_
   - _Requirements: 8.4, 8.4a, 10.4_
 
-- [ ] 2. Provar que o catálogo não regrediu — `tsc` **+ build + regime das rotas**
+- [x] 2. Provar que o catálogo não regrediu — `tsc` **+ build + regime das rotas**
   - File: nenhum (verificação)
   - `npx tsc --noEmit` — as chamadas de `lib/shopify/products.ts` (`{ revalidate: CATALOG_REVALIDATE }`, 2 ocorrências) devem continuar compilando
   - Confirmar que `{ semCache: true, revalidate: 300 }` é **erro de compilação** (a união trava a combinação inválida)
@@ -71,7 +71,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/products.ts`, `app/catalogo/page.tsx`_
   - _Requirements: 8.4, 9.1, 9.2, 9.3_
 
-- [ ] 3. Adicionar os tipos do carrinho em `lib/shopify/types.ts`
+- [x] 3. Adicionar os tipos do carrinho em `lib/shopify/types.ts`
   - File: `lib/shopify/types.ts` (modificar)
   - `LinhaCarrinho`, `CupomAplicado`, `Carrinho`, `ResultadoCarrinho` conforme §Data Models
   - **`Carrinho` NÃO tem campo `id`** — é a garantia de tipo do Req 2.4 (ID só no cookie)

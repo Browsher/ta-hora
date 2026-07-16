@@ -46,3 +46,86 @@ export interface Product {
   price:           FormattedPrice
   specs:           Spec[]
 }
+
+// ─── Carrinho ─────────────────────────────────────────────────────────────────
+//
+// Regra que atravessa todos os tipos abaixo: TODO DINHEIRO VEM DA SHOPIFY, e a
+// UI NUNCA faz aritmética com ele. O valor exibido não pode divergir do cobrado.
+
+/** Uma linha do carrinho, já formatada para exibição. */
+export interface LinhaCarrinho {
+  /** `gid://shopify/CartLine/...` — usado nas mutations de update/remove. */
+  id:            string
+  quantidade:    number
+  /** `merchandise.availableForSale` — linha indisponível é sinalizada na UI. */
+  disponivel:    boolean
+  /**
+   * `merchandise.quantityAvailable`. **Pode ser `null`**: só vem preenchido se o
+   * app tiver o scope `unauthenticated_read_product_inventory`. `null` → o `+`
+   * não desabilita e o limite chega pelo `aviso` de `warnings` (Req 10.7).
+   */
+  estoqueMaximo: number | null
+  titulo:        string
+  /** Link de volta ao produto (`/produtos/[handle]`). */
+  handle:        string
+  imagem:        ProductImage | null
+  /** `cost.amountPerQuantity` — VEM da Shopify. NUNCA `precoTotal / quantidade`. */
+  precoUnitario: FormattedPrice
+  /** `cost.totalAmount` DA LINHA — vem pronto, não é calculado aqui. */
+  precoTotal:    FormattedPrice
+  /**
+   * `discountAllocations[].discountedAmount` — LISTA, deliberadamente NÃO somada.
+   * Colapsar num total seria aritmética local, justo o que a regra proíbe. Se um
+   * dia for preciso um total de desconto, ele vem da Shopify, não de um `reduce`.
+   */
+  descontos:     FormattedPrice[]
+}
+
+/** Cupom que a Shopify considerou aplicável (`applicable: true`). */
+export interface CupomAplicado {
+  codigo: string
+}
+
+/**
+ * Carrinho normalizado.
+ *
+ * **NÃO contém o `id`** — ele fica no cookie `httpOnly` e o servidor é quem sabe
+ * qual carrinho é o da sessão. Não ter o campo evita que ele vaze em log, estado
+ * ou props por descuido.
+ *
+ * ⚠️ Fronteira honesta (não confunda com o que isto NÃO garante): o `checkoutUrl`
+ * abaixo **contém** o token do carrinho — verificado ao vivo:
+ *   `checkoutUrl = https://<loja>/cart/c/<token>?key=<key>` e
+ *   `cart.id     = gid://shopify/Cart/<MESMO token>?key=<MESMA key>`
+ * Ou seja, o valor do ID **chega ao navegador de qualquer forma** (o Req 7.2
+ * exige levar o cliente ao `checkoutUrl`). Isso é aceito e decidido: a capability
+ * é do carrinho do PRÓPRIO visitante, e a credencial que importa — o token da
+ * Storefront API — continua server-only. Ver design → "Decisão: link direto".
+ */
+export interface Carrinho {
+  checkoutUrl: string
+  /** `cart.totalQuantity` — o contador da navbar. */
+  totalItens:  number
+  /** `cost.subtotalAmount` */
+  subtotal:    FormattedPrice
+  /** `cost.totalAmount` */
+  total:       FormattedPrice
+  linhas:      LinhaCarrinho[]
+  /** Só os `applicable: true` — código rejeitado não aparece como aplicado. */
+  cupons:      CupomAplicado[]
+}
+
+/** Retorno único de toda ação de carrinho. */
+export interface ResultadoCarrinho {
+  /** `null` = sem carrinho (vazio, expirado, finalizado ou Shopify indisponível). */
+  carrinho: Carrinho | null
+  /**
+   * Derivado de `warnings` (não de `userErrors`), traduzido para pt-BR.
+   * Existe porque a Shopify limita estoque em SILÊNCIO: `userErrors` vem VAZIO e
+   * o único sinal é `warnings: MERCHANDISE_NOT_ENOUGH_STOCK`. Sem isto o `+`
+   * travaria mudo (Req 1.5, 3.12).
+   */
+  aviso:    string | null
+  /** Falha amigável. NUNCA interpola token ou endpoint (Req 8.5). */
+  erro:     string | null
+}

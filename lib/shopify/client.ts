@@ -9,10 +9,35 @@ import "server-only"
 
 const DEFAULT_API_VERSION = "2026-01"
 
-export interface StorefrontFetchOptions {
-  /** Janela de revalidação do cache (ISR), em segundos. Default 300 (5 min). */
-  revalidate?: number
-}
+// ─── Cache: LEIA ANTES DE "CONSERTAR" ────────────────────────────────────────
+//
+// ⚠️ O `next: { revalidate }` abaixo é INERTE hoje, e isso é esperado.
+//    A partir do Next 15 (aqui: 16.x) o `fetch` NÃO é mais cacheado por default
+//    — cachear é opt-in via `cache: "force-cache"`. Como este client faz POST e
+//    nunca passa `force-cache`, nada aqui entra no Data Cache.
+//
+// ⚠️ Então de onde vem o ISR do catálogo? Do ROUTE SEGMENT, não daqui:
+//      app/catalogo/page.tsx          → export const revalidate = 300
+//      app/produtos/[handle]/page.tsx → export const revalidate = 300
+//    Não remova esses exports achando que este arquivo cobre. Não cobre.
+//
+// 🚫 NUNCA "conserte" o `revalidate` daqui com `cache: "force-cache"`, e NUNCA
+//    adicione `export const fetchCache = "default-cache"` no projeto.
+//    Motivo (a doc do Next é explícita): `force-cache` cacheia QUALQUER request,
+//    INCLUSIVE POST e requests que mandam `cookie`/`authorization`. As operações
+//    de carrinho são exatamente isso. O resultado seria o pior bug possível
+//    nesta base: o CARRINHO DE UM CLIENTE SERVIDO A OUTRO. Ver Req 8.4a.
+//
+// Por que a união existe se o `revalidate` é inerte: ela crava NO TIPO a
+// intenção "o carrinho nunca cacheia", em vez de depender de um default do
+// framework que já mudou uma vez e pode mudar de novo. É defesa declarada — o
+// `semCache: true` continua correto mesmo se o Next voltar a cachear por default.
+
+export type StorefrontFetchOptions =
+  /** ISR (catálogo): janela de revalidação em segundos. Default 300 (5 min). */
+  | { semCache?: false; revalidate?: number }
+  /** Carrinho: nunca cacheia. `revalidate` é proibido aqui (conflito no Next). */
+  | { semCache: true; revalidate?: never }
 
 interface GraphQLResponse<T> {
   data?:   T
@@ -42,6 +67,13 @@ export async function storefrontFetch<T>(
 
   const endpoint = `https://${domain}/api/${version}/graphql.json`
 
+  // Mutuamente exclusivo: `cache: "no-store"` junto de `next: { revalidate }` é
+  // conflito no Next. A união de `StorefrontFetchOptions` torna a combinação
+  // inválida um erro de COMPILAÇÃO — ver o comentário de cache no topo.
+  const opcoesDeCache = opts?.semCache
+    ? { cache: "no-store" as const }
+    : { next: { revalidate: opts?.revalidate ?? 300 } }
+
   let res: Response
   try {
     res = await fetch(endpoint, {
@@ -51,7 +83,7 @@ export async function storefrontFetch<T>(
         "X-Shopify-Storefront-Access-Token": token,
       },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: opts?.revalidate ?? 300 },
+      ...opcoesDeCache,
     })
   } catch (e) {
     // Erro de rede/DNS — mensagem sem token.
