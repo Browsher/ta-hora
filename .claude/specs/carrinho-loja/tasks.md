@@ -196,7 +196,7 @@ de arquivo explícitos.
 
 ### Bloco 4 — Componentes de cliente
 
-- [ ] 15. Criar `CarrinhoProvider` em `components/loja/CarrinhoProvider.tsx`
+- [x] 15. Criar `CarrinhoProvider` em `components/loja/CarrinhoProvider.tsx`
   - File: `components/loja/CarrinhoProvider.tsx` (novo)
   - `"use client"`; contexto com `{ carrinho, aviso, erro, carregando, aberto, abrir, fechar, adicionar, alterarQuantidade, remover, aplicarCupom, removerCupom }`
   - **Fila serial**: encadear as chamadas numa `Promise` — o Next serializa o dispatch, mas `runRemainingActions()` roda **antes** do `resolve/reject`, então a ordem do **nosso** estado precisa ser garantida aqui
@@ -208,7 +208,7 @@ de arquivo explícitos.
   - _Leverage: `lib/carrinho/acoes.ts`, `lib/shopify/types.ts` (`import type`)_
   - _Requirements: 2.5, 2.6, 3.10, 4.4, 4.5, 5.4_
 
-- [ ] 16. Criar `IconeCarrinho` em `components/loja/IconeCarrinho.tsx`
+- [x] 16. Criar `IconeCarrinho` em `components/loja/IconeCarrinho.tsx`
   - File: `components/loja/IconeCarrinho.tsx` (novo)
   - `"use client"`; `ShoppingCart` (lucide) + badge com `totalItens`; clique → `abrir()`
   - **Sem badge** quando vazio **ou** quando `carrinho` é `null` (que é também o estado de falha/sem-env — mesmo visual, sem erro)
@@ -217,7 +217,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/CarrinhoProvider.tsx`, `lucide-react`_
   - _Requirements: 4.1, 4.2, 4.3, 4.7_
 
-- [ ] 17. Criar `CarrinhoLinha` em `components/loja/CarrinhoLinha.tsx`
+- [x] 17. Criar `CarrinhoLinha` em `components/loja/CarrinhoLinha.tsx`
   - File: `components/loja/CarrinhoLinha.tsx` (novo)
   - `"use client"`; foto (`<img>` do CDN), título, `precoUnitario`, **a quantidade atual**, `−`/`+`, lixeira (`Trash2`)
   - `−` em quantidade 1 → remover; `+` desabilita ao atingir `estoqueMaximo` conhecido
@@ -227,7 +227,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/CarrinhoProvider.tsx`, `lucide-react`, `lib/shopify/types.ts` (`import type`)_
   - _Requirements: 3.3, 3.4, 3.5, 3.6, 3.13_
 
-- [ ] 18. Criar `CupomForm` em `components/loja/CupomForm.tsx`
+- [x] 18. Criar `CupomForm` em `components/loja/CupomForm.tsx`
   - File: `components/loja/CupomForm.tsx` (novo)
   - `"use client"`; `Input` + botão aplicar; cupons aplicados via `HighlightBadge` (variante `suave`)
   - **O botão de remover é elemento IRMÃO do badge** — `HighlightBadge` não aceita `children`, só renderiza `text`
@@ -236,7 +236,7 @@ de arquivo explícitos.
   - _Leverage: `components/ui/Input.tsx`, `components/ui/HighlightBadge.tsx`, `components/loja/CarrinhoProvider.tsx`_
   - _Requirements: 5.1, 5.3, 5.4, 5.5_
 
-- [ ] 19. Criar `SeloPagamento` em `components/loja/SeloPagamento.tsx`
+- [x] 19. Criar `SeloPagamento` em `components/loja/SeloPagamento.tsx`
   - File: `components/loja/SeloPagamento.tsx` (novo)
   - `Lock` (lucide) + "Pagamento seguro via Mercado Pago", cores via `--cor-*`
   - Copy **informativa** — não sugerir que o pagamento ocorre no site
@@ -244,7 +244,7 @@ de arquivo explícitos.
   - _Leverage: `lucide-react`_
   - _Requirements: 6.1, 6.3, 6.4_
 
-- [ ] 20a. Criar a casca do `CarrinhoDrawer` em `components/loja/CarrinhoDrawer.tsx`
+- [x] 20a. Criar a casca do `CarrinhoDrawer` em `components/loja/CarrinhoDrawer.tsx`
   - File: `components/loja/CarrinhoDrawer.tsx` (novo)
   - `"use client"`; painel deslizante da direita (Framer Motion), overlay clicável, botão `X`
   - Fecha por `X`, clique no overlay e `Esc`; foco preso enquanto aberto; `role="dialog"` + `aria-modal`
@@ -256,7 +256,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/StoreShell.tsx` (padrão de paleta, linhas 18-19), `lib/paleta.ts`, `components/loja/CarrinhoProvider.tsx`, `lucide-react`_
   - _Requirements: 3.1, 3.2, 3.9, 6.3_
 
-- [ ] 20b. Renderizar itens, cupom e estado vazio no `CarrinhoDrawer`
+- [x] 20b. Renderizar itens, cupom e estado vazio no `CarrinhoDrawer`
   - File: `components/loja/CarrinhoDrawer.tsx` (continuar de 20a)
   - **Renderizar `<CarrinhoLinha>` para cada `carrinho.linhas`** (é o que compõe as tarefas 17/18 no drawer — sem isto o drawer não tem itens)
   - **Renderizar `<CupomForm />`**
@@ -266,7 +266,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/CarrinhoLinha.tsx`, `components/loja/CupomForm.tsx`, `components/loja/CarrinhoProvider.tsx`_
   - _Requirements: 3.3, 3.8, 3.11, 5.1_
 
-- [ ] 20c. Adicionar o rodapé do `CarrinhoDrawer` (totais, selo, checkout)
+- [x] 20c. Adicionar o rodapé do `CarrinhoDrawer` (totais, selo, checkout)
   - File: `components/loja/CarrinhoDrawer.tsx` (continuar de 20b)
   - Subtotal e total via `PriceTag` (valores já formatados pela Shopify — **não calcular**)
   - `<SeloPagamento />`
@@ -277,7 +277,7 @@ de arquivo explícitos.
   - _Leverage: `components/ui/PriceTag.tsx`, `components/ui/CtaButton.tsx`, `components/loja/SeloPagamento.tsx`_
   - _Requirements: 3.7, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6_
 
-- [ ] 21. Criar `BotaoAdicionar` em `components/loja/BotaoAdicionar.tsx`
+- [x] 21. Criar `BotaoAdicionar` em `components/loja/BotaoAdicionar.tsx`
   - File: `components/loja/BotaoAdicionar.tsx` (novo)
   - `"use client"`; recebe `handle` por prop
   - **Chamar `abrir()` do contexto ANTES do `await adicionar(handle)`** — a NFR exige drawer em <100ms, sem esperar a rede; o drawer mostra carregando e reconcilia quando a resposta chega. *Não é estado local do botão: o drawer é montado no root layout, então só o `abrir()` do provider o abre.*
