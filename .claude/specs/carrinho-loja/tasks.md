@@ -83,7 +83,7 @@ de arquivo explícitos.
 
 ### Bloco 2 — Camada de dados (`server-only`)
 
-- [ ] 4. Criar os documentos GraphQL do carrinho em `lib/shopify/queriesCarrinho.ts`
+- [x] 4. Criar os documentos GraphQL do carrinho em `lib/shopify/queriesCarrinho.ts`
   - File: `lib/shopify/queriesCarrinho.ts` (novo)
   - `import "server-only"` no topo
   - Fragmento `CamposDoCarrinho`: `id`, `checkoutUrl`, `totalQuantity`, `cost { subtotalAmount totalAmount }`, `discountCodes { code applicable }`, `lines(first: 100)` com `cost { amountPerQuantity totalAmount }`, `discountAllocations { discountedAmount }`, `merchandise { ... on ProductVariant { … } }`
@@ -95,7 +95,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/queries.ts` (padrão dos documentos)_
   - _Requirements: 10.2, 10.3, 10.5_
 
-- [ ] 5. Adicionar `PRODUTO_PARA_CARRINHO_QUERY` em `lib/shopify/queries.ts`
+- [x] 5. Adicionar `PRODUTO_PARA_CARRINHO_QUERY` em `lib/shopify/queries.ts`
   - File: `lib/shopify/queries.ts` (modificar)
   - **Usar `product(handle: $handle)` — NUNCA `productByHandle`**, que está depreciado na 2026-01 ("Use `product` instead", confirmado no Dev MCP). O `queries.ts` atual já usa a forma certa; o risco é escrever `productByHandle` por reflexo ao ler "produto por handle"
   - Query por handle com `variants(first: 2) { nodes { id title availableForSale quantityAvailable } }`
@@ -106,7 +106,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/queries.ts` (`PRODUCT_BY_HANDLE_QUERY` já usa `product(handle:)`)_
   - _Requirements: 1.7, 1.8, 9.1, 10.6, 10.7_
 
-- [ ] 6. Criar a normalização do carrinho em `lib/shopify/normalizeCarrinho.ts`
+- [x] 6. Criar a normalização do carrinho em `lib/shopify/normalizeCarrinho.ts`
   - File: `lib/shopify/normalizeCarrinho.ts` (novo)
   - Raw → `Carrinho`/`LinhaCarrinho`; **descartar o `id` do carrinho** (não entra no tipo)
   - `precoUnitario` ← `cost.amountPerQuantity`; `precoTotal` ← `cost.totalAmount`. **Nunca dividir/multiplicar localmente**
@@ -115,7 +115,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/normalize.ts` (`formatMoney`), `lib/shopify/types.ts`_
   - _Requirements: 3.7, 5.3, 5.4_
 
-- [ ] 7. Adicionar tradução de `warnings` para pt-BR em `lib/shopify/normalizeCarrinho.ts`
+- [x] 7. Adicionar tradução de `warnings` para pt-BR em `lib/shopify/normalizeCarrinho.ts`
   - File: `lib/shopify/normalizeCarrinho.ts` (continuar da tarefa 6)
   - Mapear `MERCHANDISE_NOT_ENOUGH_STOCK` → "Ajustamos a quantidade ao estoque disponível."; `DISCOUNT_NOT_FOUND` → "Cupom inválido."
   - Código desconhecido → mensagem genérica em pt-BR; **nunca** exibir a string crua da Shopify (vem em inglês)
@@ -123,7 +123,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/normalizeCarrinho.ts`_
   - _Requirements: 1.5, 3.12, 5.4_
 
-- [ ] 8. Criar as operações de dados em `lib/shopify/carrinho.ts`
+- [x] 8. Criar as operações de dados em `lib/shopify/carrinho.ts`
   - File: `lib/shopify/carrinho.ts` (novo)
   - `import "server-only"`; `lerCarrinhoPorId`, `criarCarrinhoCom`, `adicionarLinhas`, `atualizarLinhas`, `removerLinhas`, `definirCupons`
   - **Toda** chamada usa `storefrontFetch(..., { semCache: true })`
@@ -134,7 +134,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/client.ts`, `lib/shopify/queriesCarrinho.ts`, `lib/shopify/normalizeCarrinho.ts`_
   - _Requirements: 8.3, 8.4, 10.4_
 
-- [ ] 9. Adicionar `buscarVarianteParaCarrinho` em `lib/shopify/carrinho.ts`
+- [x] 9. Adicionar `buscarVarianteParaCarrinho` em `lib/shopify/carrinho.ts`
   - File: `lib/shopify/carrinho.ts` (continuar da tarefa 8)
   - Buscar produto por handle; escolher a **primeira variante `availableForSale: true`**
   - Nenhuma disponível → sinalizar indisponível (a action vira erro amigável)
