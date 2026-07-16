@@ -1,9 +1,27 @@
 import type { Metadata } from "next"
+import { CarrinhoProvider } from "@/components/loja/CarrinhoProvider"
+import { CarrinhoDrawer } from "@/components/loja/CarrinhoDrawer"
+import { getPaleta } from "@/lib/estilos"
+import type { Layout } from "@/lib/types"
+import homeData from "@/layouts/_home.json"
 import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Ta Hora",
 }
+
+// Paleta do site, resolvida AQUI (Server Component) e passada ao drawer por prop.
+//
+// Por que não deixar o drawer importar `_home.json` sozinho: ele é `"use client"`
+// — o JSON inteiro (9 KB de conteúdo da Home) entraria no bundle de TODA rota,
+// inclusive /catalogo. A paleta são 9 strings; só elas atravessam a fronteira.
+//
+// O drawer precisa disto porque é montado aqui, no root layout, FORA dos dois
+// únicos wrappers de paleta do projeto (PreviewContent e StoreShell). Sem a
+// paleta, ele herdaria o `:root` de fábrica e sairia dourado (#D4A017) num site
+// laranja (#ff8903).
+const layoutDaHome = homeData as unknown as Layout
+const paleta = layoutDaHome.globalSettings?.paleta ?? getPaleta(layoutDaHome.globalSettings?.estilo)
 
 export default function RootLayout({
   children,
@@ -12,7 +30,28 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body style={{ background: "#000000" }}>{children}</body>
+      <body style={{ background: "#000000" }}>
+        {/*
+          ⚠️ A HOME ESTÁTICA DEPENDE DESTE ARQUIVO (Req 9.2).
+          NÃO chame `cookies()`, `headers()` nem Server Action aqui. O
+          `CarrinhoProvider` é "use client" e busca o carrinho num efeito, DEPOIS
+          da montagem — por isso o carrinho existe em toda rota sem tornar
+          nenhuma delas dinâmica.
+
+          Se alguém passar dados de carrinho por prop a partir daqui, `/` e
+          `/sobre-nos` viram `ƒ` (dynamic) SEM ERRO NENHUM: só some o `○` da
+          saída do build. É o modo de falha mais silencioso desta spec.
+
+          Escopo: isto vale para o CARRINHO. A frente do `ProductGrid` da Home por
+          tag vai mover a Home para ISR de propósito — decisão daquela spec, não
+          violação desta. Ver tech.md → "Home estática: o que é regra e o que NÃO é".
+        */}
+        <CarrinhoProvider>
+          {children}
+          {/* Montado UMA vez, acima de tudo — o drawer é global. */}
+          <CarrinhoDrawer paleta={paleta} />
+        </CarrinhoProvider>
+      </body>
     </html>
   )
 }

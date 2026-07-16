@@ -87,6 +87,20 @@ export interface CupomAplicado {
 }
 
 /**
+ * Um desconto ativo no carrinho, agregado por origem — o "você economizou".
+ *
+ * Vem de `lines[].discountAllocations`, somando as alocações da MESMA origem
+ * entre as linhas. Ver a nota "Exceção declarada à regra de aritmética" abaixo.
+ */
+export interface DescontoAplicado {
+  /** Código do cupom (`CartCodeDiscountAllocation`). `null` = desconto automático. */
+  codigo: string | null
+  /** Rótulo do desconto automático (`CartAutomaticDiscountAllocation`). */
+  titulo: string | null
+  valor:  FormattedPrice
+}
+
+/**
  * Carrinho normalizado.
  *
  * **NÃO contém o `id`** — ele fica no cookie `httpOnly` e o servidor é quem sabe
@@ -106,10 +120,19 @@ export interface Carrinho {
   checkoutUrl: string
   /** `cart.totalQuantity` — o contador da navbar. */
   totalItens:  number
-  /** `cost.subtotalAmount` */
+  /**
+   * Subtotal **BRUTO**, antes dos descontos — soma de `line.cost.subtotalAmount`.
+   *
+   * ⚠️ NÃO é `cart.cost.subtotalAmount`. Medido na loja: com um cupom de 10%,
+   * `cart.cost.subtotalAmount` já vem LÍQUIDO (1440), igual ao total. Exibi-lo
+   * como "Subtotal" acima de um "Desconto −160" e um "Total 1440" produziria uma
+   * coluna que não fecha (1440 − 160 ≠ 1440). O bruto é o que faz a conta ler.
+   */
   subtotal:    FormattedPrice
-  /** `cost.totalAmount` */
+  /** `cost.totalAmount` — **o valor cobrado**, sempre da Shopify, nunca derivado. */
   total:       FormattedPrice
+  /** Descontos ativos, agregados por origem. Vazio = nenhum desconto. */
+  descontos:   DescontoAplicado[]
   linhas:      LinhaCarrinho[]
   /** Só os `applicable: true` — código rejeitado não aparece como aplicado. */
   cupons:      CupomAplicado[]

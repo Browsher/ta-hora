@@ -192,12 +192,35 @@ export function CarrinhoDrawer({ paleta }: { paleta: Paleta | null }) {
                 >
                   <CupomForm />
 
-                  {/* Totais — vêm PRONTOS da Shopify. Nada é somado aqui. */}
+                  {/*
+                    Totais. O TOTAL é `cost.totalAmount` da Shopify, intocado — é
+                    o valor cobrado. O subtotal é o BRUTO (antes do desconto) e a
+                    linha de desconto é agregada das alocações das linhas; as duas
+                    só existem quando `bruto − desconto === total` confere na
+                    normalização. Ver a exceção declarada em normalizeCarrinho.ts.
+                  */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--cor-texto-secundario)" }}>
                       <span>Subtotal</span>
                       <span>{carrinho.subtotal.currency} {carrinho.subtotal.price}</span>
                     </div>
+
+                    {/* "Você economizou" — uma linha por cupom/desconto ativo */}
+                    {carrinho.descontos.map((d, i) => (
+                      <div
+                        key={d.codigo ?? d.titulo ?? i}
+                        style={{
+                          display: "flex", justifyContent: "space-between",
+                          fontSize: 13, fontWeight: 600, color: "var(--cor-destaque)",
+                        }}
+                      >
+                        <span>
+                          Desconto{d.codigo ? ` (${d.codigo})` : d.titulo ? ` (${d.titulo})` : ""}
+                        </span>
+                        <span>− {d.valor.currency} {d.valor.price}</span>
+                      </div>
+                    ))}
+
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                       <span style={{ fontSize: 14, fontWeight: 700, color: "var(--cor-texto)" }}>Total</span>
                       <span style={{ fontSize: 20, fontWeight: 800, color: "var(--cor-texto)" }}>

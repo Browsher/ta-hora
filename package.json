@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "verificar:variantes": "node --env-file=.env.local scripts/verificar-variantes.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

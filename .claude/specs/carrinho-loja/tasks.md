@@ -289,7 +289,7 @@ de arquivo explícitos.
 
 ### Bloco 5 — Integração
 
-- [ ] 22. Montar `CarrinhoProvider` + `CarrinhoDrawer` em `app/layout.tsx`
+- [x] 22. Montar `CarrinhoProvider` + `CarrinhoDrawer` em `app/layout.tsx`
   - File: `app/layout.tsx` (modificar)
   - Envolver `{children}` com o provider; montar o drawer **uma vez**
   - Resolver a paleta aqui (server) — `globalSettings.paleta ?? getPaleta(estilo)` de `_home.json` — e passá-la ao drawer **por prop** (tarefa 20a)
@@ -298,7 +298,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/CarrinhoProvider.tsx`, `components/loja/CarrinhoDrawer.tsx`, `lib/estilos.ts`, `layouts/_home.json`_
   - _Requirements: 4.5, 9.2_
 
-- [ ] 22b. **Verificar imediatamente que a Home continua `○ (Static)`** (o risco silencioso da 22)
+- [x] 22b. **Verificar imediatamente que a Home continua `○ (Static)`** (o risco silencioso da 22)
   - File: nenhum (verificação) — roda **logo após a 22**, não no fim do plano
   - `npm run build` e conferir na saída: **`/` e `/sobre-nos` com `○ (Static)`**; `/catalogo` e `/produtos/[handle]` com ISR 300s
   - **Falha da verificação = `/` ou `/sobre-nos` aparecerem como `ƒ` (Dynamic).** Se isso acontecer, algo em `app/layout.tsx` ou no `CarrinhoProvider` está lendo `cookies()`/`headers()` no servidor — corrigir **antes** de seguir
@@ -308,7 +308,7 @@ de arquivo explícitos.
   - _Leverage: `app/layout.tsx`, `app/page.tsx`_
   - _Requirements: 4.5, 9.2_
 
-- [ ] 23. Adicionar `IconeCarrinho` na `components/sections/Navbar/Navbar.tsx`
+- [x] 23. Adicionar `IconeCarrinho` na `components/sections/Navbar/Navbar.tsx`
   - File: `components/sections/Navbar/Navbar.tsx` (modificar)
   - Inserir no container de ações — o `div` com `marginLeft: "auto"` (`Navbar.tsx:183`) —, **sem prop nova obrigatória**
   - **Puramente aditivo:** preservar `NavbarProps` (`{ type?, accentColor?, content?, [key: string]: unknown }`), o contrato do `PreviewContent` e todos os links do JSON (`content.link1..6` + `linkCount`, inclusive "Catálogo" → `/catalogo`). Nenhum JSON precisa migrar (Req 9.4)
@@ -318,7 +318,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/IconeCarrinho.tsx`, `components/sections/Navbar/Navbar.tsx`, `components/loja/StoreShell.tsx`_
   - _Requirements: 3.2, 4.1, 4.6, 9.1, 9.4, 9.5_
 
-- [ ] 24. Trocar o placeholder por `BotaoAdicionar` e **remover** o arquivo antigo
+- [x] 24. Trocar o placeholder por `BotaoAdicionar` e **remover** o arquivo antigo
   - Files: `app/produtos/[handle]/page.tsx` (modificar), `components/loja/AddToCartPlaceholder.tsx` (**deletar**)
   - Passar o `handle` da rota ao `BotaoAdicionar`
   - Conferir que nenhum import órfão do placeholder restou
@@ -328,7 +328,7 @@ de arquivo explícitos.
 
 ### Bloco 6 — Salvaguarda e documentação
 
-- [ ] 25. Criar `scripts/verificar-variantes.mjs` e o script npm
+- [x] 25. Criar `scripts/verificar-variantes.mjs` e o script npm
   - Files: `scripts/verificar-variantes.mjs` (novo), `package.json` (modificar)
   - Consultar os produtos (paginando — não parar no primeiro lote) e **falhar (exit ≠ 0) se algum tiver > 1 variante**, nomeando os handles
   - **Contar variantes**, nunca `options` (hoje os produtos têm 1 variante e mantêm a opção `Cor` — checar `options` daria falso positivo imediato)
@@ -377,7 +377,7 @@ de arquivo explícitos.
   - _Leverage: árvore real do projeto_
   - _Requirements: 11.10, 11.11_
 
-- [ ] 27c. Documentar `verificar:variantes` no `README.md`
+- [x] 27c. Documentar `verificar:variantes` no `README.md`
   - File: `README.md` (modificar)
   - Adicionar o comando, o que ele prova (premissa "catálogo sem variantes") e quando rodar (**antes de publicar mudanças de catálogo**)
   - Registrar que ele **não** está no `npm run build` de propósito — o Req 8.6 exige build sem `.env.local`
@@ -388,7 +388,7 @@ de arquivo explícitos.
 
 ### Bloco 7 — Verificação (DoD: build + manual)
 
-- [ ] 28. Revalidar TODAS as operações do carrinho via Dev MCP contra 2026-01
+- [x] 28. Revalidar TODAS as operações do carrinho via Dev MCP contra 2026-01
   - File: nenhum (verificação) — usar `lib/shopify/queriesCarrinho.ts` e `queries.ts` como fonte
   - Extrair as queries/mutations **como ficaram no código** e validar com `mcp__shopify-dev-mcp__validate_graphql_codeblocks` (`api: storefront-graphql`, `version: 2026-01`)
   - Conferir: `warnings` em toda mutation; `$discountCodes: [String!]!`; nenhum campo depreciado; `... on ProductVariant`; **`product(handle:)` e não `productByHandle`** (que gera aviso de depreciação)
@@ -396,7 +396,7 @@ de arquivo explícitos.
   - Purpose: DoD do Req 10 — o schema, não a memória, é a fonte da verdade
   - _Requirements: 10.1, 10.2, 10.3, 10.5, 10.6_
 
-- [ ] 29. Verificar build (com e SEM `.env.local`), tipos, salvaguarda e não-vazamento
+- [x] 29. Verificar build (com e SEM `.env.local`), tipos, salvaguarda e não-vazamento
   - File: nenhum (verificação)
   - `npx tsc --noEmit` limpo; `npm run build` limpo
   - `npm run build` **sem `.env.local`** deve passar (fazer backup e restaurar; conferir checksum)
@@ -407,7 +407,7 @@ de arquivo explícitos.
   - Purpose: DoD — build limpo, token não vaza, regime das rotas intacto, salvaguarda de fato executada
   - _Requirements: 1.8, 8.1, 8.4a, 8.6, 9.1, 9.2, 9.3_
 
-- [ ] 30. 🧑 **PORTÃO HUMANO** — verificação manual dos fluxos do drawer (`npm run dev`)
+- [x] 30. 🧑 **PORTÃO HUMANO** — verificação manual dos fluxos do drawer (`npm run dev`)
   - File: nenhum (verificação). **Não é tarefa de agente:** exige credenciais reais e olho humano
   - Adicionar produto → drawer abre; contador = 1
   - Adicionar o **mesmo** produto → **1 linha, quantidade 2** (a Shopify mescla)
@@ -421,7 +421,7 @@ de arquivo explícitos.
   - Purpose: DoD — aceitação dos comportamentos que só aparecem em runtime
   - _Requirements: 1.4, 1.5, 3.2, 3.8, 3.12, 4.1, 5.4, 6.3_
 
-- [ ] 31. 🧑 **PORTÃO HUMANO** — persistência, degradação e checkout real
+- [x] 31. 🧑 **PORTÃO HUMANO** — persistência, degradação e checkout real
   - File: nenhum (verificação). **Não é tarefa de agente:** o último item exige uma **compra real**
   - Fechar e reabrir o navegador → carrinho persiste (cookie 7 dias)
   - DevTools → `document.cookie` **não** mostra `carrinho_id` (prova de `httpOnly`, Req 2.4). *Escopo: isso prova que a **persistência** é ilegível por JS — **não** que o ID é secreto. O ID está no `checkoutUrl`, no DOM (`<a href>`), por design. Ver design §Fronteira honesta*

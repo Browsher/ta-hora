@@ -51,10 +51,22 @@ const CAMPOS_DO_CARRINHO = /* GraphQL */ `
         quantity
         cost {
           amountPerQuantity { amount currencyCode }
+          # BRUTO da linha (antes dos descontos) — medido: com TESTE10 a linha
+          # tem subtotalAmount 1600 e totalAmount 1440. É a ÚNICA origem de
+          # "quanto era antes" que a Shopify oferece na 2026-01.
+          subtotalAmount    { amount currencyCode }
           totalAmount       { amount currencyCode }
         }
+        # Campo VIVO — e o único lugar onde o desconto do cupom aparece.
+        # Cart.discountAllocations é depreciado E devolve [] (medido na loja).
+        # A própria depreciação manda usar lines[].discountAllocations com o
+        # argumento lineLevelOnly: false — que NÃO EXISTE na 2026-01 (o Dev MCP
+        # rejeita); a orientação é para uma versão futura. Aqui, sem argumento, a
+        # alocação do cupom de pedido JÁ vem apontada na linha (verificado).
         discountAllocations {
           discountedAmount { amount currencyCode }
+          ... on CartCodeDiscountAllocation { code }
+          ... on CartAutomaticDiscountAllocation { title }
         }
         merchandise {
           ... on ProductVariant {

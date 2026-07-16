@@ -7,6 +7,7 @@ import { useSectionEffects } from "@/lib/SectionEffectsContext"
 import { useEffectsMode } from "@/lib/EffectsModeContext"
 import { useIsMobile } from "@/lib/useIsMobile"
 import { CtaButton } from "@/components/ui/CtaButton"
+import { IconeCarrinho } from "@/components/loja/IconeCarrinho"
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 
@@ -179,8 +180,23 @@ export function Navbar({
           </div>
         )}
 
-        {/* Right side: CTA + hamburger */}
+        {/* Right side: carrinho + CTA + hamburger */}
         <div style={{ marginLeft: "auto", display: "flex", gap: 12, alignItems: "center", flexShrink: 0 }}>
+          {/*
+            Ícone do carrinho — ADITIVO: nenhuma prop nova, o contrato
+            type/variation/content/accentColor do PreviewContent segue intacto e
+            os JSONs não precisam migrar.
+
+            ⚠️ FORA do gate `!isMobile`, de propósito. No mobile esta navbar
+            esconde o CTA e mostra só o hambúrguer; se o ícone entrasse junto do
+            CtaButton, o carrinho ficaria INACESSÍVEL no celular — e o build não
+            pegaria isso. O ícone é a única entrada do carrinho em toda página.
+
+            Fora do CarrinhoProvider ele renderiza `null`, então a Navbar continua
+            montável isolada (como StoreShell e PreviewContent já assumem).
+          */}
+          <IconeCarrinho accentColor={accentColor} />
+
           {!isMobile && ctaVisible && (
             <CtaButton
               label={c.ctaLabel}

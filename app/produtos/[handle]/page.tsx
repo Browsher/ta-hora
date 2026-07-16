@@ -4,7 +4,7 @@ import { getProducts, getProductByHandle } from "@/lib/shopify/products"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { ProductGallery } from "@/components/loja/ProductGallery"
 import { ProductSpecs } from "@/components/loja/ProductSpecs"
-import { AddToCartPlaceholder } from "@/components/loja/AddToCartPlaceholder"
+import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
 import type { Product } from "@/lib/shopify/types"
@@ -77,7 +77,9 @@ export default async function ProdutoPage(
 
           <PriceTag price={produto.price.price} currency={produto.price.currency} size="grande" />
 
-          <AddToCartPlaceholder />
+          {/* O handle da rota — nunca um merchandiseId: o servidor resolve a
+              variante (o cliente não escolhe o que vai pro carrinho). */}
+          <BotaoAdicionar handle={handle} />
 
           {produto.descriptionHtml && (
             <div
