@@ -145,7 +145,7 @@ de arquivo explícitos.
 
 ### Bloco 3 — Fronteira cliente/servidor (Server Actions + cookie)
 
-- [ ] 10. Criar os helpers de cookie em `lib/carrinho/cookie.ts`
+- [x] 10. Criar os helpers de cookie em `lib/carrinho/cookie.ts`
   - File: `lib/carrinho/cookie.ts` (novo)
   - `import "server-only"`; `lerIdDoCarrinho`, `gravarIdDoCarrinho`, `descartarIdDoCarrinho`
   - **`cookies()` é assíncrono no Next 15/16 — `await cookies()`**
@@ -156,7 +156,7 @@ de arquivo explícitos.
   - _Leverage: `next/headers` (`cookies()`)_
   - _Requirements: 2.1, 2.4_
 
-- [ ] 11. Criar `lerCarrinho` e `adicionarItem` em `lib/carrinho/acoes.ts`
+- [x] 11. Criar `lerCarrinho` e `adicionarItem` em `lib/carrinho/acoes.ts`
   - File: `lib/carrinho/acoes.ts` (novo)
   - `"use server"` no topo
   - `lerCarrinho()`: **curto-circuita sem cookie** (retorna `{ carrinho: null }` sem tocar a Shopify — toda visita à Home chama isto)
@@ -167,7 +167,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/carrinho.ts`, `lib/carrinho/cookie.ts`_
   - _Requirements: 1.1, 1.2, 1.3, 2.2, 2.3, 2.6, 8.2_
 
-- [ ] 12. Adicionar `atualizarQuantidade` e `removerLinha` em `lib/carrinho/acoes.ts`
+- [x] 12. Adicionar `atualizarQuantidade` e `removerLinha` em `lib/carrinho/acoes.ts`
   - File: `lib/carrinho/acoes.ts` (continuar da tarefa 11)
   - `atualizarQuantidade(lineId, quantidade)`; quantidade 0 → remover a linha
   - `removerLinha(lineId)`
@@ -176,7 +176,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/carrinho.ts`, `lib/carrinho/cookie.ts`_
   - _Requirements: 3.4, 3.5, 3.6_
 
-- [ ] 13. Adicionar `aplicarCupom` e `removerCupom` em `lib/carrinho/acoes.ts`
+- [x] 13. Adicionar `aplicarCupom` e `removerCupom` em `lib/carrinho/acoes.ts`
   - File: `lib/carrinho/acoes.ts` (continuar da tarefa 12)
   - A mutation **substitui** a lista: aplicar → enviar `[...atuais, novo]`; remover → enviar a lista sem ele (vazia → `[]`, **nunca `null`**)
   - **Purga:** se o código voltar `applicable: false`, reenviar a lista sem ele para o carrinho não ficar sujo, e devolver o aviso "Cupom inválido"
@@ -186,7 +186,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/carrinho.ts`, `lib/carrinho/cookie.ts`_
   - _Requirements: 5.2, 5.3, 5.4, 5.5, 5.6_
 
-- [ ] 14. Adicionar tratamento de erro nas actions em `lib/carrinho/acoes.ts`
+- [x] 14. Adicionar tratamento de erro nas actions em `lib/carrinho/acoes.ts`
   - File: `lib/carrinho/acoes.ts` (continuar da tarefa 13)
   - Envolver as chamadas: falha de rede/Shopify/env → `{ carrinho: null, erro: "<amigável>" }`
   - **Nenhuma mensagem interpola token ou endpoint** (Req 8.5)

@@ -64,6 +64,21 @@ interface RespostaDeVariante {
 const SEM_CARRINHO: ResultadoCarrinho = { carrinho: null, aviso: null, erro: null }
 
 /**
+ * Sentinela de `userErrors`.
+ *
+ * NÃO é uma mensagem: é um marcador. `userErrors` vem em inglês, da Shopify, e a
+ * string crua nunca pode chegar ao cliente — mas esta camada também não é a que
+ * escreve copy. Então ela só sinaliza QUE houve erro, e a action troca por texto
+ * pt-BR (tarefa 14).
+ *
+ * A action traduz APENAS este valor exato — nunca "qualquer `erro` não-nulo".
+ * A diferença importa: as actions têm mensagens próprias e específicas (ex.:
+ * "Produto indisponível no momento.", Req 1.6), e uma tradução cega as
+ * atropelaria, transformando um diagnóstico útil em "tente novamente".
+ */
+export const ERRO_DA_SHOPIFY = "@erro-da-shopify"
+
+/**
  * Payload cru → `ResultadoCarrinho`.
  *
  * A ordem importa: `userErrors` primeiro (falha de verdade), depois `warnings`
@@ -75,10 +90,7 @@ function paraResultado(payload: RespostaDeMutation): ResultadoCarrinho {
   return {
     carrinho: payload.cart ? normalizeCarrinho(payload.cart) : null,
     aviso:    traduzirAvisos(payload.warnings),
-    // `userErrors` vem em inglês, da Shopify. Não repassamos a string crua ao
-    // cliente; quem traduz para mensagem amigável é a action (Bloco 3, tarefa
-    // 14). Aqui só sinalizamos QUE houve erro.
-    erro:     erro ? "erro-da-shopify" : null,
+    erro:     erro ? ERRO_DA_SHOPIFY : null,
   }
 }
 
