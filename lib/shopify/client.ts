@@ -7,7 +7,7 @@ import "server-only"
 // O token vem SEMPRE de `process.env` (nunca embutido no código). Nenhuma
 // mensagem de erro interpola o token.
 
-const DEFAULT_API_VERSION = "2025-01"
+const DEFAULT_API_VERSION = "2026-01"
 
 export interface StorefrontFetchOptions {
   /** Janela de revalidação do cache (ISR), em segundos. Default 300 (5 min). */
