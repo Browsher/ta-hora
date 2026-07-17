@@ -49,7 +49,7 @@ de arquivo explícitos.
 
 ### Bloco 1 — O fragmento (o único risco real) e sua prova
 
-- [ ] 1. Adicionar `tags` ao fragmento em `lib/shopify/queriesCarrinho.ts`
+- [x] 1. Adicionar `tags` ao fragmento em `lib/shopify/queriesCarrinho.ts`
   - File: `lib/shopify/queriesCarrinho.ts` (modificar — **linha 78**)
   - Trocar `product { title handle }` por `product { title handle tags }`
   - **É só isto.** Nenhum argumento novo, nenhum tipo novo, nenhuma conexão nova
@@ -63,7 +63,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/queriesCarrinho.ts`_
   - _Requirements: 1.4, 9.5_
 
-- [ ] 2. Propagar `tags` nos tipos e na normalização
+- [x] 2. Propagar `tags` nos tipos e na normalização
   - Files: `lib/shopify/types.ts` (modificar), `lib/shopify/normalizeCarrinho.ts` (modificar)
   - `types.ts`: `LinhaCarrinho` ganha `tags: string[]` — documentar que é o que
     permite o gatilho sem rede
@@ -75,7 +75,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/normalizeCarrinho.ts` (padrão de `normalizeLinha`)_
   - _Requirements: 1.4_
 
-- [ ] 3. Criar as constantes de tag em `lib/shopify/tags.ts`
+- [x] 3. Criar as constantes de tag em `lib/shopify/tags.ts`
   - File: `lib/shopify/tags.ts` (novo)
   - `export const TAG_CAMERA = "camera"` e `export const TAG_ACESSORIO = "acessorio"`
   - **SEM `server-only`** — o servidor usa na query, o cliente no gatilho.
@@ -86,7 +86,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/types.ts` (precedente de módulo compartilhado)_
   - _Requirements: 1.4, 2.1_
 
-- [ ] 4a. Criar `scripts/extrair-graphql.mjs` — montar os documentos como o runtime monta
+- [x] 4a. Criar `scripts/extrair-graphql.mjs` — montar os documentos como o runtime monta
   - File: `scripts/extrair-graphql.mjs` (novo)
   - Ler `lib/shopify/queriesCarrinho.ts` e `queries.ts`; extrair os template
     literals `/* GraphQL */` e **resolver as DUAS interpolações**:
@@ -105,7 +105,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/queriesCarrinho.ts` (estrutura dos literais)_
   - _Requirements: 10.1_
 
-- [ ] 4b. 🔴 **PROVAR QUE O CARRINHO NÃO QUEBROU** — revalidar as 6 operações
+- [x] 4b. 🔴 **PROVAR QUE O CARRINHO NÃO QUEBROU** — revalidar as 6 operações
   - File: nenhum (verificação) — **a tarefa mais importante do plano**
   - Rodar o extrator (4a) e validar as **6** operações com
     `mcp__shopify-dev-mcp__validate_graphql_codeblocks`

@@ -68,6 +68,19 @@ export interface LinhaCarrinho {
   titulo:        string
   /** Link de volta ao produto (`/produtos/[handle]`). */
   handle:        string
+  /**
+   * Tags do produto (`merchandise.product.tags`).
+   *
+   * É o que permite avaliar o gatilho da sugestão de acessórios **sem rede**: o
+   * cliente já recebe a linha, então saber se há uma câmera no carrinho custa
+   * zero chamadas. Sem isto, seria preciso buscar as câmeras só para descobrir
+   * se vale a pena buscar os acessórios — galinha e ovo.
+   *
+   * **Nunca `undefined`:** o schema declara `Product.tags` como `[String!]!`
+   * (verificado) e `normalizeLinha` — o único construtor de `LinhaCarrinho` —
+   * aplica `?? []`. É o que segura o `.includes()` do gatilho.
+   */
+  tags:          string[]
   imagem:        ProductImage | null
   /** `cost.amountPerQuantity` — VEM da Shopify. NUNCA `precoTotal / quantidade`. */
   precoUnitario: FormattedPrice

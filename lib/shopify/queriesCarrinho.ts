@@ -75,7 +75,20 @@ const CAMPOS_DO_CARRINHO = /* GraphQL */ `
             availableForSale
             quantityAvailable
             image { url altText width height }
-            product { title handle }
+            # tags alimenta a sugestão de acessórios: com elas na linha, o
+            # cliente sabe SE HÁ CÂMERA NO CARRINHO sem nenhuma chamada de rede
+            # — é o que permite não buscar acessórios quando não há gatilho.
+            #
+            # É um campo ESCALAR ([String!]! — sem argumento, sem subseleção) num
+            # product que já era selecionado. Por isso foi seguro tocar aqui: o
+            # fragmento é compartilhado pela CARRINHO_QUERY e pelas 5 mutations —
+            # as 6 operações do carrinho. Não adicione nada além de escalares aqui
+            # sem revalidar as 6 (ver scripts/extrair-graphql.mjs).
+            #
+            # (Sem crases neste comentário: ele vive DENTRO de um template
+            # literal delimitado por crase — uma crase aqui encerra a string e
+            # quebra o arquivo. Já aconteceu duas vezes neste mesmo arquivo.)
+            product { title handle tags }
           }
         }
       }

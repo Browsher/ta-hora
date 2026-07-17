@@ -33,7 +33,8 @@ interface RawVariante {
   /** `null` quando falta o scope de inventário — ver Req 10.7. */
   quantityAvailable: number | null
   image:             RawImagemCarrinho | null
-  product:           { title: string; handle: string }
+  /** `tags` é `[String!]!` no schema — nunca null quando `product` é selecionado. */
+  product:           { title: string; handle: string; tags: string[] }
 }
 
 interface RawAlocacaoDeDesconto {
@@ -137,6 +138,12 @@ function normalizeLinha(raw: RawLinha): LinhaCarrinho {
     estoqueMaximo: v.quantityAvailable ?? null,
     titulo:        v.product?.title ?? "Produto",
     handle:        v.product?.handle ?? "",
+    // `?? []` é a ÚNICA guarda do gatilho: o provider faz
+    // `l.tags.includes(TAG_CAMERA)`, e `undefined.includes()` derrubaria o
+    // drawer inteiro. `merchandise` é `Partial<RawVariante>` porque só
+    // selecionamos `... on ProductVariant` — se um dia vier outro tipo de
+    // merchandise, `product` (e `tags`) somem. Esta linha é o que segura isso.
+    tags:          v.product?.tags ?? [],
     imagem:        normalizeImagemCarrinho(v.image),
     // Preço unitário VEM da Shopify (`amountPerQuantity`). Jamais
     // `totalAmount / quantidade` — ver a regra no topo do arquivo.
