@@ -10,12 +10,13 @@ import {
   buscarVarianteParaCarrinho,
   ERRO_DA_SHOPIFY,
 } from "@/lib/shopify/carrinho"
+import { buscarAcessoriosPorTag } from "@/lib/shopify/acessorios"
 import {
   lerIdDoCarrinho,
   gravarIdDoCarrinho,
   descartarIdDoCarrinho,
 } from "./cookie"
-import type { ResultadoCarrinho } from "@/lib/shopify/types"
+import type { ResultadoCarrinho, ProductCard } from "@/lib/shopify/types"
 
 // A FRONTEIRA cliente/servidor. Esta é a ÚNICA superfície que o cliente toca.
 //
@@ -235,4 +236,37 @@ export async function removerCupom(codigo: string): Promise<ResultadoCarrinho> {
 async function cuponsAtuais(cartId: string): Promise<string[]> {
   const r = await lerCarrinhoPorId(cartId)
   return r.carrinho?.cupons.map((c) => c.codigo) ?? []
+}
+
+// ─── Acessórios sugeridos (tarefa 9) ──────────────────────────────────────────
+
+/**
+ * Os acessórios da loja, disponíveis para venda.
+ *
+ * **SEM ARGUMENTOS, de propósito.** É a garantia — na assinatura — de que o
+ * cliente não escolhe tag, query, endpoint nem versão de API. A tag vem de
+ * `lib/shopify/tags.ts` e a busca é montada no servidor. Um parâmetro `tag`
+ * aqui transformaria a fronteira fechada num proxy de busca.
+ *
+ * **NUNCA lança: falha vira `[]`.** Sem carrinho, sem env, Shopify fora, rede
+ * caindo — tudo devolve lista vazia, e o cliente simplesmente não vê a seção. A
+ * sugestão é um extra comercial; ela não pode derrubar a compra, que é o caminho
+ * da receita. Mesmo princípio do `lerCarrinho()` acima.
+ *
+ * **Não lê o cookie e não toca o carrinho** — é leitura de catálogo. Mora neste
+ * arquivo porque **esta é a fronteira do cliente**: criar um segundo módulo de
+ * actions para uma função dividiria a superfície sem ganho nenhum.
+ *
+ * Quem decide QUANDO chamar é o `CarrinhoProvider`: só quando há uma câmera no
+ * carrinho, e uma vez por carga de página. Ele consegue saber disso sem rede
+ * porque o fragmento do carrinho traz `tags` na linha.
+ */
+export async function buscarAcessorios(): Promise<ProductCard[]> {
+  try {
+    return await buscarAcessoriosPorTag()
+  } catch {
+    // Deliberadamente sem `console.error(e)`: a mensagem de `storefrontFetch`
+    // inclui o endpoint. Nada daqui vai para o cliente nem para o log.
+    return []
+  }
 }

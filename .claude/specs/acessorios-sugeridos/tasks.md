@@ -204,7 +204,7 @@ de arquivo explícitos.
 
 ### Bloco 4 — Fronteira (Server Action)
 
-- [ ] 9. Adicionar `buscarAcessorios()` em `lib/carrinho/acoes.ts`
+- [x] 9. Adicionar `buscarAcessorios()` em `lib/carrinho/acoes.ts`
   - File: `lib/carrinho/acoes.ts` (modificar)
   - `"use server"` já está no topo; **sem argumentos** — o cliente não escolhe
     tag, query, endpoint nem versão (Req 8.3)
