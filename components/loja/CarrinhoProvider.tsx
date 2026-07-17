@@ -87,6 +87,12 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   // declarado fora de escopo (Req 4.4).
   const fila = useRef<Promise<unknown>>(Promise.resolve())
 
+  // Espelho de `carrinho` num ref, para o handler de `pageshow` ler o valor
+  // ATUAL sem depender do closure (que congelaria no valor do 1º render). Ver o
+  // uso na volta do bfcache, abaixo.
+  const carrinhoRef = useRef<Carrinho | null>(null)
+  carrinhoRef.current = carrinho
+
   /**
    * Aplica um resultado ao estado.
    *
@@ -143,8 +149,20 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     // Voltar do checkout é tipicamente o botão Back, e o bfcache restaura a
     // página SEM re-executar efeitos — exatamente o cenário do carrinho fantasma
     // (Req 2.5/2.6). `pageshow` com `persisted` é o único sinal desse caminho.
+    //
+    // ⚠️ NÃO basta `sincronizar()` aqui. A página volta congelada do bfcache e a
+    // Server Action que a `sincronizar` dispara não settla nessa página
+    // descongelada — fica PENDENTE, e como tudo passa pela mesma `fila` serial,
+    // planta um elo eterno que TRAVA os botões (+/−/remover/finalizar) sem erro
+    // no console. F5 cura porque é um mount limpo. Então, quando há carrinho em
+    // memória, fazemos o equivalente ao F5: um reload. Escopado por
+    // `carrinhoRef.current` para NÃO recarregar a Home estática (nem qualquer
+    // página sem carrinho) numa volta comum — ali `sincronizar()` basta e é
+    // inócuo.
     const aoRestaurar = (e: PageTransitionEvent) => {
-      if (e.persisted) sincronizar()
+      if (!e.persisted) return
+      if (carrinhoRef.current) window.location.reload()
+      else sincronizar()
     }
     window.addEventListener("pageshow", aoRestaurar)
     return () => window.removeEventListener("pageshow", aoRestaurar)
