@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "verificar:variantes": "node --env-file=.env.local scripts/verificar-variantes.mjs",
-    "verificar:tags": "node --env-file=.env.local scripts/verificar-tags.mjs"
+    "verificar:tags": "node --env-file=.env.local scripts/verificar-tags.mjs",
+    "verificar:descricao": "node --env-file=.env.local scripts/verificar-descricao.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -16,6 +17,7 @@
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "sanitize-html": "^2.17.6",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.6.0"
   },
@@ -24,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
