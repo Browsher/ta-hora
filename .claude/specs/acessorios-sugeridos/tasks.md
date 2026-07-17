@@ -378,7 +378,7 @@ de arquivo explícitos.
   - Purpose: DoD
   - _Requirements: 8.1, 8.2, 8.5, 9.2, 9.3, 9.4, 9.6_
 
-- [ ] 18. 🧑 **PORTÃO HUMANO** — os fluxos da seção (`npm run dev`)
+- [x] 18. 🧑 **PORTÃO HUMANO** — os fluxos da seção (`npm run dev`)
   - File: nenhum (verificação). **Não é tarefa de agente**
   - Carrinho com `camera-seguranca-es-p9` → seção **"Você também vai precisar"**
     com os 2 acessórios. *Vão aparecer **câmeras** — são os dados de teste
@@ -405,7 +405,7 @@ de arquivo explícitos.
   - Purpose: DoD — o que só aparece em runtime
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 2.3, 3.1, 3.2, 3.3, 3.4, 4.1, 4.8, 5.1, 6.1, 6.3_
 
-- [ ] 19. 🧑 **PORTÃO HUMANO** — degradação e não-regressão final
+- [x] 19. 🧑 **PORTÃO HUMANO** — degradação e não-regressão final
   - File: nenhum (verificação). **Não é tarefa de agente**
   - Renomear `.env.local` → site sobe, **sem seção e sem erro**; carrinho degrada
     como já degradava; Home e Sobre Nós intactas (restaurar depois)
