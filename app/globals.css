@@ -351,9 +351,14 @@ body {
   }
 }
 
-/* Página SEM descrição: 1 coluna estreita e centrada (sem coluna fantasma). */
+/* Página SEM descrição: o MESMO bloco [galeria | info] do caso com descrição,
+   centralizado — sem a coluna de imagens à direita. A galeria NÃO encolhe.
+   A largura de conteúdo tem de bater com a coluna esquerda do grid (~720px): o
+   article tem padding horizontal de até 64px de cada lado, então 720 + 128 = 848
+   de max-width entrega ~720px de conteúdo, e o sub-grid reproduz a galeria de
+   456px idêntica. */
 .produto-unico {
-  max-width:   560px;
+  max-width:   848px;
   margin-inline: auto;
 }
 
