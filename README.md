@@ -32,11 +32,19 @@ npm start       # roda o build de produção localmente
 O build **passa sem `.env.local`**: as rotas da loja degradam para um estado de
 erro amigável em runtime, e o carrinho fica sem contador — mas o site sobe.
 
-## Verificar variantes (rodar antes de publicar mudanças de catálogo)
+## Checks de catálogo (rodar antes de publicar mudanças de produto)
+
+Nenhum dos dois está no `npm run build` de propósito: o build precisa passar sem
+`.env.local`, e ambos precisam do token. São checagens de **dados**, não de
+código — rode-as à mão ao mexer no catálogo.
+
+### Variantes
 
 ```bash
 npm run verificar:variantes
 ```
+
+Exit `0` = ok. Exit `1` = **a premissa caiu, resolva antes de publicar.**
 
 Exit `0` = ok. Exit `1` = **a premissa caiu, resolva antes de publicar.**
 
@@ -45,8 +53,23 @@ O site **não tem seletor de variante**, porque hoje todo produto tem exatamente
 a primeira disponível — ou seja, entregaria a **cor errada, em silêncio**. Este
 check existe para essa premissa cair com barulho.
 
-Ele **não** está no `npm run build` de propósito: o build precisa passar sem
-`.env.local`, e este check precisa do token. Rode-o à mão ao mexer no catálogo.
+### Tags (a sugestão de acessórios)
+
+```bash
+npm run verificar:tags
+```
+
+Exit `0` = há gatilho e há o que sugerir. Exit `1` = **a seção nunca vai
+aparecer.** Ele também **avisa** (sem falhar) sobre produtos publicados **sem tag
+alguma** — quase sempre um cadastro novo em que a etiqueta foi esquecida.
+
+Por que existe: sem as tags, a seção de acessórios simplesmente não renderiza —
+sem erro, sem log. Para quem olha a tela, é **indistinguível de um bug**.
+
+O check conta acessórios **sugeríveis** (com a tag **e** disponíveis), não apenas
+etiquetados: com os acessórios todos esgotados, a seção também some, e um check
+que só olhasse a etiqueta ficaria verde no exato estado que ele existe para
+impedir.
 
 ## O carrinho
 
@@ -60,6 +83,37 @@ Ele **não** está no `npm run build` de propósito: o build precisa passar sem
   vêm todos da API. O site não tem regra nem lista de cupons.
 - **Cupons:** cadastre em Descontos, no admin da Shopify. Código inválido devolve
   "Cupom inválido" e é purgado do carrinho.
+
+## Acessórios sugeridos (no drawer)
+
+Quando o carrinho tem uma **câmera**, o drawer mostra a seção **"Você também vai
+precisar"** com os acessórios da loja e um botão para adicioná-los em um clique.
+
+**Tudo é decidido por tag na Shopify — nunca no código:**
+
+| Tag | Papel |
+|---|---|
+| `camera` | **Gatilho** — um destes no carrinho faz a seção aparecer |
+| `acessorio` | **Sugerido** — estes são listados na seção |
+
+Tags em **minúsculas, sem acento** (as constantes vivem em `lib/shopify/tags.ts`;
+divergência de grafia faz a seção sumir em silêncio). Para mudar o que é sugerido,
+aplique ou remova a tag no admin — **sem deploy**.
+
+A seção some sozinha quando não há câmera no carrinho, quando todos os acessórios
+já foram adicionados, ou quando a busca falha: ela é um extra comercial e **nunca**
+atrapalha a compra.
+
+> ⚠️ **Estado do catálogo (medido em 2026-07-17):** os produtos etiquetados
+> `acessorio` hoje são `camera-seguranca-q8` e `camera-seguranca-s8` — que são
+> **câmeras**, usadas como **dados de teste** para validar o mecanismo. **As
+> sugestões vão mostrar câmeras; isso é esperado, não bug.** Quando o cabo
+> extensor e o cartão de memória existirem, aplique `acessorio` neles e remova
+> destes — sem tocar em código.
+>
+> Câmeras com a tag `camera` (as que disparam a seção): `camera-seguranca-es-p9`
+> e `camera-de-seguranca-q6`. As demais estão **sem tag** e não disparam nada —
+> `npm run verificar:tags` reporta quais.
 
 ### Notas de comportamento (medidas na loja, não suposições)
 

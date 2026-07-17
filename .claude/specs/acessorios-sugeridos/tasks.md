@@ -131,7 +131,7 @@ de arquivo explícitos.
 
 ### Bloco 2 — Não-regressão do carrinho em produção
 
-- [ ] 5. 🧑 **PORTÃO HUMANO** — o carrinho ainda vende? (`npm run dev`)
+- [x] 5. 🧑 **PORTÃO HUMANO** — o carrinho ainda vende? (`npm run dev`)
   - File: nenhum (verificação). **Não é tarefa de agente:** exige olho humano
   - Adicionar produto → drawer abre, contador = 1
   - Adicionar o mesmo → 1 linha, quantidade 2
@@ -314,7 +314,7 @@ de arquivo explícitos.
 
 ### Bloco 7 — Salvaguarda e documentação
 
-- [ ] 14. Criar `scripts/verificar-tags.mjs` e o script npm
+- [x] 14. Criar `scripts/verificar-tags.mjs` e o script npm
   - Files: `scripts/verificar-tags.mjs` (novo), `package.json` (modificar)
   - **Falha (exit ≠ 0)** se não houver nenhum produto **sugerível** (`acessorio`
     **e** `availableForSale: true`) **ou** nenhum com `camera`
@@ -333,7 +333,7 @@ de arquivo explícitos.
   - _Leverage: `scripts/verificar-variantes.mjs` (copiar a estrutura e o comentário do exitCode), `lib/shopify/tags.ts` (grafia)_
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 10.3_
 
-- [ ] 15. Provar os 3 caminhos do `verificar:tags`
+- [x] 15. Provar os 3 caminhos do `verificar:tags`
   - File: nenhum (verificação)
   - **Estado real** (2 `camera`, 2 `acessorio` disponíveis) → `npm run
     verificar:tags` → **exit 0**
@@ -350,7 +350,7 @@ de arquivo explícitos.
   - Purpose: a salvaguarda de fato sinaliza — nos três caminhos
   - _Requirements: 7.1, 7.4_
 
-- [ ] 16. Documentar a feature e o `verificar:tags` no `README.md`
+- [x] 16. Documentar a feature e o `verificar:tags` no `README.md`
   - File: `README.md` (modificar)
   - Como funciona (tag `camera` = gatilho, `acessorio` = sugerido), que **muda
     pelo admin, sem código**
@@ -365,7 +365,7 @@ de arquivo explícitos.
 
 ### Bloco 8 — Verificação (DoD: build + manual)
 
-- [ ] 17. Verificar build, tipos, fronteira e não-vazamento
+- [x] 17. Verificar build, tipos, fronteira e não-vazamento
   - File: nenhum (verificação)
   - `npx tsc --noEmit` limpo; `npm run build` limpo; **e sem `.env.local`** (fazer
     backup, conferir checksum ao restaurar)
