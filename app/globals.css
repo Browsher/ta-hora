@@ -326,3 +326,43 @@ body {
     animation: none;
   }
 }
+
+/* ─── Página de produto: descrição rica + coluna esquerda sticky ──────────────
+   (spec layout-pagina-produto). Escopado por classe — não toca :root nem base. */
+
+/* Imagens da descrição contidas na coluna: vêm da Shopify SEM width (medido),
+   a 1448px estourariam ~500px de coluna. max-width:100% é contenção, não
+   "forçar largura". */
+.descricao-produto img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Reserva de espaço aproximada contra layout shift: sem width/height no HTML,
+   um aspect-ratio segura o "salto" enquanto a imagem baixa. As imagens medidas
+   do ES-P9 são ~4:3/3:4; 4/3 é reserva honesta (min-height fixo deixava salto).
+   Só quando a <img> não traz width próprio. */
+.descricao-produto img:not([width]) {
+  aspect-ratio: 4 / 3;
+}
+
+.descricao-produto p {
+  margin: 0 0 12px;
+}
+
+/* Sticky condicional: a coluna esquerda (galeria + nome + preço + botão) só
+   "congela" quando há LARGURA de 2 colunas (≥768px) E ALTURA suficiente para ela
+   INTEIRA caber — com a galeria dentro, a esquerda passou a ~800–1000px. Por isso
+   o limiar é 1000px, não menos: abaixo dele o botão "Adicionar" poderia grudar
+   fora da tela. É aproximação CSS-only (sem JS de medição); o 1000px é ajustável
+   na verificação manual.
+   align-self:start é OBRIGATÓRIO — sem ele o item de grid estica e o sticky nunca
+   dispara. */
+@media (min-width: 768px) and (min-height: 1000px) {
+  .produto-coluna-esquerda {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+}
