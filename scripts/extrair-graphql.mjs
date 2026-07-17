@@ -42,8 +42,13 @@ const OPERACOES_DO_CARRINHO = [
   "DEFINIR_CUPONS_MUTATION",
 ]
 
-// Do catálogo: entram para provar NÃO-REGRESSÃO (não deviam mudar nunca).
-const OPERACOES_DO_CATALOGO = [
+// De `queries.ts`. As do catálogo entram para provar NÃO-REGRESSÃO (não deviam
+// mudar nunca); `ACESSORIOS_QUERY` entra porque também precisa ser validada.
+//
+// ⚠️ AO CRIAR UMA QUERY NOVA, ADICIONE-A AQUI. Um documento que este script não
+// conhece não é validado por ninguém — e o silêncio vira "está tudo certo".
+const OPERACOES_DE_QUERIES = [
+  "ACESSORIOS_QUERY",
   "PRODUTO_PARA_CARRINHO_QUERY",
   "PRODUCTS_QUERY",
   "PRODUCT_BY_HANDLE_QUERY",
@@ -73,7 +78,7 @@ function main() {
 
   const docs = {}
   for (const nome of OPERACOES_DO_CARRINHO) docs[nome] = resolver(extrair(qc, `export const ${nome}`))
-  for (const nome of OPERACOES_DO_CATALOGO) docs[nome] = extrair(qs, `export const ${nome}`)
+  for (const nome of OPERACOES_DE_QUERIES) docs[nome] = extrair(qs, `export const ${nome}`)
 
   let falhou = false
   console.log("Documentos montados a partir do código real:\n")

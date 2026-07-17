@@ -43,6 +43,43 @@ export const SPEC_METAFIELD_IDENTIFIERS = SPEC_METAFIELDS.map(
 )
 
 /**
+ * Produtos por tag — usada pela sugestão de acessórios.
+ *
+ * `$query` vem por VARIÁVEL, montada no servidor a partir de `TAG_ACESSORIO`
+ * (`lib/shopify/tags.ts`). O cliente nunca escolhe a busca: a action
+ * `buscarAcessorios()` não tem argumentos.
+ *
+ * **`first: 250` é o TETO da Storefront API** — verificado: `first: 251` responde
+ * *"first cannot exceed 250"*. Não paginamos de propósito: uma tag `acessorio`
+ * com mais de 250 produtos não é catálogo crescendo, é a tag virando categoria —
+ * e aí a feature precisa ser repensada, porque ninguém lê 250 sugestões num
+ * drawer. Paginar fingiria suportar um cenário que a UI não suporta.
+ *
+ * A seleção é exatamente `RawProductCard` + `availableForSale`, para
+ * `normalizeProductCard` funcionar sem adaptador.
+ *
+ * **`availableForSale` NÃO entra na string de busca**, embora
+ * `tag:x AND available_for_sale:true` seja aceito pela API. Motivo: quando testei,
+ * a loja tinha 2 acessórios e 0 esgotados — "filtra certo" e "não filtra nada"
+ * davam o mesmo resultado. Um filtro que não consigo verificar é pior que um
+ * `.filter()` em JS, que qualquer um lê. O filtro está em `acessorios.ts`.
+ */
+export const ACESSORIOS_QUERY = /* GraphQL */ `
+  query Acessorios($query: String!, $first: Int!) {
+    products(first: $first, query: $query) {
+      nodes {
+        id
+        handle
+        title
+        availableForSale
+        featuredImage { url altText width height }
+        priceRange { minVariantPrice { amount currencyCode } }
+      }
+    }
+  }
+`
+
+/**
  * Variantes de um produto — usada só pelo carrinho, para o SERVIDOR resolver o
  * `merchandiseId` a partir do handle (o cliente nunca escolhe a variante).
  *

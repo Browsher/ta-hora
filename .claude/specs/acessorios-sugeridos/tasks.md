@@ -159,7 +159,7 @@ de arquivo explícitos.
 > promessa "impossível empilhar 12 arquivos sobre um carrinho quebrado" viraria
 > só honra.*
 
-- [ ] 6. Adicionar `ACESSORIOS_QUERY` em `lib/shopify/queries.ts`
+- [x] 6. Adicionar `ACESSORIOS_QUERY` em `lib/shopify/queries.ts`
   - **🛑 PRÉ-REQUISITO: as tarefas 4b (6 operações revalidadas) e 5 (portão
     humano: o carrinho ainda vende) precisam ter PASSADO.** Se não passaram, pare
     aqui — o problema é no fragmento, e ele não fica mais fácil de achar com mais
@@ -179,7 +179,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/queries.ts` (padrão dos documentos)_
   - _Requirements: 2.1, 2.5, 2.6_
 
-- [ ] 7. Criar `lib/shopify/acessorios.ts` (`server-only`)
+- [x] 7. Criar `lib/shopify/acessorios.ts` (`server-only`)
   - File: `lib/shopify/acessorios.ts` (novo)
   - `import "server-only"`; `buscarAcessoriosPorTag(): Promise<ProductCard[]>`
   - Monta `query: \`tag:${TAG_ACESSORIO}\`` **no servidor** — o cliente nunca
@@ -192,7 +192,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/client.ts`, `lib/shopify/normalize.ts` (`normalizeProductCard`), `lib/shopify/tags.ts`_
   - _Requirements: 2.1, 2.2, 2.4, 2.5, 2.6, 8.1, 8.5_
 
-- [ ] 8. Validar `ACESSORIOS_QUERY` no Dev MCP e executá-la na loja
+- [x] 8. Validar `ACESSORIOS_QUERY` no Dev MCP e executá-la na loja
   - File: nenhum (verificação)
   - Validar contra 2026-01 — **aviso de depreciação conta como falha**
   - **Executar de fato:** `tag:acessorio` deve devolver **2** produtos
