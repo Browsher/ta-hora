@@ -84,6 +84,40 @@ export const ACESSORIOS_QUERY = /* GraphQL */ `
 `
 
 /**
+ * Produtos por tag de MARCA — usada pela seção "Você também pode gostar"
+ * (produtos-recomendados). Recomenda outras câmeras da MESMA marca.
+ *
+ * Documento **novo** (não reusa nem generaliza a `ACESSORIOS_QUERY`): a forma é
+ * idêntica, mas manter separado evita tocar a feature de acessórios que já
+ * funciona. Se um dia surgir um 3º consumidor de "produtos por tag", aí sim vale
+ * extrair um documento compartilhado — com as duas features revalidadas.
+ *
+ * `$query` vem por VARIÁVEL, montada no servidor a partir de `MARCAS`
+ * (`lib/shopify/tags.ts`): `tag:eseecloud` / `tag:icsee`. O cliente nunca escolhe.
+ *
+ * `first: 250` é o TETO da Storefront API; não paginamos (a seção mostra no
+ * máximo 4 — cortar em JS é mais simples e verificável que paginar).
+ *
+ * Seleção = `RawProductCard` + `availableForSale`, para `normalizeProductCard`
+ * funcionar sem adaptador. **`availableForSale` NÃO entra na string de busca** —
+ * filtro em JS (`recomendados.ts`), mesmo motivo da `ACESSORIOS_QUERY`.
+ */
+export const RECOMENDADOS_QUERY = /* GraphQL */ `
+  query Recomendados($query: String!, $first: Int!) {
+    products(first: $first, query: $query) {
+      nodes {
+        id
+        handle
+        title
+        availableForSale
+        featuredImage { url altText width height }
+        priceRange { minVariantPrice { amount currencyCode } }
+      }
+    }
+  }
+`
+
+/**
  * Variantes de um produto — usada só pelo carrinho, para o SERVIDOR resolver o
  * `merchandiseId` a partir do handle (o cliente nunca escolhe a variante).
  *

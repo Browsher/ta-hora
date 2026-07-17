@@ -110,7 +110,7 @@ de arquivo explícitos.
 
 ### Bloco 2 — Busca por marca (server-only)
 
-- [ ] 5. Adicionar `RECOMENDADOS_QUERY` em `lib/shopify/queries.ts`
+- [x] 5. Adicionar `RECOMENDADOS_QUERY` em `lib/shopify/queries.ts`
   - File: `lib/shopify/queries.ts` (modificar)
   - `query Recomendados($query: String!, $first: Int!)` com
     `products(first: $first, query: $query)` → `nodes { id handle title
@@ -124,7 +124,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/queries.ts` (`ACESSORIOS_QUERY` como forma)_
   - _Requirements: 2.1, 2.5, 2.7_
 
-- [ ] 6. Criar `lib/shopify/recomendados.ts` (`server-only`)
+- [x] 6. Criar `lib/shopify/recomendados.ts` (`server-only`)
   - File: `lib/shopify/recomendados.ts` (novo)
   - `import "server-only"`; `buscarRecomendados(marca: (typeof MARCAS)[number], handleAtual: string): Promise<ProductCard[]>`
     — 🔒 **`marca` tipada como elemento de `MARCAS`** (não `string`): trava no
@@ -145,7 +145,7 @@ de arquivo explícitos.
   - _Leverage: `lib/shopify/acessorios.ts` (molde exato), `lib/shopify/client.ts`, `lib/shopify/normalize.ts` (`normalizeProductCard`), `lib/shopify/tags.ts`_
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 6.1, 6.2, 6.4, 9.3_
 
-- [ ] 7. Validar as queries no Dev MCP e exercitar na loja
+- [x] 7. Validar as queries no Dev MCP e exercitar na loja
   - File: nenhum (verificação)
   - Validar `PRODUCT_BY_HANDLE_QUERY` **com `tags`** e `RECOMENDADOS_QUERY` contra
     **2026-01** — **aviso de depreciação conta como falha** (Req 9.2)
