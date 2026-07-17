@@ -71,6 +71,23 @@ etiquetados: com os acessórios todos esgotados, a seção também some, e um ch
 que só olhasse a etiqueta ficaria verde no exato estado que ele existe para
 impedir.
 
+### Marcas (os produtos recomendados)
+
+```bash
+npm run verificar:marcas
+```
+
+Exit `0` = há câmeras com marca para recomendar. Exit `1` = **nenhum produto tem
+marca** e a seção "Você também pode gostar" nunca vai aparecer. Reporta a
+contagem por marca (`eseecloud`, `icsee`) e **avisa** (sem falhar) sobre produtos
+publicados **sem tag de marca conhecida**, nomeando os handles.
+
+> 🔴 A tag da marca EsseCloud é **`eseecloud`** — com **dois "e"** (es-**ee**-cloud).
+> É a grafia CERTA, medida na loja (`tag:eseecloud` → 4; `tag:essecloud` → 0), e a
+> constante `TAG_ESEECLOUD` em `lib/shopify/tags.ts` reflete isso. **Não
+> "conserte" para `essecloud`:** zeraria a seção para toda câmera EsseCloud, sem
+> erro. Este check é a rede que pega essa divergência.
+
 ## O carrinho
 
 - **Drawer lateral** com itens, quantidade (`−`/`+`), cupom, subtotal, desconto e
@@ -114,6 +131,32 @@ atrapalha a compra.
 > Câmeras com a tag `camera` (as que disparam a seção): `camera-seguranca-es-p9`
 > e `camera-de-seguranca-q6`. As demais estão **sem tag** e não disparam nada —
 > `npm run verificar:tags` reporta quais.
+
+## Produtos recomendados (na página de produto)
+
+Na página `/produtos/[handle]`, **abaixo** do bloco de 2 colunas, a seção **"Você
+também pode gostar"** mostra **até 4 outras câmeras da mesma marca**, em grade
+fixa centralizada. É **inteiramente server-side** (roda no ISR da própria página;
+sem client component novo, sem carrossel) e os cards levam à página do produto
+(não adicionam ao carrinho).
+
+**A marca é decidida por tag na Shopify — nunca no código:**
+
+| Tag | Marca |
+|---|---|
+| `eseecloud` | EsseCloud — 🔴 **dois "e"** (grafia real, medida) |
+| `icsee` | iCSee |
+
+As constantes vivem em `lib/shopify/tags.ts` (`TAG_ESEECLOUD`, `TAG_ICSEE`,
+`MARCAS`). A seção some sozinha quando o produto não tem marca conhecida, quando
+só ele existe naquela marca, ou quando a busca falha — um extra que **nunca**
+derruba a página. Rode `npm run verificar:marcas` ao mexer nas tags de marca.
+
+> **Estado do catálogo (medido em 2026-07-17):** `eseecloud` → 4 câmeras
+> (`es-p9`, `q6`, `q8`, `s8`); `icsee` → 3 (`a31h`, `a38`, `camera-lampada`).
+> Logo, uma página `eseecloud` recomenda 3, uma `icsee` recomenda 2. As câmeras
+> `q8`/`s8` (os "acessórios" de teste) **também** têm `eseecloud` e aparecem nos
+> recomendados de EsseCloud — correto pela regra de marca, não é bug.
 
 ### Notas de comportamento (medidas na loja, não suposições)
 

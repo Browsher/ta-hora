@@ -224,7 +224,7 @@ de arquivo explícitos.
 > dados está atendida (medida). Entregar a feature sem este bloco é decisão
 > consciente; a salvaguarda é barata e recomendada.
 
-- [ ] 11. ⚪ (Opcional) Criar `scripts/verificar-marcas.mjs` e o script npm
+- [x] 11. ⚪ (Opcional) Criar `scripts/verificar-marcas.mjs` e o script npm
   - Files: `scripts/verificar-marcas.mjs` (novo), `package.json` (modificar)
   - **Falha (exit ≠ 0)** se **nenhum** produto publicado tiver `eseecloud` **ou**
     `icsee`. Reportar a contagem por marca. **Avisar (sem falhar)** produtos **sem
@@ -237,7 +237,7 @@ de arquivo explícitos.
   - _Leverage: `scripts/verificar-tags.mjs` (estrutura + comentário do exitCode), `lib/shopify/tags.ts` (grafia)_
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 12. ⚪ (Opcional) Documentar a feature e o `verificar:marcas` no `README.md`
+- [x] 12. ⚪ (Opcional) Documentar a feature e o `verificar:marcas` no `README.md`
   - File: `README.md` (modificar)
   - Como funciona (tag de marca `eseecloud`/`icsee` → recomendados da mesma marca,
     muda pelo admin sem código); registrar que **`eseecloud` tem dois "e" de
@@ -248,7 +248,7 @@ de arquivo explícitos.
 
 ### Bloco 6 — Verificação (DoD: build + manual)
 
-- [ ] 13. Verificar build, tipos, fronteira e regime de render
+- [x] 13. Verificar build, tipos, fronteira e regime de render
   - File: nenhum (verificação)
   - `npx tsc --noEmit` limpo; `npm run build` limpo; **e sem `.env.local`** (backup
     + checksum ao restaurar) — o build passa e a seção só degrada em runtime

@@ -8,7 +8,8 @@
     "start": "next start",
     "verificar:variantes": "node --env-file=.env.local scripts/verificar-variantes.mjs",
     "verificar:tags": "node --env-file=.env.local scripts/verificar-tags.mjs",
-    "verificar:descricao": "node --env-file=.env.local scripts/verificar-descricao.mjs"
+    "verificar:descricao": "node --env-file=.env.local scripts/verificar-descricao.mjs",
+    "verificar:marcas": "node --env-file=.env.local scripts/verificar-marcas.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
