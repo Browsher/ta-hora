@@ -269,7 +269,7 @@ de arquivo explícitos.
 
 ### Bloco 6 — UI
 
-- [ ] 12. Criar `AcessoriosSugeridos` em `components/loja/AcessoriosSugeridos.tsx`
+- [x] 12. Criar `AcessoriosSugeridos` em `components/loja/AcessoriosSugeridos.tsx`
   - File: `components/loja/AcessoriosSugeridos.tsx` (novo)
   - `"use client"`; sem props — lê `useCarrinho()`
   - **Guarda única:** `if (!ctx || ctx.sugestoes.length === 0) return null` —
@@ -293,7 +293,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/CarrinhoProvider.tsx`, `components/loja/SeloPagamento.tsx` (precedente de copy fixa), `components/loja/ProductCardLink.tsx` (PriceTag com ProductCard), `components/ui/PriceTag.tsx`, `lib/tokens.ts`_
   - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.7, 5.1, 5.2, 5.3, 5.4, 5.5, 6.1_
 
-- [ ] 13. Renderizar a seção no `CarrinhoDrawer`
+- [x] 13. Renderizar a seção no `CarrinhoDrawer`
   - File: `components/loja/CarrinhoDrawer.tsx` (modificar)
   - `<AcessoriosSugeridos />` **depois do `)}` que fecha o ternário (linha 180)**
     e **antes do `</div>` do corpo (linha 181)**

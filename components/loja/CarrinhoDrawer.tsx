@@ -10,6 +10,7 @@ import { useCarrinho } from "./CarrinhoProvider"
 import { CarrinhoLinha } from "./CarrinhoLinha"
 import { CupomForm } from "./CupomForm"
 import { SeloPagamento } from "./SeloPagamento"
+import { AcessoriosSugeridos } from "./AcessoriosSugeridos"
 
 // Painel lateral do carrinho. Montado UMA vez, no `app/layout.tsx`.
 //
@@ -178,6 +179,21 @@ export function CarrinhoDrawer({ paleta }: { paleta: Paleta | null }) {
                     ))}
                   </ul>
                 )}
+
+                {/*
+                  Acessórios sugeridos: DEPOIS dos itens, ANTES do rodapé de
+                  totais (Req 4.1). Renderiza `null` quando não há o que sugerir,
+                  então sem sugestões o drawer sai EXATAMENTE como antes.
+
+                  ⚠️ FICA AQUI DENTRO DO CORPO, FORA DO <footer>. Isso não é
+                  arrumação: o corpo é `flex:1; overflowY:auto` e o rodapé é
+                  `flexShrink:0` — IRMÃOS. É essa separação que faz os totais e o
+                  "Finalizar compra" NUNCA pularem nem sumirem da vista, por mais
+                  acessórios que apareçam (Req 4.8/6.3). Mover esta linha para
+                  dentro do rodapé, ou mexer no `flex`, quebra os dois requisitos
+                  em silêncio — nada no build acusaria.
+                */}
+                <AcessoriosSugeridos />
               </div>
 
               {/* ─── Rodapé — só existe com itens (Req 3.8) ─── */}
