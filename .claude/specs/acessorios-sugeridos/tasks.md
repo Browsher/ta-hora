@@ -219,7 +219,7 @@ de arquivo explícitos.
 
 ### Bloco 5 — Estado (onde mora a armadilha)
 
-- [ ] 10. Adicionar `acessorios` e a busca 1x em `components/loja/CarrinhoProvider.tsx`
+- [x] 10. Adicionar `acessorios` e a busca 1x em `components/loja/CarrinhoProvider.tsx`
   - File: `components/loja/CarrinhoProvider.tsx` (modificar)
   - Estado `acessorios: ProductCard[]` + `buscou` (`useRef`)
   - `temCamera` = `(carrinho?.linhas ?? []).some(l => l.tags.includes(TAG_CAMERA))`
@@ -243,7 +243,7 @@ de arquivo explícitos.
   - _Leverage: `lib/carrinho/acoes.ts`, `lib/shopify/tags.ts`, `lib/shopify/types.ts` (`import type`)_
   - _Requirements: 1.1, 2.5, 6.2_
 
-- [ ] 11. Derivar `sugestoes` **com o gatilho embutido** no `CarrinhoProvider`
+- [x] 11. Derivar `sugestoes` **com o gatilho embutido** no `CarrinhoProvider`
   - File: `components/loja/CarrinhoProvider.tsx` (continuar da tarefa 10)
   - `useMemo`: **`if (!temCamera) return []`**, depois `acessorios.filter(a => !noCarrinho.has(a.handle))`
     com `noCarrinho = new Set(linhas.map(l => l.handle))`
