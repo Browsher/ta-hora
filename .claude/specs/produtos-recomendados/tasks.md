@@ -157,7 +157,7 @@ de arquivo explícitos.
 
 ### Bloco 3 — UI (Server Component + CSS)
 
-- [ ] 8. Criar `components/loja/RecomendadosRelacionados.tsx` (Server Component)
+- [x] 8. Criar `components/loja/RecomendadosRelacionados.tsx` (Server Component)
   - File: `components/loja/RecomendadosRelacionados.tsx` (novo)
   - **SEM `"use client"`** — Server Component que monta os cards client (mesmo
     padrão do `CatalogGrid`)
@@ -174,7 +174,7 @@ de arquivo explícitos.
   - _Leverage: `components/loja/CatalogGrid.tsx` (padrão server→cards client), `components/loja/ProductCardLink.tsx`, `components/ui/Heading.tsx`_
   - _Requirements: 3.3, 4.1, 4.2, 4.3, 4.4, 4.5, 5.1, 5.3, 6.2, 6.3_
 
-- [ ] 9. Adicionar as classes da seção e da grade centralizada em `app/globals.css`
+- [x] 9. Adicionar as classes da seção e da grade centralizada em `app/globals.css`
   - File: `app/globals.css` (modificar)
   - `.recomendados-secao`: `max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px,5vw,64px) 72px`
     — 🔴 **`padding-top: 0`** (achado BAIXA-1): o `<article>` acima já tem
@@ -195,7 +195,7 @@ de arquivo explícitos.
 
 ### Bloco 4 — Integração na página
 
-- [ ] 10. Plugar a seção em `app/produtos/[handle]/page.tsx`
+- [x] 10. Plugar a seção em `app/produtos/[handle]/page.tsx`
   - File: `app/produtos/[handle]/page.tsx` (modificar)
   - Imports: `marcaDoProduto` (de `tags`), `buscarRecomendados` (de `recomendados`),
     `RecomendadosRelacionados`, `type ProductCard`

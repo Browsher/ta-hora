@@ -6,9 +6,12 @@ import { StoreShell } from "@/components/loja/StoreShell"
 import { ProductGallery } from "@/components/loja/ProductGallery"
 import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
+import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
-import type { Product } from "@/lib/shopify/types"
+import { marcaDoProduto } from "@/lib/shopify/tags"
+import { buscarRecomendados } from "@/lib/shopify/recomendados"
+import type { Product, ProductCard } from "@/lib/shopify/types"
 
 // ISR + params dinâmicos: handles não pré-renderizados renderizam sob demanda.
 export const revalidate = 300
@@ -67,6 +70,20 @@ export default async function ProdutoPage(
   const descricaoLimpa = sanitizarDescricao(produto.descriptionHtml)
   const temDescricao = descricaoLimpa !== ""
 
+  // Recomendados da MESMA marca (seção "Você também pode gostar"). Só busca se o
+  // produto tem marca conhecida; a busca roda NO SERVIDOR, no ISR desta página.
+  // Falha → [] → a seção não aparece: um extra não pode derrubar a página que
+  // vende. Sem console.error (a mensagem de storefrontFetch conteria o endpoint).
+  const marca = marcaDoProduto(produto.tags)
+  let recomendados: ProductCard[] = []
+  if (marca) {
+    try {
+      recomendados = await buscarRecomendados(marca, produto.handle)
+    } catch {
+      recomendados = []
+    }
+  }
+
   return (
     <StoreShell>
       <article
@@ -104,6 +121,11 @@ export default async function ProdutoPage(
         {/* Coluna direita — descrição rica, só quando há conteúdo. */}
         {temDescricao && <DescricaoProduto html={descricaoLimpa} />}
       </article>
+
+      {/* Seção "Você também pode gostar" — IRMÃ do <article> (largura total,
+          centralizada), NUNCA um 3º filho do grid de 2 colunas. Some sozinha
+          quando `recomendados` é []. */}
+      <RecomendadosRelacionados produtos={recomendados} />
     </StoreShell>
   )
 }

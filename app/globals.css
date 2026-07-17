@@ -420,3 +420,39 @@ body {
     align-self: start;
   }
 }
+
+/* ─── Seção "Você também pode gostar" (produtos-recomendados) ──────────────────
+   Faixa de recomendação ABAIXO do <article> de 2 colunas, largura total e
+   centralizada. Container alinhado ao do /catalogo (max 1200px). */
+.recomendados-secao {
+  max-width:     1200px;
+  margin-inline: auto;               /* centra de fato (o mx-auto do TW falha) */
+  /* padding-top: 0 — o <article> acima já tem padding-bottom: 72px; um top extra
+     somaria ~80px de vão (decisão da auditoria, achado BAIXA-1). */
+  padding:       0 clamp(20px, 5vw, 64px) 72px;
+}
+
+/* Título centralizado, alinhado com os cards (que já ficam no meio). Escopado ao
+   `> h2` DESTA seção: NÃO afeta o texto dos cards (dentro de .recomendados-grade,
+   não é filho direto) nem o nome do produto (um <h1> em outro lugar da página). */
+.recomendados-secao > h2 {
+  text-align: center;
+}
+
+/* Grade: cards de base RESPONSIVA que quebram linha e ficam SEMPRE centralizados —
+   1, 2, 3 ou 4. flex + justify-content:center resolve a centralização em qualquer
+   quantidade (um grid de colunas fracionárias deixaria 1 card colado à esquerda).
+   base clamp(150px, 42vw, 240px): ~150px no celular → 2 cards por linha (como o
+   /catalogo), 240px no desktop → até 4. flex-grow:0 impede um card solto esticar. */
+.recomendados-grade {
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+  align-items:     stretch;          /* cards da mesma linha com a mesma altura */
+  gap:             20px;
+  margin-top:      24px;
+}
+.recomendados-grade > * {
+  flex:      0 1 clamp(150px, 42vw, 240px);
+  max-width: 260px;
+}
