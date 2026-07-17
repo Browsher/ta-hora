@@ -41,6 +41,9 @@ export interface RawProduct {
   handle:          string
   title:           string
   descriptionHtml: string
+  // `product.tags` — `[String!]!` no schema. Pode não vir se a query não pedir;
+  // por isso `normalizeProduct` aplica `?? []`. É a marca da câmera.
+  tags:            string[]
   images:          { nodes: RawImage[] }
   priceRange:      RawPriceRange
   // `metafields(identifiers:)` retorna a lista NA ORDEM dos identifiers, com
@@ -103,6 +106,9 @@ export function normalizeProduct(raw: RawProduct): Product {
     handle:          raw.handle,
     title:           raw.title,
     descriptionHtml: raw.descriptionHtml,
+    // `?? []` defensivo: garante que `Product.tags` nunca é undefined, o que
+    // seguraria o `marcaDoProduto(produto.tags)` (não explode no `.includes`).
+    tags:            raw.tags ?? [],
     images,
     price:           formatMoney(raw.priceRange.minVariantPrice),
     specs,

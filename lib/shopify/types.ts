@@ -42,6 +42,13 @@ export interface Product {
   handle:          string
   title:           string
   descriptionHtml: string
+  /**
+   * Tags do produto (`product.tags`). É o que permite descobrir a **marca**
+   * (`eseecloud`/`icsee`) para a seção "Você também pode gostar"
+   * (produtos-recomendados). Nunca `undefined`: schema `[String!]!` + `?? []`
+   * em `normalizeProduct`.
+   */
+  tags:            string[]
   images:          ProductImage[]
   price:           FormattedPrice
   specs:           Spec[]

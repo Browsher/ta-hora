@@ -25,6 +25,10 @@ export const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       handle
       title
       descriptionHtml
+      # tags: dirige a seção "Você também pode gostar" (produtos-recomendados) —
+      # a marca (eseecloud/icsee) sai daqui, sem uma segunda busca. Escalar
+      # aditivo; esta query é usada SÓ por getProductByHandle (não pelo carrinho).
+      tags
       images(first: 20) { nodes { url altText width height } }
       priceRange { minVariantPrice { amount currencyCode } }
       metafields(identifiers: $identifiers) {
