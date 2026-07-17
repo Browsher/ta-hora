@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getProducts, getProductByHandle } from "@/lib/shopify/products"
+import { sanitizarDescricao } from "@/lib/shopify/sanitizarDescricao"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { ProductGallery } from "@/components/loja/ProductGallery"
-import { ProductSpecs } from "@/components/loja/ProductSpecs"
+import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
@@ -61,37 +62,47 @@ export default async function ProdutoPage(
   }
   if (!produto) notFound()
 
+  // Sanitiza no SERVIDOR (fronteira única). "" quando não há conteúdo visível —
+  // é isso que decide o layout: 2 colunas (com descrição) x 1 coluna centrada.
+  const descricaoLimpa = sanitizarDescricao(produto.descriptionHtml)
+  const temDescricao = descricaoLimpa !== ""
+
   return (
     <StoreShell>
       <article
-        // 1 coluna no mobile, 2 no desktop (md ≥ 768px).
-        className="mx-auto grid max-w-[1100px] grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-[clamp(24px,4vw,56px)]"
+        // Layout em globals.css (classes explícitas — o mx-auto do Tailwind não
+        // é gerado neste projeto): `produto-grid` = 60/40 centrado com esquerda
+        // sticky; `produto-unico` = 1 coluna estreita centrada (sem descrição).
+        className={temDescricao ? "produto-grid" : "produto-unico"}
         style={{ padding: "40px clamp(20px, 5vw, 64px) 72px" }}
       >
-        {/* Coluna esquerda: galeria */}
-        <ProductGallery images={produto.images} title={produto.title} />
+        {/* Coluna esquerda — bloco de compra. É o alvo do sticky (globals.css).
+            No DESKTOP, um sub-grid lado a lado [galeria | info] baixa a altura da
+            coluna (galeria e info dividem a altura em vez de somar) — é o que
+            permite o sticky congelar em telas normais. No MOBILE colapsa para 1
+            coluna: galeria → nome → preço → botão (a ordem do DOM). */}
+        <div className="produto-coluna-esquerda">
+          <div className="produto-esquerda-inner">
+            <div className="produto-galeria">
+              <ProductGallery images={produto.images} title={produto.title} />
+            </div>
 
-        {/* Coluna direita: título, preço, ação, descrição, specs */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <Heading as="h1" size="pequeno" text={produto.title} color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
+            {/* Info empilhada. Há espaço para crescer abaixo do botão (specs, etc.). */}
+            <div className="produto-info">
+              <Heading as="h1" size="pequeno" text={produto.title} color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
 
-          <PriceTag price={produto.price.price} currency={produto.price.currency} size="grande" />
+              <PriceTag price={produto.price.price} currency={produto.price.currency} size="grande" />
 
-          {/* O handle da rota — nunca um merchandiseId: o servidor resolve a
-              variante (o cliente não escolhe o que vai pro carrinho). */}
-          <BotaoAdicionar handle={handle} />
-
-          {produto.descriptionHtml && (
-            <div
-              // descriptionHtml é conteúdo do lojista (fronteira de confiança
-              // conhecida) — ver design.md, cenário 6.
-              dangerouslySetInnerHTML={{ __html: produto.descriptionHtml }}
-              style={{ color: "var(--cor-texto-secundario)", lineHeight: 1.7 }}
-            />
-          )}
-
-          <ProductSpecs specs={produto.specs} />
+              {/* O handle da rota — nunca um merchandiseId: o servidor resolve a
+                  variante (o cliente não escolhe o que vai pro carrinho). Abre o
+                  drawer e dispara os acessórios sugeridos — intocado. */}
+              <BotaoAdicionar handle={handle} />
+            </div>
+          </div>
         </div>
+
+        {/* Coluna direita — descrição rica, só quando há conteúdo. */}
+        {temDescricao && <DescricaoProduto html={descricaoLimpa} />}
       </article>
     </StoreShell>
   )

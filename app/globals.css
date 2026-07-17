@@ -327,39 +327,88 @@ body {
   }
 }
 
-/* ─── Página de produto: descrição rica + coluna esquerda sticky ──────────────
-   (spec layout-pagina-produto). Escopado por classe — não toca :root nem base. */
+/* ─── Página de produto: layout 60/40 + descrição rica + esquerda sticky ──────
+   (spec layout-pagina-produto). Escopado por classe — não toca :root nem base.
 
-/* Imagens da descrição contidas na coluna: vêm da Shopify SEM width (medido),
-   a 1448px estourariam ~500px de coluna. max-width:100% é contenção, não
-   "forçar largura". */
-.descricao-produto img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+   Por que CSS explícito e não utilities Tailwind: neste projeto o `mx-auto` do
+   Tailwind NÃO é gerado (verificado no navegador: article com margin 0px, colado
+   à esquerda, ~800px de vazio à direita). `max-w`/`grid`/`gap` funcionam, mas o
+   `mx-auto` não — então o layout crítico da página vive aqui, previsível. */
+
+/* Grid da página COM descrição: centrado, largura cheia do container, 60/40. */
+.produto-grid {
+  max-width:   1400px;               /* mais largo: galeria generosa + gap maior */
+  margin-inline: auto;               /* centra de fato (o mx-auto do TW falha) */
+  display:     grid;
+  grid-template-columns: 1fr;        /* mobile: 1 coluna empilhada */
+  gap:         32px;
+  align-items: start;                /* obrigatório p/ o sticky não esticar */
+}
+@media (min-width: 768px) {
+  .produto-grid {
+    grid-template-columns: 3fr 2fr;  /* desktop: 60% esquerda / 40% direita */
+    gap: clamp(40px, 5vw, 72px);     /* separação maior entre compra e descrição */
+  }
 }
 
-/* Reserva de espaço aproximada contra layout shift: sem width/height no HTML,
-   um aspect-ratio segura o "salto" enquanto a imagem baixa. As imagens medidas
-   do ES-P9 são ~4:3/3:4; 4/3 é reserva honesta (min-height fixo deixava salto).
-   Só quando a <img> não traz width próprio. */
-.descricao-produto img:not([width]) {
-  aspect-ratio: 4 / 3;
+/* Página SEM descrição: 1 coluna estreita e centrada (sem coluna fantasma). */
+.produto-unico {
+  max-width:   560px;
+  margin-inline: auto;
+}
+
+/* Coluna esquerda no DESKTOP: sub-grid lado a lado [galeria | info]. Galeria e
+   info dividem a altura em vez de somar — foi o que derrubou a altura da coluna
+   de ~898px (empilhado) para ~470px, o que faz o sticky congelar em tela normal.
+   No MOBILE colapsa para 1 coluna (galeria em cima, info embaixo). */
+.produto-esquerda-inner {
+  display: grid;
+  grid-template-columns: 1fr;      /* mobile: empilha galeria e info */
+  gap: 20px;
+}
+@media (min-width: 768px) {
+  .produto-esquerda-inner {
+    /* Galeria MAIOR: fica com a maior fatia da coluna esquerda; a info guarda um
+       mínimo de 210px (cabe título + preço + botão). Mesmo maior, galeria+info
+       lado a lado mantêm a coluna baixa o bastante p/ o sticky (medido). */
+    grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* Info (título + preço + botão) empilhada. Cresce para baixo — há espaço para
+   specs/etc. depois do botão numa spec futura. */
+.produto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Imagens da descrição: PREENCHEM a largura da coluna direita (width:100%), sem
+   sobrar preto ao lado, E no TAMANHO/PROPORÇÃO REAL. `height: auto` sem
+   aspect-ratio forçado: nada de esticar/deformar (o aspect-ratio 4/3 anterior
+   esmagava as retrato — 800x1067 virava 458x344). Como as imagens são ~800px
+   naturais e a coluna ~480px, o width:100% reduz (nunca amplia além do natural). */
+.descricao-produto img {
+  width:     100%;
+  max-width: 100%;
+  height:    auto;
+  display:   block;
 }
 
 .descricao-produto p {
   margin: 0 0 12px;
 }
 
-/* Sticky condicional: a coluna esquerda (galeria + nome + preço + botão) só
-   "congela" quando há LARGURA de 2 colunas (≥768px) E ALTURA suficiente para ela
-   INTEIRA caber — com a galeria dentro, a esquerda passou a ~800–1000px. Por isso
-   o limiar é 1000px, não menos: abaixo dele o botão "Adicionar" poderia grudar
-   fora da tela. É aproximação CSS-only (sem JS de medição); o 1000px é ajustável
-   na verificação manual.
-   align-self:start é OBRIGATÓRIO — sem ele o item de grid estica e o sticky nunca
-   dispara. */
-@media (min-width: 768px) and (min-height: 1000px) {
+/* Sticky condicional: a coluna esquerda só "congela" quando há LARGURA de 2
+   colunas (≥768px) E ALTURA de viewport suficiente para ela INTEIRA caber — senão
+   o botão "Adicionar" grudaria fora da tela (Req 1.4). Com o sub-grid a coluna
+   ficou ~470px (medido), então o limiar min-height cai para 640px: congela em
+   telas normais (viewport ~855px) com o botão sempre visível. Aproximação
+   CSS-only, sem JS de medição. align-self:start é OBRIGATÓRIO — sem ele o item de
+   grid estica e o sticky nunca dispara. */
+@media (min-width: 768px) and (min-height: 640px) {
   .produto-coluna-esquerda {
     position: sticky;
     top: 24px;
