@@ -1,5 +1,6 @@
 import { SPEC_METAFIELDS } from "./specs"
 import { marcaDoProduto, TAG_MAIS_RECURSOS } from "./tags"
+import { temLenteMultipla, temAlarmeSonoro } from "./destaques"
 import type {
   Money,
   FormattedPrice,
@@ -35,6 +36,21 @@ export interface RawProductCard {
   // alteração. Ausentes → normalizam para marca/resumo `null`, maisRecursos `false`.
   tags?:         string[]                   // `product.tags`
   resumo?:       { value: string } | null   // metafield aliasado `custom.resumo`
+
+  // ── Destaques do bloco (feature catalogo-destaques) — opcionais pelo MESMO
+  //    motivo acima: só a PRODUCTS_QUERY os seleciona.
+  //
+  // 🔴 ESTES 4 SÃO VALORES CRUS, direto da Shopify — NENHUM passou pelas regras de
+  // `destaques.ts`. Este é o lado SUJO da fronteira: aqui ainda existem
+  // "Lente única", "Aplicativo" e "Noticação". No `ProductCard`, não existem mais.
+  selo?:         { value: string } | null   // `custom.selo`
+  resolucao?:    { value: string } | null   // `custom.tipo_de_resolucao`
+  // ⚠️ MESMO NOME de `ProductCard.lentes`, SEMÂNTICA OPOSTA. Este é o valor cru e
+  // INCLUI "Lente única"; o do `ProductCard` nunca inclui. Não passe um pelo
+  // outro — é justamente por esse risco que o campo do alarme abaixo tem nome
+  // diferente do seu veredito (`alarme` cru vs `alarmeSonoro` decidido).
+  lentes?:       { value: string } | null   // `custom.numero_de_lentes`
+  alarme?:       { value: string } | null   // `custom.com_alarme` (CRU: "Aplicativo"…)
 }
 
 interface RawMetafield {
@@ -102,6 +118,23 @@ export function normalizeProductCard(raw: RawProductCard): ProductCard {
     // a ordem de "Melhor preço" ficaria indefinida — daí o script verificar:resumo
     // e o build seguram a premissa antes de a UI depender dela.
     precoNumerico: Number(raw.priceRange.minVariantPrice.amount),
+
+    // ── Destaques do bloco (feature catalogo-destaques) ──────────────────────
+    //
+    // 🔴 AQUI É A FRONTEIRA. Acima desta linha o `raw` ainda tem "Lente única",
+    // "Aplicativo" e "Noticação"; abaixo dela, o `ProductCard` não tem mais. A
+    // decisão de "aparece ou não" é tomada NO SERVIDOR, de propósito: o valor que
+    // não deve ser exibido nunca chega ao cliente, então nenhum refactor futuro
+    // da UI consegue renderizá-lo por engano (Req 3.2, 4.2).
+    selo:      raw.selo?.value?.trim()      || null,
+    resolucao: raw.resolucao?.value?.trim() || null,
+    // Lentes: o valor só SOBREVIVE se disparar. "Lente única" → null.
+    // O `trim()` exibido é o mesmo texto que o gatilho avaliou.
+    lentes: temLenteMultipla(raw.lentes?.value)
+      ? raw.lentes!.value.trim()
+      : null,
+    // Alarme: VEREDITO, não valor — o "Aplicativo" da A31H morre exatamente aqui.
+    alarmeSonoro: temAlarmeSonoro(raw.alarme?.value),
   }
 }
 

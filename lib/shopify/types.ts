@@ -58,6 +58,38 @@ export interface ProductCard {
   maisRecursos:  boolean
   /** Chave de ordenação de "Melhor preço" — NUNCA exibido (o preço exibido é `price`). */
   precoNumerico: number
+
+  // ── Destaques do bloco (feature catalogo-destaques) ─────────────────────────
+  //
+  // Cabeçalho PRÓPRIO, separado do bloco acima de propósito: estes campos vêm de
+  // outra feature e de outros metafields. Pendurá-los no comentário do
+  // `catalogo-consultivo` faria aquele comentário mentir sobre a proveniência.
+  //
+  // 🔴 A REGRA JÁ FOI APLICADA quando estes campos chegam aqui. Este é o lado
+  // LIMPO da fronteira: `normalizeProductCard` chamou `lib/shopify/destaques.ts`
+  // e os valores que não devem aparecer — "Lente única", "Aplicativo",
+  // "Noticação" — ficaram para trás, no `RawProductCard`. A UI não tem como
+  // renderizar o que não recebeu. Ver `normalize.ts`.
+  //
+  // Aditivos e OBRIGATÓRIOS pelo mesmo argumento do bloco acima:
+  // `normalizeProductCard` é o único construtor, então acessórios/recomendados
+  // (que não pedem estes metafields) recebem `null`/`false` e os ignoram.
+  /** `custom.selo` — recomendação editorial do lojista ("Menor preço", "Mais
+   *  completa"). `null` = sem tarja; o bloco não renderiza caixa vazia (Req 1.3). */
+  selo:          string | null
+  /** `custom.tipo_de_resolucao` — valor LITERAL ("HD", "Full HD", "4K Ultra HD",
+   *  "3K Vertical"). Exibido como veio do admin, sem rótulo (Req 2.1/2.3). */
+  resolucao:     string | null
+  /** `custom.numero_de_lentes`, SÓ quando é diferencial (dupla/tripla).
+   *  🔴 NUNCA contém "Lente única": quando a câmera tem lente única — ou o valor é
+   *  desconhecido — este campo é `null`, não a string. O ícone de lentes só existe
+   *  quando há o que destacar (Req 3.2/3.3). */
+  lentes:        string | null
+  /** VEREDITO, não valor: `custom.com_alarme === "Alarme sonoro"`.
+   *  🔴 É `boolean` DE PROPÓSITO. O texto exibido é o rótulo FIXO "Alarme sonoro",
+   *  nunca o metafield — e um booleano torna impossível exibir por engano o valor
+   *  cru ("Aplicativo" na A31H, "Noticação" nas demais). Ver Req 4.3. */
+  alarmeSonoro:  boolean
 }
 
 /** Produto completo — usado na página `/produtos/[handle]`. */

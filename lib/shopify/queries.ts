@@ -17,6 +17,19 @@ import { SPEC_METAFIELDS } from "./specs"
 // alimentam o selo de marca + filtro e o resumo consultivo do bloco. UMA requisição
 // (sem N+1). A chave `custom.resumo` é confirmada nos DADOS reais por
 // `npm run verificar:resumo`.
+//
+// Os 4 metafields seguintes são ADITIVOS (feature catalogo-destaques): alimentam a
+// tarja de posicionamento (`selo`) e a linha de destaques do bloco (`resolucao`,
+// `lentes`, `alarme`). Entram na MESMA requisição — o catálogo continua sendo uma
+// única chamada por revalidação de ISR.
+//
+// 🔴 AS `key` SÃO AS LITERAIS DA LOJA, não o rótulo do admin — mesma lição de
+// `custom.marca` (rótulo "Aplicativo") e `custom.notorizada` (rótulo "Motorizada")
+// em `specs.ts`: renomear no admin PRESERVA a key original. Uma key errada não dá
+// erro — devolve `null` e o destaque some em SILÊNCIO. As 4 foram confirmadas nos
+// DADOS reais (7/7 câmeras) e ficam travadas por `npm run verificar:destaques`.
+//
+// ⚠️ `sortKey: MANUAL` acima é a ORDEM MANUAL do lojista — não remova ao editar.
 export const PRODUCTS_QUERY = /* GraphQL */ `
   query Products($handle: String!, $first: Int!) {
     collection(handle: $handle) {
@@ -28,7 +41,11 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
           tags
           featuredImage { url altText width height }
           priceRange { minVariantPrice { amount currencyCode } }
-          resumo: metafield(namespace: "custom", key: "resumo") { value }
+          resumo:    metafield(namespace: "custom", key: "resumo")             { value }
+          selo:      metafield(namespace: "custom", key: "selo")               { value }
+          resolucao: metafield(namespace: "custom", key: "tipo_de_resolucao")  { value }
+          lentes:    metafield(namespace: "custom", key: "numero_de_lentes")   { value }
+          alarme:    metafield(namespace: "custom", key: "com_alarme")         { value }
         }
       }
     }
