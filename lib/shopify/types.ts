@@ -2,6 +2,8 @@
 // Sem `server-only` de propósito: são só TIPOS, importados via `import type`
 // pelos componentes de cliente (apagados na compilação).
 
+import type { Marca } from "./tags" // type-only; sem ciclo (tags.ts não importa daqui)
+
 /** Dinheiro cru como vem da Shopify. */
 export interface Money {
   amount:       string // "1799.90"
@@ -34,6 +36,23 @@ export interface ProductCard {
   title:  string
   image:  ProductImage | null
   price:  FormattedPrice
+  // ── Campos derivados no SERVIDOR (feature catalogo-consultivo) ──────────────
+  //
+  // Aditivos e OBRIGATÓRIOS. Compilam em todo lugar porque `normalizeProductCard`
+  // é o ÚNICO construtor de `ProductCard` no codebase — todos os produtores
+  // (products/acessorios/recomendados) passam por ele. Os cards vindos de queries
+  // que não pedem tags/metafield (acessórios, recomendados) chegam com
+  // `marca=null`, `resumo=null`, `maisRecursos=false` — inertes; esses consumidores
+  // os ignoram. Se um dia alguém montar um `ProductCard` literal, o compilador
+  // corretamente exige estes campos (falha desejada, não regressão).
+  /** Marca resolvida por `marcaDoProduto` (tags). `null` = sem tag de marca. */
+  marca:         Marca | null
+  /** `custom.resumo`; `null` quando ausente/vazio (bloco renderiza sem a linha). */
+  resumo:        string | null
+  /** Tem a tag `mais-recursos` (chave do filtro homônimo). */
+  maisRecursos:  boolean
+  /** Chave de ordenação de "Melhor preço" — NUNCA exibido (o preço exibido é `price`). */
+  precoNumerico: number
 }
 
 /** Produto completo — usado na página `/produtos/[handle]`. */

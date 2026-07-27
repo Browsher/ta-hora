@@ -4,6 +4,13 @@ import { SPEC_METAFIELDS } from "./specs"
 // Documentos GraphQL da Storefront API. `server-only` (defesa em profundidade):
 // as queries só são usadas pelo servidor via client.ts/products.ts.
 
+// PRODUCTS_QUERY — usada SÓ por getProducts (vitrine /catalogo).
+//
+// `tags` e o metafield aliasado `resumo` são ADITIVOS (feature catalogo-consultivo):
+// alimentam, respectivamente, o selo de marca + filtro (Mais recursos/EseeCloud/
+// iCSee) e o resumo consultivo do bloco. Continua UMA requisição para o catálogo
+// inteiro (sem N+1; sem busca por câmera). A chave `custom.resumo` é confirmada
+// nos DADOS reais da loja por `npm run verificar:resumo` (não só no schema).
 export const PRODUCTS_QUERY = /* GraphQL */ `
   query Products($first: Int!) {
     products(first: $first) {
@@ -11,8 +18,10 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
         id
         handle
         title
+        tags
         featuredImage { url altText width height }
         priceRange { minVariantPrice { amount currencyCode } }
+        resumo: metafield(namespace: "custom", key: "resumo") { value }
       }
     }
   }

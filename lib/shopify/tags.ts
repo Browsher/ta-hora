@@ -53,3 +53,28 @@ export const MARCAS = [TAG_ESEECLOUD, TAG_ICSEE] as const
 export function marcaDoProduto(tags: string[]): (typeof MARCAS)[number] | null {
   return MARCAS.find((m) => tags.includes(m)) ?? null
 }
+
+// ─── Catálogo consultivo (feature catalogo-consultivo) ────────────────────────
+//
+// O /catalogo tem um filtro "Mais recursos" que sobe ao topo as câmeras com esta
+// tag. Mesma disciplina do resto do arquivo: a grafia mora AQUI, num lugar só —
+// um typo faria o filtro "não subir nada", indistinguível de "nenhuma câmera tem
+// a tag". Confirmar com `npm run verificar:*` se mudar no admin.
+export const TAG_MAIS_RECURSOS = "mais-recursos"
+
+/** As marcas conhecidas como tipo — `"eseecloud" | "icsee"`. */
+export type Marca = (typeof MARCAS)[number]
+
+/**
+ * Rótulo de EXIBIÇÃO da marca, DESACOPLADO da grafia da tag: a tag é `eseecloud`
+ * (minúscula, dois "e"), mas o selo na UI mostra "EseeCloud"/"iCSee". Nunca
+ * derive o rótulo da tag por capitalização — a marca tem grafia própria.
+ *
+ * O cliente (selo em `CameraBloco`) usa ESTE mapa; nunca reescreve as strings.
+ * Como `tags.ts` não tem `server-only`, ele atravessa a fronteira (igual a
+ * `types.ts`) — não contém token nem fetch.
+ */
+export const ROTULO_MARCA: Record<Marca, string> = {
+  eseecloud: "EseeCloud",
+  icsee:     "iCSee",
+}
