@@ -1,5 +1,5 @@
 import { getProducts } from "@/lib/shopify/products"
-import { CatalogGrid } from "@/components/loja/CatalogGrid"
+import { CatalogoConsultivo } from "@/components/loja/CatalogoConsultivo"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { Heading } from "@/components/ui/Heading"
 import { SectionLabel } from "@/components/ui/SectionLabel"
@@ -11,7 +11,7 @@ export default async function CatalogoPage() {
   let corpo: React.ReactNode
   try {
     const produtos = await getProducts()
-    corpo = <CatalogGrid products={produtos} />
+    corpo = <CatalogoConsultivo produtos={produtos} />
   } catch {
     // Shopify offline / erro → estado amigável (Req 4.4). O resto do site
     // (home, Sobre Nós) não depende da Shopify e segue funcionando.

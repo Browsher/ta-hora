@@ -456,3 +456,135 @@ body {
   flex:      0 1 clamp(150px, 42vw, 240px);
   max-width: 260px;
 }
+
+/* ─── Catálogo consultivo (feature catalogo-consultivo) ──────────────────────
+   Blocos largos horizontais + barra de filtros. Mobile-first (mesmo precedente
+   de `.produto-grid`): o padrão é coluna; a partir de 768px o bloco vira linha.
+   Nada aqui esconde nem remove card — o filtro só reordena um array. */
+
+/* Barra de filtros: flex que quebra linha; alvos de toque ≥ 40px (Req 3.10). */
+.catalogo-filtros {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         10px;
+}
+.catalogo-filtro {
+  min-height:    40px;
+  padding:       8px 18px;
+  border-radius: 999px;
+  border:        1px solid color-mix(in srgb, var(--cor-destaque) 22%, transparent);
+  background:    transparent;
+  color:         var(--cor-texto-secundario);
+  font-size:     14px;
+  font-weight:   600;
+  cursor:        pointer;
+  transition:    background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.catalogo-filtro:hover {
+  border-color: color-mix(in srgb, var(--cor-destaque) 45%, transparent);
+  color:        var(--cor-texto);
+}
+/* Filtro ativo: destaque dourado (Req 3.8) — par accent/texto do tema. */
+.catalogo-filtro[data-ativo="true"] {
+  background:   var(--cor-destaque);
+  border-color: var(--cor-destaque);
+  color:        var(--cor-destaque-texto);
+}
+.catalogo-filtro:focus-visible {
+  outline:        2px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/* Lista: uma coluna de blocos, com respiro entre eles. */
+.catalogo-lista {
+  display:        flex;
+  flex-direction: column;
+  gap:            20px;
+}
+
+/* Bloco: mobile = coluna (imagem no topo); ≥768px = linha (imagem à esquerda). */
+.catalogo-bloco {
+  display:        flex;
+  flex-direction: column;
+  gap:            18px;
+  background:     var(--cor-card);
+  border:         1px solid color-mix(in srgb, var(--cor-destaque) 14%, transparent);
+  border-radius:  20px;
+  overflow:       hidden;
+  padding:        18px;
+}
+.catalogo-bloco__midia {
+  width: 100%;
+}
+.catalogo-bloco__conteudo {
+  display:        flex;
+  flex-direction: column;
+  align-items:    flex-start;
+  gap:            12px;
+  min-width:      0;                 /* deixa o texto encolher sem estourar a largura */
+}
+.catalogo-bloco__selo {
+  display:       inline-block;
+  padding:       4px 12px;
+  border-radius: 999px;
+  font-size:     12px;
+  font-weight:   700;
+  letter-spacing: 0.03em;
+  background:    color-mix(in srgb, var(--cor-destaque) 16%, transparent);
+  color:         var(--cor-destaque);
+  border:        1px solid color-mix(in srgb, var(--cor-destaque) 32%, transparent);
+}
+.catalogo-bloco__titulo {
+  margin:      0;
+  font-size:   clamp(18px, 2.2vw, 24px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+.catalogo-bloco__titulo-link {
+  color:           var(--cor-texto);
+  text-decoration: none;
+}
+.catalogo-bloco__titulo-link:hover {
+  color: var(--cor-destaque);
+}
+.catalogo-bloco__resumo {
+  max-width: 60ch;                   /* linha legível; não estica no desktop largo */
+}
+/* Botão "ver detalhes": ação secundária (contorno dourado). */
+.catalogo-bloco__botao {
+  display:         inline-flex;
+  align-items:     center;
+  min-height:      44px;
+  margin-top:      4px;
+  padding:         10px 22px;
+  border-radius:   999px;
+  border:          1px solid var(--cor-destaque);
+  background:      transparent;
+  color:           var(--cor-destaque);
+  font-size:       15px;
+  font-weight:     700;
+  text-decoration: none;
+  transition:      background 0.18s ease, color 0.18s ease;
+}
+.catalogo-bloco__botao:hover {
+  background: var(--cor-destaque);
+  color:      var(--cor-destaque-texto);
+}
+
+@media (min-width: 768px) {
+  .catalogo-bloco {
+    flex-direction: row;
+    align-items:    stretch;
+    gap:            28px;
+    padding:        22px;
+  }
+  /* Imagem ~40% à esquerda; o conteúdo ocupa o restante. */
+  .catalogo-bloco__midia {
+    flex:      0 0 40%;
+    max-width: 40%;
+  }
+  .catalogo-bloco__conteudo {
+    flex:            1 1 auto;
+    justify-content: center;
+  }
+}
