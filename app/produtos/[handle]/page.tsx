@@ -6,6 +6,7 @@ import { StoreShell } from "@/components/loja/StoreShell"
 import { ProductGallery } from "@/components/loja/ProductGallery"
 import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
+import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
@@ -121,6 +122,11 @@ export default async function ProdutoPage(
         {/* Coluna direita — descrição rica, só quando há conteúdo. */}
         {temDescricao && <DescricaoProduto html={descricaoLimpa} />}
       </article>
+
+      {/* Ficha técnica — IRMÃ do <article> (largura total, centralizada), entre a
+          compra/descrição e os recomendados. Some sozinha quando o produto não tem
+          nenhuma spec preenchida (mesmo padrão dos recomendados). */}
+      <FichaTecnica specs={produto.specs} />
 
       {/* Seção "Você também pode gostar" — IRMÃ do <article> (largura total,
           centralizada), NUNCA um 3º filho do grid de 2 colunas. Some sozinha

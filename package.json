@@ -10,7 +10,8 @@
     "verificar:tags": "node --env-file=.env.local scripts/verificar-tags.mjs",
     "verificar:descricao": "node --env-file=.env.local scripts/verificar-descricao.mjs",
     "verificar:marcas": "node --env-file=.env.local scripts/verificar-marcas.mjs",
-    "verificar:resumo": "node --env-file=.env.local scripts/verificar-resumo.mjs"
+    "verificar:resumo": "node --env-file=.env.local scripts/verificar-resumo.mjs",
+    "verificar:especificacoes": "node --env-file=.env.local scripts/verificar-especificacoes.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

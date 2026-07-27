@@ -34,7 +34,8 @@ export default async function CatalogoPage() {
           gap:           28,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {/* Cabeçalho centralizado (alinha com a barra de filtros .catalogo-filtros). */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8 }}>
           <SectionLabel text="Nossos produtos" accentColor="var(--cor-destaque)" />
           <Heading as="h1" size="medio" text="Catálogo" color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
         </div>

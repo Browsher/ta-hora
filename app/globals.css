@@ -462,11 +462,13 @@ body {
    de `.produto-grid`): o padrão é coluna; a partir de 768px o bloco vira linha.
    Nada aqui esconde nem remove card — o filtro só reordena um array. */
 
-/* Barra de filtros: flex que quebra linha; alvos de toque ≥ 40px (Req 3.10). */
+/* Barra de filtros: flex que quebra linha; alvos de toque ≥ 40px (Req 3.10).
+   Centralizada para acompanhar o cabeçalho centralizado do catálogo. */
 .catalogo-filtros {
-  display:     flex;
-  flex-wrap:   wrap;
-  gap:         10px;
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+  gap:             10px;
 }
 .catalogo-filtro {
   min-height:    40px;
@@ -605,18 +607,20 @@ body {
   text-align: center;
 }
 
-/* Grade de cards: colunas que se ajustam (~3 no desktop, 1–2 no mobile) sem
-   estourar a largura. `auto-fit` + minmax garante sem scroll horizontal. */
+/* Grade de cards. MOBILE: 2 por linha (base). DESKTOP: 3 colunas fixas (3×3
+   para as 9 principais) — ver @media abaixo. Sem scroll horizontal em nenhuma
+   largura. Mesma largura/centralização do resto da ficha (filho de .ficha-tecnica). */
 .ficha-cards {
   display:               grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap:                   16px;
   margin-top:            28px;
 }
 .ficha-card {
   display:        flex;
   flex-direction: column;
-  align-items:    flex-start;
+  align-items:    center;              /* ícone/rótulo/valor centralizados na coluna */
+  text-align:     center;              /* texto do rótulo e do valor centralizado */
   gap:            8px;
   background:     var(--cor-card);
   border:         1px solid color-mix(in srgb, var(--cor-destaque) 14%, transparent);
@@ -643,6 +647,7 @@ body {
 }
 .ficha-detalhes__titulo {
   display:        block;
+  text-align:     center;              /* no mesmo eixo central do título e dos cards */
   font-size:      13px;
   font-weight:    700;
   letter-spacing: 0.04em;
@@ -669,9 +674,23 @@ body {
 }
 
 @media (min-width: 768px) {
-  /* Duas colunas de pares rótulo→valor; cada par é um dt+dd lado a lado. */
+  /* Cards em 3 colunas fixas → as 9 principais viram 3×3. Ocupa toda a largura
+     da ficha (mesmo container centralizado do título e do "Mais detalhes"). */
+  .ficha-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* "Mais detalhes": 2 pares rótulo→valor, mas colunas de CONTEÚDO (não `1fr`) —
+     assim não esticam nem deixam vazio à direita. `justify-content: center`
+     centraliza o conjunto, dividindo a sobra IGUALMENTE nos dois lados (eixo 957,
+     mesmo dos cards). `column-gap` aperta rótulo→valor; a margem no rótulo do 2º
+     par (coluna 3 = `dt` de índice par) abre a separação entre os pares. */
   .ficha-detalhes__lista {
-    grid-template-columns: auto 1fr auto 1fr;
-    column-gap:            16px;
+    grid-template-columns: max-content max-content max-content max-content;
+    justify-content:       center;
+    column-gap:            10px;
+    row-gap:               8px;
+  }
+  .ficha-detalhes__lista dt:nth-of-type(even) {
+    margin-left: 148px;   /* vão central entre as 2 colunas (48 + 100) */
   }
 }

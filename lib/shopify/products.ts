@@ -20,14 +20,24 @@ import type { ProductCard, Product } from "./types"
 
 const CATALOG_REVALIDATE = 300 // segundos (ISR ≤ 5 min)
 
-/** Todos os produtos da loja, resumidos para a vitrine. */
+// Handle da coleção MANUAL que dirige a ordem do /catalogo. O lojista arrasta os
+// produtos nesta coleção no admin (populares no topo) e o catálogo reflete. Se
+// renomear/trocar a coleção, mude aqui — e confirme que ela está publicada no
+// canal Storefront (senão `collection` vem null → catálogo vazio).
+const CATALOGO_COLLECTION_HANDLE = "cameras"
+
+/** Produtos do catálogo, na ORDEM MANUAL da coleção, resumidos para a vitrine. */
 export async function getProducts(): Promise<ProductCard[]> {
-  const data = await storefrontFetch<{ products: { nodes: RawProductCard[] } }>(
+  const data = await storefrontFetch<{
+    collection: { products: { nodes: RawProductCard[] } } | null
+  }>(
     PRODUCTS_QUERY,
-    { first: 100 },
+    { handle: CATALOGO_COLLECTION_HANDLE, first: 100 },
     { revalidate: CATALOG_REVALIDATE },
   )
-  return data.products.nodes.map(normalizeProductCard)
+  // `collection` null = handle errado ou coleção não publicada no canal Storefront.
+  // Degrada para vazio (estado "Nenhum produto disponível"), nunca quebra.
+  return data.collection?.products.nodes.map(normalizeProductCard) ?? []
 }
 
 /** Um produto pelo handle. Retorna `null` quando o produto não existe. */

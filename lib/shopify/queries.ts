@@ -6,22 +6,30 @@ import { SPEC_METAFIELDS } from "./specs"
 
 // PRODUCTS_QUERY — usada SÓ por getProducts (vitrine /catalogo).
 //
+// Busca os produtos de uma COLEÇÃO (não `products` global) para respeitar a ORDEM
+// MANUAL do admin: `sortKey: MANUAL` devolve os produtos na ordem que o lojista
+// arrastou na coleção (as populares no topo). O connection de loja `products` NÃO
+// tem `MANUAL` (só a coleção tem — `ProductCollectionSortKeys`), por isso a busca
+// é por coleção. `collection` vem `null` se o handle estiver errado ou a coleção
+// não estiver publicada no canal Storefront → getProducts trata com `?? []`.
+//
 // `tags` e o metafield aliasado `resumo` são ADITIVOS (feature catalogo-consultivo):
-// alimentam, respectivamente, o selo de marca + filtro (Mais recursos/EseeCloud/
-// iCSee) e o resumo consultivo do bloco. Continua UMA requisição para o catálogo
-// inteiro (sem N+1; sem busca por câmera). A chave `custom.resumo` é confirmada
-// nos DADOS reais da loja por `npm run verificar:resumo` (não só no schema).
+// alimentam o selo de marca + filtro e o resumo consultivo do bloco. UMA requisição
+// (sem N+1). A chave `custom.resumo` é confirmada nos DADOS reais por
+// `npm run verificar:resumo`.
 export const PRODUCTS_QUERY = /* GraphQL */ `
-  query Products($first: Int!) {
-    products(first: $first) {
-      nodes {
-        id
-        handle
-        title
-        tags
-        featuredImage { url altText width height }
-        priceRange { minVariantPrice { amount currencyCode } }
-        resumo: metafield(namespace: "custom", key: "resumo") { value }
+  query Products($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      products(first: $first, sortKey: MANUAL) {
+        nodes {
+          id
+          handle
+          title
+          tags
+          featuredImage { url altText width height }
+          priceRange { minVariantPrice { amount currencyCode } }
+          resumo: metafield(namespace: "custom", key: "resumo") { value }
+        }
       }
     }
   }
