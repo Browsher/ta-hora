@@ -525,6 +525,73 @@ body {
   gap:            12px;
   min-width:      0;                 /* deixa o texto encolher sem estourar a largura */
 }
+/* ─── Destaques do bloco (feature catalogo-destaques) ────────────────────────
+   Tarja de posicionamento (custom.selo) + linha de ícones de spec. Nada aqui
+   esconde nem reescreve: a decisão de "aparece ou não" foi tomada no SERVIDOR
+   (lib/shopify/destaques.ts); o CSS só desenha o que chegou. */
+
+/* Linha do topo: tarja + selo de marca lado a lado.
+   🔴 `width: 100%` é OBRIGATÓRIO, não estética: o pai `.catalogo-bloco__conteudo`
+   tem `align-items: flex-start`, que encolhe os filhos ao conteúdo. Sem a largura
+   explícita este flex não teria de onde quebrar, e a tarja com texto longo
+   estouraria o bloco — falha SILENCIOSA (Req 1.7). */
+.catalogo-bloco__topo {
+  display:     flex;
+  flex-wrap:   wrap;
+  align-items: center;
+  gap:         8px;
+  width:       100%;
+}
+
+/* Tarja de posicionamento: accent SÓLIDO + retângulo de cantos suaves.
+   Contrasta de propósito com a cápsula suave do selo de marca logo abaixo —
+   são dados diferentes e não podem parecer o mesmo (Req 1.6).
+   O raio de 10px também serve ao Req 1.7: uma cápsula de 999px com texto em duas
+   linhas fica deformada; um retângulo quebra bem.
+   🔴 SEM `text-transform`: `uppercase` REESCREVERIA na tela o texto que o lojista
+   digitou no admin, violando o Req 1.1 sem ninguém notar. O selo de marca abaixo
+   também não usa — seguir o precedente.
+   Par de cor `--cor-destaque` / `--cor-destaque-texto`: o contraste é o do TEMA
+   (mesmo par de `.catalogo-filtro[data-ativo="true"]`), nunca um hex inventado. */
+.catalogo-bloco__tarja {
+  display:        inline-block;
+  padding:        5px 12px;
+  border-radius:  10px;
+  font-size:      12px;
+  font-weight:    700;
+  letter-spacing: 0.02em;
+  line-height:    1.35;
+  background:     var(--cor-destaque);
+  color:          var(--cor-destaque-texto);
+  overflow-wrap:  anywhere;   /* texto livre do admin: quebra em vez de estourar */
+}
+
+/* Linha de destaques: itens que quebram em várias linhas quando não cabem.
+   `width: 100%` pelo mesmo motivo do `__topo` (o pai encolhe os filhos).
+   `flex-wrap` é o que garante "nunca rolagem horizontal" (Req 6.4). */
+.catalogo-destaques {
+  display:     flex;
+  flex-wrap:   wrap;
+  align-items: center;
+  gap:         8px 16px;
+  width:       100%;
+}
+/* Item: ícone + valor, SEM rótulo — o bloco é vitrine; rótulo é coisa da ficha. */
+.catalogo-destaque {
+  display:     inline-flex;
+  align-items: center;
+  gap:         6px;
+  font-size:   13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color:       var(--cor-texto-secundario);
+}
+/* Ícone dourado (accent do tema) e que NÃO encolhe quando o texto quebra. */
+.catalogo-destaque__icone {
+  flex-shrink: 0;
+  color:       var(--cor-destaque);
+}
+
 .catalogo-bloco__selo {
   display:       inline-block;
   padding:       4px 12px;

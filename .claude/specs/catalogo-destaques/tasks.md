@@ -276,6 +276,13 @@ nomeados explicitamente.
 
 - [ ] 4.1 Auditar SEO: tarja e destaques no HTML do servidor
   - File: nenhum (verificação)
+  - 🔴 **`rm -rf .next` ANTES de auditar o HTML de um build.** Descoberto ao vivo
+    no Bloco 2: `npm run build` sobre um `.next` morno **reaproveitou o prerender
+    ISR antigo de `/catalogo`** — o HTML servido saiu com o `CameraBloco` de
+    ANTES da feature (sem `catalogo-bloco__topo`, que é um `div` incondicional),
+    mesmo com os chunks novos já compilados e o `tsc` limpo. O build não avisa: a
+    saída mostra `○ /catalogo` normalmente. Auditar SEO nesse HTML daria **falso
+    negativo** ("a feature não renderiza") ou, pior, um falso positivo futuro
   - Com `npm run dev`, fazer `view-source:` ou `curl` em `/catalogo`
   - Confirmar que o **texto da tarja** e os **valores de destaque** aparecem no
     HTML inicial — não só depois da hidratação
@@ -314,7 +321,8 @@ nomeados explicitamente.
 - [ ] 4.3 Fechar o DoD: build, regime de rotas e auditoria de token/bundle
   - File: nenhum (verificação)
   - `npx tsc --noEmit` **limpo**
-  - `npm run build` **passa sem erro**
+  - `npm run build` **passa sem erro** — 🔴 precedido de `rm -rf .next`, pelo
+    motivo documentado na 4.1 (prerender ISR morno é reaproveitado em silêncio)
   - Na saída do build: `/` e `/sobre-nos` seguem **`○ (Static)`**; `/catalogo` e
     `/produtos/[handle]` seguem com **ISR** — regressão aqui é silenciosa
   - `npm run build` **sem `.env.local`** continua passando (renomear o arquivo
