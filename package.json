@@ -11,7 +11,8 @@
     "verificar:descricao": "node --env-file=.env.local scripts/verificar-descricao.mjs",
     "verificar:marcas": "node --env-file=.env.local scripts/verificar-marcas.mjs",
     "verificar:resumo": "node --env-file=.env.local scripts/verificar-resumo.mjs",
-    "verificar:especificacoes": "node --env-file=.env.local scripts/verificar-especificacoes.mjs"
+    "verificar:especificacoes": "node --env-file=.env.local scripts/verificar-especificacoes.mjs",
+    "verificar:destaques": "node --env-file=.env.local scripts/verificar-destaques.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
