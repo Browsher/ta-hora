@@ -112,7 +112,10 @@ export function normalizeProduct(raw: RawProduct): Product {
       (m) => m !== null && m.namespace === def.namespace && m.key === def.key,
     )
     if (!mf || !mf.value) return null
-    return { label: def.label, value: mf.value }
+    // `key` novo (feature ficha-tecnica): a UI junta com SPEC_METAFIELDS por ele
+    // para tier/ordem/ícone. A omissão de ausentes/`!value` acima é o "some se
+    // vazio" por spec — preservada.
+    return { key: def.key, label: def.label, value: mf.value }
   }).filter((s): s is Spec => s !== null)
 
   const images = raw.images.nodes

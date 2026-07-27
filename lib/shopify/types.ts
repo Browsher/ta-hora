@@ -25,6 +25,11 @@ export interface ProductImage {
 
 /** Especificação técnica derivada de um metafield (par rótulo/valor). */
 export interface Spec {
+  // `key` do metafield (ex.: "tipo_de_resolucao"). Aditivo (feature ficha-tecnica):
+  // permite a UI juntar cada spec ao mapa `SPEC_METAFIELDS` para obter tier/ordem e
+  // ao mapa de ícones. `ProductSpecs` (órfão) e demais consumidores seguem
+  // compilando — só usam label/value.
+  key:   string // "tipo_de_resolucao"
   label: string // "Resolução"
   value: string // "4MP / 2K"
 }
