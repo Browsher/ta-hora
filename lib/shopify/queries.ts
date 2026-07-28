@@ -52,6 +52,46 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
   }
 `
 
+/**
+ * Produtos da VITRINE DA HOME — usada só por `getVitrineHome()`, que alimenta a
+ * seção "Nossos Produtos" (feature home-produtos-carrossel).
+ *
+ * Busca por COLEÇÃO (`destaques`) com `sortKey: MANUAL` pelo mesmo motivo da
+ * `PRODUCTS_QUERY` acima: quem manda na ordem é o ARRASTO DO LOJISTA no admin,
+ * não o código. O connection global `products` não tem `MANUAL`. `collection` vem
+ * `null` se o handle mudar ou a coleção sair do canal Storefront → `getVitrineHome`
+ * degrada com `?? []` e a seção some (a Home nunca cai por causa da loja).
+ *
+ * ⚠️ `sortKey: MANUAL` é a ORDEM MANUAL do lojista — não remova ao editar.
+ *
+ * **A seleção é DE PROPÓSITO mais magra que a do catálogo:** sem `tags` e sem os
+ * 5 metafields. A Home é vitrine simples — foto, nome, preço e "Ver detalhes";
+ * selo, resumo e destaques de spec são do `/catalogo` e da página de produto.
+ * Pedir o que não se exibe seria peso de rede sem consumidor.
+ *
+ * **Com `availableForSale`** — o filtro de esgotados precisa dele. Segue o
+ * precedente da `RECOMENDADOS_QUERY`: o campo entra na SELEÇÃO, nunca na string
+ * de busca (aqui nem existe string de busca — a coleção é a curadoria). Assim a
+ * seleção é `RawProductCard` + um campo, e `normalizeProductCard` funciona sem
+ * adaptador, ignorando o extra.
+ */
+export const VITRINE_HOME_QUERY = /* GraphQL */ `
+  query ProdutosDestaque($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      products(first: $first, sortKey: MANUAL) {
+        nodes {
+          id
+          handle
+          title
+          availableForSale
+          featuredImage { url altText width height }
+          priceRange { minVariantPrice { amount currencyCode } }
+        }
+      }
+    }
+  }
+`
+
 export const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
   query ProductByHandle($handle: String!, $identifiers: [HasMetafieldsIdentifier!]!) {
     product(handle: $handle) {
