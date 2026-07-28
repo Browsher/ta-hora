@@ -195,6 +195,10 @@ function DestaqueWhatsApp({
           display:         "inline-flex",
           alignItems:      "center",
           gap:             10,
+          // Pill NEGATIVO do bloco: fundo = a cor do texto, rótulo = o accent.
+          // O accent aqui fica VIBRANTE de propósito — sobre o pill escuro dá
+          // 8.83:1, enquanto o tom forte (#995202) cairia para 3.56:1 e
+          // reprovaria. É o caso em que migrar PIORARIA o contraste.
           background:      corSobreAccent,
           color:           accentColor,
           borderRadius:    100,
@@ -361,17 +365,21 @@ export function CanaisSuporte({
   const containerProps = buildSectionContainerProps(se?.sectionEntry, mode)
   const itemProps      = buildSectionItemProps(se?.sectionEntry)
 
-  // Texto sobre o accent SÓLIDO. NÃO usar var(--cor-destaque-texto): a paleta do
-  // site carimba #ffffff nesse token, e branco sobre #ff8903 dá 2.38:1 — reprova
-  // no WCAG AA. contrastColor devolve #000000 (8.83:1).
+  // Texto sobre o accent SÓLIDO.
   //
-  // O ramo var(--cor-fundo) é o caminho normal (o PreviewContent passa
-  // var(--cor-destaque) quando o JSON não fixa um hex) e ASSUME uma paleta de
-  // fundo escuro — verdade em todas as paletas do site hoje. Numa paleta de fundo
-  // claro este bloco precisa ser reavaliado.
+  // O ramo do hex (o JSON fixa um accent próprio) deriva o contraste na hora.
+  // O ramo var() é o caminho normal — o PreviewContent passa var(--cor-destaque).
+  //
+  // Ele usava var(--cor-fundo), o que ASSUMIA fundo escuro: no tema claro isso
+  // virou #FAFAF8 sobre #ff8903 = 2.28:1, reprovado. Agora usa o par do próprio
+  // accent, que a paleta define como #000000 → 8.83:1. Nenhum token novo: é
+  // exatamente para isto que --cor-destaque-texto existe.
+  //
+  // Não trocar por --cor-destaque-texto-forte: aquele slot é para o accent lido
+  // como TEXTO sobre o FUNDO da página, não sobre o accent.
   const corSobreAccent = accentColor.startsWith("#")
     ? contrastColor(accentColor)
-    : "var(--cor-fundo)"
+    : "var(--cor-destaque-texto)"
 
   return (
     <section id="suporte" style={{ padding: "clamp(48px, 6vw, 72px) 0" }}>

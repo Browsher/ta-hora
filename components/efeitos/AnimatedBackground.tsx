@@ -369,9 +369,18 @@ function BeamBg({ accentColor, intensity }: { accentColor: string; intensity: Ba
       ctx.rotate(ANGLE)
       const grad = ctx.createLinearGradient(-bw, 0, bw, 0)
       grad.addColorStop(0,    `rgba(${r},${g},${b},0)`)
-      grad.addColorStop(0.35, `rgba(${r},${g},${b},${alpha * 0.06})`)
-      grad.addColorStop(0.5,  `rgba(${r},${g},${b},${alpha * 0.11})`)
-      grad.addColorStop(0.65, `rgba(${r},${g},${b},${alpha * 0.06})`)
+      // ESCALA (a) — ramo ANIMADO. Multiplicadores: o alpha recebido é
+      // BEAM_ALPHAS[i] (1.0 / 0.6 / 0.4), então o beam mais fraco sai a 40%.
+      // Os valores originais (0.06 / 0.11) foram calibrados para fundo PRETO e
+      // somem sobre #FAFAF8. Ver a escala (b), independente, no ramo reduced.
+      //
+      // TETO do stop central = 0.265: acima disso o accent-texto (#995202) dos
+      // %%destaque%% do headline cai abaixo de 4.5:1 sobre o beam no pico.
+      // 0.24 deixa 4.60:1. NÃO subir sem refazer essa conta — o headline em
+      // --cor-texto tem folga enorme (13.6:1), mas não é ele quem trava.
+      grad.addColorStop(0.35, `rgba(${r},${g},${b},${alpha * 0.14})`)
+      grad.addColorStop(0.5,  `rgba(${r},${g},${b},${alpha * 0.24})`)
+      grad.addColorStop(0.65, `rgba(${r},${g},${b},${alpha * 0.14})`)
       grad.addColorStop(1,    `rgba(${r},${g},${b},0)`)
       ctx.fillStyle = grad
       ctx.fillRect(-bw, -diag * 0.5, bw * 2, diag)
@@ -388,7 +397,11 @@ function BeamBg({ accentColor, intensity }: { accentColor: string; intensity: Ba
       ctx.rotate(ANGLE)
       const grad = ctx.createLinearGradient(-bw, 0, bw, 0)
       grad.addColorStop(0,   `rgba(${r},${g},${b},0)`)
-      grad.addColorStop(0.5, `rgba(${r},${g},${b},0.09)`)
+      // ESCALA (b) — ramo prefers-reduced-motion. Literal PURO: não passa por
+      // BEAM_ALPHAS, então não pode ser ajustado junto com a escala (a). Fica a
+      // ~71% do pico animado (0.28) — sem movimento para diluir, um valor igual
+      // viraria mancha. Avaliar este ramo à parte no DevTools.
+      grad.addColorStop(0.5, `rgba(${r},${g},${b},0.20)`)
       grad.addColorStop(1,   `rgba(${r},${g},${b},0)`)
       ctx.fillStyle = grad
       ctx.fillRect(-bw, -diag * 0.5, bw * 2, diag)

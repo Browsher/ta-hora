@@ -87,7 +87,7 @@
         "item4Icon": "✅",
         "item4Title": "Produtos originais",
         "item4Description": "Só itens originais, lacrados e com nota fiscal.",
-        "sectionBg": "linear-gradient(to top, #e59701, #834506)"
+        "sectionBg": "linear-gradient(to top, #FFF8EF, #FBE8D2)"
       },
       "paddingTop": 0,
       "paddingBottom": 0,
@@ -209,7 +209,7 @@
         "sectionLabel": "Ofertas por tempo limitado",
         "headline": "%%Aproveite agora%% e receba em casa",
         "subtitle": "+20 mil clientes já compraram com frete rápido e garantia. Sua vez chegou.",
-        "sectionBg": "linear-gradient(to top, #e59701, #834506)",
+        "sectionBg": "linear-gradient(to top, #FFF8EF, #FBE8D2)",
         "ctaLabel": "Ver ofertas",
         "ctaHref": "/catalogo"
       },
