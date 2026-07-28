@@ -158,6 +158,7 @@ interface SubProps {
   openMode:       string
   defaultOpen:    boolean
   showCategories: boolean
+  gridMinWidth:   number
 }
 
 // ─── FAQ Header (shared) ──────────────────────────────────────────────────────
@@ -235,7 +236,7 @@ function FAQAccordion({ c, containerProps, itemProps, accentColor, items, openMo
 
 // ─── Grid type ────────────────────────────────────────────────────────────────
 
-function FAQGrid({ c, containerProps, itemProps, accentColor, items }: SubProps) {
+function FAQGrid({ c, containerProps, itemProps, accentColor, items, gridMinWidth }: SubProps) {
   return (
     <section id="faq" style={{ padding: "clamp(64px, 8vw, 96px) 0" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(20px, 5vw, 64px)" }}>
@@ -247,8 +248,13 @@ function FAQGrid({ c, containerProps, itemProps, accentColor, items }: SubProps)
           <motion.div
             {...itemProps}
             style={{
-              display:             "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              display: "grid",
+              // gridMinWidth controla quantas colunas cabem: quanto MAIOR o mínimo,
+              // menos colunas. 280 (default) → 4 lado a lado num container de 1200;
+              // 420 → 2 por linha (2x2 com 4 perguntas).
+              // min(100%, Npx): sem isso, numa viewport mais estreita que N a coluna
+              // não encolhe e a página ganha scroll horizontal.
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${gridMinWidth}px), 1fr))`,
               gap:                 24,
             }}
           >
@@ -401,6 +407,9 @@ export function FAQ({
   const openMode       = (cv.openMode    as string  | undefined) ?? "uma-por-vez"
   const defaultOpen    = (cv.defaultOpen as boolean | undefined) ?? false
   const showCategories = (cv.showCategories as boolean | undefined) ?? true
+  // ADITIVO: default 280 = o comportamento de sempre, então nenhum JSON existente
+  // muda. Só o type "grid" usa.
+  const gridMinWidth   = (cv.gridMinWidth as number | undefined) ?? 280
 
   const ALL_ITEMS: FAQItem[] = [
     { question: c.faq1Question,  answer: c.faq1Answer,  category: c.faq1Category  },
@@ -418,6 +427,7 @@ export function FAQ({
 
   const subProps: SubProps = {
     c, se, containerProps, itemProps, accentColor, items, openMode, defaultOpen, showCategories,
+    gridMinWidth,
   }
 
   if (type === "grid")          return <FAQGrid         {...subProps} />
