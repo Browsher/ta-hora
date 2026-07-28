@@ -40,7 +40,12 @@
   --cor-texto-fraco:      rgba(232, 220, 200, 0.55);                  /* legendas/placeholders — base bege, opacidade menor */
   --cor-destaque:         #D4A017;                                    /* cor de destaque (accent) */
   --cor-destaque-texto:   #000000;                                    /* par do accent: cor do texto/ícone SOBRE o accent — cada tema define os dois */
-  --cor-destaque-texto-forte: #D4A017;                                /* accent como TEXTO/FOCO sobre o fundo. Aqui = o próprio accent: sobre #0D0A08 o dourado dá 8.31:1, então a fábrica escura não precisa de tom fechado. Num tema CLARO os dois divergem (ver lib/paleta.ts) */
+  /* Accent como TEXTO/FOCO sobre o fundo. O fallback é o PRÓPRIO accent — não um
+     hex solto: assim ele nunca desalinha da paleta que estiver valendo. Na
+     fábrica escura isso dá 8.31:1 (dourado sobre #0D0A08), sem precisar de tom
+     fechado. É também o valor que o site usa hoje POR DECISÃO DO USUÁRIO no tema
+     claro — ver .claude/specs/tema-claro/DECISAO-ACCENT-TEXTO.md. */
+  --cor-destaque-texto-forte: var(--cor-destaque);
 }
 
 @keyframes gradient {

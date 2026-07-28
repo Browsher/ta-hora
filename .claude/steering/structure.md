@@ -117,3 +117,24 @@ e sem quebrar os JSONs existentes.
 - Ao editar JSON, preservar campos legados desconhecidos — não "limpar" o arquivo.
 - **Os dados da loja NÃO moram em JSON** — produto, preço e estoque vêm da
   Shopify. Só o conteúdo editorial é JSON.
+
+## Tema claro — accent vibrante como texto (decisão do dono do produto)
+
+O site usa tema **claro** (`globalSettings.paleta` nos 3 JSONs de `layouts/`).
+A paleta tem **10 slots**: os 9 originais + `destaqueTextoForte`
+(`--cor-destaque-texto-forte`), que existe para separar o accent usado como
+**texto/foco** do accent usado como **superfície**.
+
+**Por decisão explícita do dono do produto, os dois valem o mesmo hex
+(`#ff8903`)** — ou seja, o texto em accent reprova o WCAG AA (2.28:1). Isso é
+escolha estética consciente, **não** um bug: não "conserte" trocando por um tom
+mais fechado. Ver `.claude/specs/tema-claro/DECISAO-ACCENT-TEXTO.md`.
+
+A **estrutura** continua importando: os pontos de texto/foco leem
+`var(--cor-destaque-texto-forte, <accent>)` e os de superfície leem
+`--cor-destaque`. Manter essa separação ao escrever componentes novos — é ela que
+permite reverter a decisão mudando **um valor**, em vez de caçar 46 pontos.
+
+Nota: `structure.md` e `tech.md` dizem em outros trechos que há "dois wrappers de
+paleta". São **três**: `PreviewContent.tsx`, `StoreShell.tsx` e
+`CarrinhoDrawer.tsx` (este último montado no root layout, alimentado por prop).

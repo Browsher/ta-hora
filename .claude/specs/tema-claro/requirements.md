@@ -98,6 +98,21 @@ escuro, para ter uma leitura confortável e uma vitrine moderna.
    `:root` de fábrica (escuro) naquele slot — comportamento a ser evitado; os
    três JSONs SHALL carimbar todos os slots explicitamente.
 
+> ## ⚠️ EMENDA — o valor de `--cor-destaque-texto-forte` foi alterado
+>
+> O Req 2 abaixo especifica `#995202` (5.64:1). **Isso não é mais o que o site
+> usa.** Por decisão explícita do dono do produto, tomada depois da
+> implementação e ciente dos números, a variável vale **`#ff8903`** — o laranja
+> vibrante — e portanto os ~46 pontos de texto/foco **reprovam AA (2.28:1)**.
+>
+> A **estrutura** do Req 2 (a bifurcação texto-vs-superfície, a variável
+> separada, o fallback, a opcionalidade) continua **integralmente válida e
+> implementada** — só o valor mudou. Ver
+> `.claude/specs/tema-claro/DECISAO-ACCENT-TEXTO.md`.
+>
+> **Para a auditoria (Req 5):** estes pontos são **exceção aceita**, a
+> registrar — não reprovação a corrigir. O restante da meta AA continua valendo.
+
 ### Requirement 2 — Accent legível como TEXTO e como FOCO
 
 **User Story:** Como visitante, quero ler rótulos, preços e destaques em laranja
