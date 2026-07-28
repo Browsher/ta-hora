@@ -99,6 +99,7 @@
       "type": "grid",
       "variation": "",
       "effect": "none",
+      "paddingBottom": 40,
       "content": {
         "gridWidth": "centralizado",
         "headline": "%%Escolha%% o modelo ideal para você",

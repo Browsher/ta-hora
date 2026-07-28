@@ -57,13 +57,27 @@ export function VitrineHome({
   if (produtos.length === 0) return null
 
   return (
-    // 🔴 Contêiner externo copiado do `ProductGridGrid` (padrão, não import — é
-    // função interna dele): os MESMOS paddings, para o espaçamento da Home não
-    // mudar ao trocar o componente. O `PreviewContent` já aplica
-    // paddingTop/paddingBottom no wrapper de fora; este padding é ADICIONAL e
-    // existe hoje. ⚠️ O padding horizontal é premissa da conta do carrossel
-    // (Bloco 3) — mudá-lo invalida a largura de card calculada lá.
-    <section id={`vitrine-${idSecao}`} style={{ padding: "clamp(64px, 8vw, 96px) 0" }}>
+    // Contêiner externo modelado no `ProductGridGrid` (padrão, não import — é
+    // função interna dele). O `PreviewContent` já aplica paddingTop/paddingBottom
+    // no wrapper de fora; este padding é ADICIONAL, e se soma ao de lá.
+    //
+    // ⚠️ O padding horizontal é premissa da conta do carrossel — mudá-lo invalida
+    // a largura de card calculada em globals.css.
+    //
+    // O topo continua igual ao do `ProductGridGrid` (o respiro para a seção
+    // "Features", acima, é o de sempre). Só a BASE foi reduzida, de propósito: o
+    // vão até a "Como Funciona" empilha QUATRO paddings — este, o
+    // `paddingBottom` do wrapper desta seção, o `paddingTop` do wrapper dela, e o
+    // padding interno dela. Como só esta seção pode mudar (as outras estão
+    // congeladas), a redução sai daqui e do `paddingBottom` desta entrada no
+    // `_home.json`.
+    <section
+      id={`vitrine-${idSecao}`}
+      style={{
+        paddingTop:    "clamp(64px, 8vw, 96px)",
+        paddingBottom: "clamp(40px, 5vw, 64px)",
+      }}
+    >
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(20px, 5vw, 64px)" }}>
         <motion.div {...containerProps} style={{ display: "flex", flexDirection: "column", gap: 32 }}>
           {/* Cabeçalho no padrão do `GridHeader`: rótulo + headline centralizados.
