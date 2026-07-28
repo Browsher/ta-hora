@@ -21,6 +21,7 @@ import type { ProductCard } from "@/lib/shopify/types"
 // When a new component is approved, add its static import here manually.
 
 import { BenefitsCard } from "@/components/sections/BenefitsCard"
+import { CanaisSuporte } from "@/components/sections/CanaisSuporte"
 import { CTAFinal } from "@/components/sections/CTAFinal"
 import { Hero } from "@/components/sections/Hero"
 import { FAQ } from "@/components/sections/FAQ"
@@ -37,6 +38,7 @@ import { VitrineHome } from "@/components/sections/VitrineHome"
 const componentMap: Record<string, React.ComponentType<any>> = {
   Hero,
   BenefitsCard,
+  CanaisSuporte,
   CTAFinal,
   FAQ,
   Features,
