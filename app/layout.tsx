@@ -30,7 +30,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body style={{ background: "#000000" }}>
+      {/*
+        ⚠️ SEGUNDO LUGAR ONDE O FUNDO DO SITE VIVE.
+        Este hex precisa acompanhar `globalSettings.paleta.fundo` dos layouts —
+        trocar a paleta nos JSONs SEM editar aqui deixa uma faixa da cor antiga
+        aparecendo no overscroll e abaixo do rodapé.
+
+        Por que não `var(--cor-fundo)`: o <body> está FORA dos três wrappers de
+        paleta (PreviewContent, StoreShell, CarrinhoDrawer) — quem o alcança é o
+        :root de globals.css, que é a paleta de FÁBRICA e segue ESCURA de
+        propósito (é o fallback do builder e o detector do modo de falha "slot de
+        paleta ausente"). Usar a var aqui pintaria o body de #0D0A08.
+
+        É a única exceção ao princípio "a cor se ajusta em um lugar só".
+      */}
+      <body style={{ background: "#FAFAF8" }}>
         {/*
           ⚠️ A HOME ESTÁTICA DEPENDE DESTE ARQUIVO (Req 9.2).
           NÃO chame `cookies()`, `headers()` nem Server Action aqui. O

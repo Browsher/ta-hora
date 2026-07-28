@@ -112,15 +112,16 @@
   "globalSettings": {
     "estilo": "elegante",
     "paleta": {
-      "fundo": "#000000",
-      "superficie": "#141210",
-      "card": "#1c1508",
-      "borda": "#252015",
-      "texto": "#E8DCC8",
-      "textoSecundario": "rgba(232, 220, 200, 0.7)",
-      "textoFraco": "rgba(232, 220, 200, 0.55)",
+      "fundo": "#FAFAF8",
+      "superficie": "#F0EFEB",
+      "card": "#FFFFFF",
+      "borda": "#E2E0DA",
+      "texto": "#1A1A1A",
+      "textoSecundario": "#5A5A57",
+      "textoFraco": "#8E8B85",
       "destaque": "#ff8903",
-      "destaqueTexto": "#ffffff"
+      "destaqueTexto": "#000000",
+      "destaqueTextoForte": "#995202"
     }
   }
 }
