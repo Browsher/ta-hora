@@ -34,7 +34,8 @@ function buildStyle(
       borderRadius: 0,
       background: "transparent",
       border: "none",
-      borderBottom: `2px solid ${accentColor}`,
+      // Sublinhado do rótulo: acompanha o TEXTO, não é superfície → tom forte.
+      borderBottom: `2px solid var(--cor-destaque-texto-forte, ${accentColor})`,
       color: textColor,
       padding: "4px 0",
     }

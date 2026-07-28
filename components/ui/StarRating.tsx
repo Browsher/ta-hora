@@ -15,7 +15,8 @@ export function StarRating({ value, accentColor, size = 13 }: StarRatingProps) {
         <span
           key={i}
           style={{
-            color:   i < full || (i === full && num - full >= 0.5) ? accentColor : "color-mix(in srgb, var(--cor-texto) 20%, transparent)",
+            // Estrela cheia: accent como GLIFO → tom forte (ver lib/paleta.ts).
+            color:   i < full || (i === full && num - full >= 0.5) ? `var(--cor-destaque-texto-forte, ${accentColor})` : "color-mix(in srgb, var(--cor-texto) 20%, transparent)",
             opacity: i === full && num - full >= 0.5 ? 0.6 : 1,
             fontSize: size,
           }}

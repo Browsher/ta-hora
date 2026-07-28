@@ -73,7 +73,9 @@ export function NavArrow({
       className={cn(className)}
       style={{
         // base (comum às 3 variantes)
-        color:          accentColor,
+        // Glifo ‹ › = accent como TEXTO → tom forte. O fundo/borda da variante
+        // (variantStyle, abaixo) segue no accent VIBRANTE — é superfície.
+        color:          `var(--cor-destaque-texto-forte, ${accentColor})`,
         cursor:         "pointer",
         display:        "flex",
         alignItems:     "center",

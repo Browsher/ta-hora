@@ -33,7 +33,9 @@ export function HighlightBadge({
   style,
   ...rest
 }: HighlightBadgeProps) {
-  const textColor  = variant === "solido" ? "var(--cor-destaque-texto)" : accentColor
+  // Sólido: texto SOBRE o accent → o par --cor-destaque-texto (já correto).
+  // Suave/outline: texto sobre o FUNDO da página → tom forte (ver lib/paleta.ts).
+  const textColor  = variant === "solido" ? "var(--cor-destaque-texto)" : `var(--cor-destaque-texto-forte, ${accentColor})`
   // Versões translúcidas do accent via color-mix (in srgb — mesmo espaço do hex+alpha).
   // %s exatas: 20→12.55%, 50→31.37% (parseInt(sfx,16)/255). Aceita accentColor hex OU var(--cor-destaque).
   const bg         = variant === "solido" ? accentColor : `color-mix(in srgb, ${accentColor} 12.55%, transparent)`

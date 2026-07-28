@@ -60,7 +60,9 @@ export function Input({
         width:        "100%",
         borderRadius: 8,
         background:   "color-mix(in srgb, var(--cor-texto) 5%, transparent)",
-        border:       `1px solid ${focused ? accentColor : "color-mix(in srgb, var(--cor-texto) 10%, transparent)"}`,
+        // Borda de FOCO: indicador de foco exige ≥3:1 (WCAG 1.4.11) — o accent
+        // vibrante dá 2.28:1 sobre o fundo claro, então usa o tom forte.
+        border:       `1px solid ${focused ? `var(--cor-destaque-texto-forte, ${accentColor})` : "color-mix(in srgb, var(--cor-texto) 10%, transparent)"}`,
         color:        "var(--cor-texto)",
         outline:      "none",
         transition:   "border-color 0.15s ease",

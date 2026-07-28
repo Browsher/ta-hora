@@ -31,7 +31,10 @@ export function SectionLabel({
   style,
   ...rest
 }: SectionLabelProps) {
-  const resolvedColor = color ?? accentColor
+  // Accent como TEXTO → tom forte (ver lib/paleta.ts).
+  // Esta MESMA cor pinta o tracinho decorativo do showLine mais abaixo — é
+  // intencional: traço e rótulo são uma unidade visual e devem combinar.
+  const resolvedColor = color ?? `var(--cor-destaque-texto-forte, ${accentColor})`
 
   return (
     <motion.span

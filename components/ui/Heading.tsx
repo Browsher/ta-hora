@@ -63,7 +63,10 @@ export function Heading({
   style,
   ...rest
 }: HeadingProps) {
-  const resolvedHL   = highlightColor ?? accentColor
+  // O accent aqui é TEXTO sobre o fundo da página — usa o tom forte, não o
+  // vibrante (que é de superfície). Fallback = accentColor: sem o slot na
+  // paleta, o comportamento é o de antes. Ver lib/paleta.ts.
+  const resolvedHL   = highlightColor ?? `var(--cor-destaque-texto-forte, ${accentColor})`
 
   // Dynamic tag — ternary avoids TypeScript union issues with motion[as]
   const Tag = as === "h1" ? motion.h1 : as === "h3" ? motion.h3 : motion.h2

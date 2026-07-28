@@ -47,7 +47,8 @@ export function StatNumber({
   ...rest
 }: StatNumberProps) {
   const { display, ref }   = useCounter(value, enabled)
-  const resolvedColor      = color ?? accentColor
+  // Accent como TEXTO → tom forte (ver lib/paleta.ts).
+  const resolvedColor      = color ?? `var(--cor-destaque-texto-forte, ${accentColor})`
   const resolvedLabelColor = labelColor ?? "var(--cor-texto-fraco)"
   const isRow              = direction === "row"
   const isCenter           = align === "centro"

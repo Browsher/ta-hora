@@ -64,7 +64,8 @@ export function Text({
   style,
   ...rest
 }: TextProps) {
-  const resolvedHL = highlightColor ?? accentColor
+  // Accent como TEXTO → tom forte (ver Heading.tsx / lib/paleta.ts).
+  const resolvedHL = highlightColor ?? `var(--cor-destaque-texto-forte, ${accentColor})`
 
   return (
     <motion.p
