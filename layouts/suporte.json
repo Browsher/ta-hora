@@ -1,0 +1,126 @@
+{
+  "id": "d2c11cd5-53c6-4478-abd5-fb6d66b6db94",
+  "name": "Suporte",
+  "template": "",
+  "updatedAt": "2026-07-28T00:00:00.000Z",
+  "sections": [
+    {
+      "id": "1cf4f7a0-1f7f-47d4-9ca6-b282c5c39086",
+      "component": "Navbar",
+      "type": "flutuante",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "navPosition": "fixa",
+        "linkCount": 4,
+        "ctaVisible": true,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "link1Label": "Catálogo",
+        "link1Href": "/catalogo",
+        "link2Label": "Sobre Nós",
+        "link2Href": "/sobre-nos",
+        "link3Label": "Rastreio",
+        "link4Label": "Suporte",
+        "link4Href": "/suporte",
+        "ctaLabel": "Quero Comprar",
+        "sectionBg": null
+      },
+      "paddingTop": 0,
+      "paddingBottom": 0
+    },
+    {
+      "id": "4d487c1a-9752-46d3-bbe8-fae2238a884c",
+      "component": "CanaisSuporte",
+      "type": "",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "_nota": "whatsappNumero: SO DIGITOS com DDI — o wa.me nao aceita mascara, o numero formatado quebra o link. whatsappMensagem: texto CRU, sem encode — o encode acontece na renderizacao. Os textos aqui sao copia do DEFAULT_CONTENT de CanaisSuporte.tsx, que e a fonte autoritativa; ao editar, mantenha os dois em sincronia. Esta chave e inerte: JSON nao aceita comentario, e o componente so le os campos que conhece.",
+        "rotulo": "SUPORTE",
+        "titulo": "Como podemos ajudar?",
+        "subtitulo": "Estamos aqui pra tirar suas dúvidas antes e depois da compra",
+        "whatsappNumero": "5511984188541",
+        "whatsappMensagem": "Olá, sou cliente do Ta Hora, preciso de um suporte",
+        "whatsappTitulo": "Fale com a gente pelo WhatsApp",
+        "whatsappDescricao": "É o jeito mais rápido de resolver. Chame que a gente responde no horário de atendimento.",
+        "whatsappBotaoLabel": "Falar no WhatsApp",
+        "emailTitulo": "E-mail",
+        "emailEndereco": "icamera6688@gmail.com",
+        "instagramTitulo": "Instagram",
+        "instagramUsuario": "@tahora.com.br",
+        "instagramUrl": "https://instagram.com/tahora.com.br",
+        "horarioTexto": "Atendimento: Segunda a Sexta, 9h às 18h"
+      }
+    },
+    {
+      "id": "1a7ce94f-d1f2-4fb6-bc0d-bdf4c675993c",
+      "component": "FAQ",
+      "type": "grid",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "_nota": "type='grid' NAO e escolha estetica: o grid renderiza as respostas SEMPRE, entao elas ficam no HTML pre-renderizado (SEO). O 'accordion' monta a resposta dentro de AnimatePresence com isOpen e a resposta FECHADA nao existe no DOM. Nao trocar para accordion sem resolver isso. faqCount e editavel ate 10, MAS subir o numero exige adicionar o par faqNQuestion/faqNAnswer aqui — sem o par, vaza o texto de template do DEFAULT_CONTENT do componente (perguntas de software por assinatura, que nao tem nada a ver com a loja). As respostas abaixo sao PLACEHOLDER de proposito: sem prazos, valores ou percentuais, para nao virarem compromisso da loja antes de o dono revisar. Esta chave e inerte: JSON nao aceita comentario, e o componente so le os campos que conhece.",
+        "faqCount": 4,
+        "gridMinWidth": 420,
+        "sectionLabel": "DÚVIDAS FREQUENTES",
+        "headline": "As perguntas que a gente %%mais recebe%%",
+        "faq1Question": "Qual é o prazo de entrega?",
+        "faq1Answer": "O prazo varia conforme a sua região e a forma de envio escolhida no checkout. Assim que o pedido é despachado, você recebe a confirmação com os dados de acompanhamento.",
+        "faq2Question": "Os produtos têm garantia?",
+        "faq2Answer": "Sim, todos os produtos têm garantia. Se algo chegar com defeito, fale com a gente pelo WhatsApp que a gente te orienta no próximo passo.",
+        "faq3Question": "Quais são as formas de pagamento?",
+        "faq3Answer": "As formas de pagamento disponíveis aparecem na hora de finalizar a compra, no checkout.",
+        "faq4Question": "Como acompanho meu pedido?",
+        "faq4Answer": "Assim que o pedido é enviado, você recebe os dados de acompanhamento no e-mail cadastrado. Qualquer dúvida, fale com a gente pelo WhatsApp."
+      }
+    },
+    {
+      "id": "3c99ff48-72ec-498a-b016-1a8537cc1f17",
+      "component": "Footer",
+      "type": "compacto",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "columnCount": 2,
+        "showSocial": false,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "column1Link1Label": "Catálogo",
+        "column1Link1Href": "/catalogo",
+        "column1Link2Label": "Sobre Nós",
+        "column1Link2Href": "/sobre-nos",
+        "column1Link3Label": "Rastreio",
+        "column1Link4Label": "Suporte",
+        "column1Link4Href": "/suporte",
+        "column2Link1Label": "Seja um Afiliado",
+        "column2Link2Label": "Política de privacidade",
+        "column2Link3Label": "Termos de uso",
+        "column2Link4Label": ""
+      },
+      "paddingBottom": 0,
+      "paddingTop": 40
+    }
+  ],
+  "kind": "site-page",
+  "siteId": "62216173-2ea7-4853-be5d-10856b856495",
+  "slug": "suporte",
+  "isHome": false,
+  "order": 2,
+  "globalSettings": {
+    "estilo": "elegante",
+    "paleta": {
+      "fundo": "#000000",
+      "superficie": "#141210",
+      "card": "#1c1508",
+      "borda": "#252015",
+      "texto": "#E8DCC8",
+      "textoSecundario": "rgba(232, 220, 200, 0.7)",
+      "textoFraco": "rgba(232, 220, 200, 0.55)",
+      "destaque": "#ff8903",
+      "destaqueTexto": "#ffffff"
+    }
+  }
+}
