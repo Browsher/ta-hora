@@ -227,7 +227,8 @@ export function CarrinhoDrawer({ paleta }: { paleta: Paleta | null }) {
                         key={d.codigo ?? d.titulo ?? i}
                         style={{
                           display: "flex", justifyContent: "space-between",
-                          fontSize: 13, fontWeight: 600, color: "var(--cor-destaque)",
+                          // Valor de desconto = TEXTO (informação de compra).
+                          fontSize: 13, fontWeight: 600, color: "var(--cor-destaque-texto-forte, var(--cor-destaque))",
                         }}
                       >
                         <span>
@@ -251,7 +252,7 @@ export function CarrinhoDrawer({ paleta }: { paleta: Paleta | null }) {
                   {/* Alerta antes do checkout (Req 7.6): sem isto o cliente só
                       descobre o item esgotado LÁ, depois de preencher tudo. */}
                   {temIndisponivel && (
-                    <p role="alert" style={{ margin: 0, fontSize: 12, color: "var(--cor-destaque)" }}>
+                    <p role="alert" style={{ margin: 0, fontSize: 12, color: "var(--cor-destaque-texto-forte, var(--cor-destaque))" }}>
                       Um item do seu carrinho ficou indisponível. Remova-o para concluir a compra.
                     </p>
                   )}

@@ -75,7 +75,7 @@ export function CarrinhoLinha({ linha }: { linha: LinhaCarrinho }) {
         </span>
 
         {!linha.disponivel && (
-          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--cor-destaque)" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--cor-destaque-texto-forte, var(--cor-destaque))" }}>
             Indisponível
           </span>
         )}
@@ -87,7 +87,7 @@ export function CarrinhoLinha({ linha }: { linha: LinhaCarrinho }) {
 
         {/* Descontos: LISTA, não somada — cada alocação como a Shopify devolveu */}
         {linha.descontos.map((d, i) => (
-          <span key={i} style={{ fontSize: 11, color: "var(--cor-destaque)" }}>
+          <span key={i} style={{ fontSize: 11, color: "var(--cor-destaque-texto-forte, var(--cor-destaque))" }}>
             − {d.currency} {d.price}
           </span>
         ))}

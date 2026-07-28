@@ -47,9 +47,11 @@ export function CupomForm({ accentColor = "var(--cor-destaque)" }: { accentColor
           disabled={carregando || !codigo.trim()}
           style={{
             background:   "none",
-            border:       `1px solid ${accentColor}`,
+            // background:none → esta borda é o ÚNICO contorno do botão:
+            // identificação de controle (WCAG 1.4.11), não decoração.
+            border:       `1px solid var(--cor-destaque-texto-forte, ${accentColor})`,
             borderRadius: tokens.radius.btn,
-            color:        accentColor,
+            color:        `var(--cor-destaque-texto-forte, ${accentColor})`,
             padding:      "0 14px",
             fontSize:     13,
             fontWeight:   600,

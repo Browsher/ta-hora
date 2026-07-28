@@ -114,9 +114,11 @@ export function AcessoriosSugeridos() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 3, flexShrink: 0,
                 background:   "none",
-                border:       "1px solid var(--cor-destaque)",
+                // background:none → esta borda é o ÚNICO contorno do botão:
+                // identificação de controle (WCAG 1.4.11), não decoração.
+                border:       "1px solid var(--cor-destaque-texto-forte, var(--cor-destaque))",
                 borderRadius: tokens.radius.btn,
-                color:        "var(--cor-destaque)",
+                color:        "var(--cor-destaque-texto-forte, var(--cor-destaque))",
                 padding:      "6px 10px",
                 fontSize:     12,
                 fontWeight:   600,

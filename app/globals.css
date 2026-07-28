@@ -300,7 +300,7 @@ body {
   transition: color 0.2s ease;
 }
 .footer-links-cor a[href]:hover {
-  color: var(--footer-accent, var(--cor-destaque)) !important;
+  color: var(--footer-accent, var(--cor-destaque-texto-forte, var(--cor-destaque))) !important;
 }
 
 .footer-links-sublinhado a[href] {
@@ -497,7 +497,7 @@ body {
 .vitrine-home__ver-detalhes {
   font-size:   0.8125rem;
   font-weight: 600;
-  color:       var(--cor-destaque);
+  color:       var(--cor-destaque-texto-forte, var(--cor-destaque));
 }
 
 /* ─── Carrossel de mobile (feature home-produtos-carrossel) ───────────────────
@@ -524,7 +524,7 @@ body {
   border-radius: 999px;
   border:        1px solid color-mix(in srgb, var(--cor-destaque) 22%, transparent);
   background:    transparent;
-  color:         var(--cor-destaque);
+  color:         var(--cor-destaque-texto-forte, var(--cor-destaque));
   font-size:     20px;
   line-height:   1;
   cursor:        pointer;
@@ -535,7 +535,7 @@ body {
   background:   color-mix(in srgb, var(--cor-destaque) 8%, transparent);
 }
 .carrossel__setas button:focus-visible {
-  outline:        2px solid var(--cor-destaque);
+  outline:        2px solid var(--cor-destaque-texto-forte, var(--cor-destaque));
   outline-offset: 2px;
 }
 
@@ -632,7 +632,7 @@ body {
   color:        var(--cor-destaque-texto);
 }
 .catalogo-filtro:focus-visible {
-  outline:        2px solid var(--cor-destaque);
+  outline:        2px solid var(--cor-destaque-texto-forte, var(--cor-destaque));
   outline-offset: 2px;
 }
 
@@ -728,7 +728,7 @@ body {
 /* Ícone dourado (accent do tema) e que NÃO encolhe quando o texto quebra. */
 .catalogo-destaque__icone {
   flex-shrink: 0;
-  color:       var(--cor-destaque);
+  color:       var(--cor-destaque-texto-forte, var(--cor-destaque));
 }
 
 .catalogo-bloco__selo {
@@ -739,7 +739,7 @@ body {
   font-weight:   700;
   letter-spacing: 0.03em;
   background:    color-mix(in srgb, var(--cor-destaque) 16%, transparent);
-  color:         var(--cor-destaque);
+  color:         var(--cor-destaque-texto-forte, var(--cor-destaque));
   border:        1px solid color-mix(in srgb, var(--cor-destaque) 32%, transparent);
 }
 .catalogo-bloco__titulo {
@@ -753,7 +753,7 @@ body {
   text-decoration: none;
 }
 .catalogo-bloco__titulo-link:hover {
-  color: var(--cor-destaque);
+  color: var(--cor-destaque-texto-forte, var(--cor-destaque));
 }
 .catalogo-bloco__resumo {
   max-width: 60ch;                   /* linha legível; não estica no desktop largo */
@@ -766,9 +766,9 @@ body {
   margin-top:      4px;
   padding:         10px 22px;
   border-radius:   999px;
-  border:          1px solid var(--cor-destaque);
+  border:          1px solid var(--cor-destaque-texto-forte, var(--cor-destaque));
   background:      transparent;
-  color:           var(--cor-destaque);
+  color:           var(--cor-destaque-texto-forte, var(--cor-destaque));
   font-size:       15px;
   font-weight:     700;
   text-decoration: none;
@@ -834,7 +834,7 @@ body {
   padding:        18px;
 }
 .ficha-card__icone {
-  color: var(--cor-destaque);
+  color: var(--cor-destaque-texto-forte, var(--cor-destaque));
 }
 .ficha-card__label {
   font-size: 13px;
