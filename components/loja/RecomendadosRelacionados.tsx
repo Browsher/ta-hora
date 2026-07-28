@@ -34,7 +34,10 @@ export function RecomendadosRelacionados({ produtos }: { produtos: ProductCard[]
           hoje (a chamada é só da vitrine da Home). */}
       <CarrosselMobile
         id="carrossel-recomendados"
-        rotulo="Você também pode gostar"
+        // Nome PRÓPRIO da faixa, diferente do aria-label da <section> acima: se
+        // os dois fossem iguais, um leitor de tela anunciaria o mesmo rótulo
+        // duas vezes ao entrar na região.
+        rotulo="Produtos recomendados"
         quantidade={produtos.length}
         classeFaixa="recomendados-grade"
       >

@@ -36,7 +36,8 @@ e a distinção importa:
 
 | Rota | Regime | Origem do regime |
 |---|---|---|
-| `/` (Home), `/sobre-nos` | **`○` Static (SSG)** — pré-renderizadas, sem Shopify | conteúdo dirigido por JSON, sem API dinâmica de servidor |
+| `/sobre-nos` | **`○` Static (SSG)** — pré-renderizada, sem Shopify | conteúdo dirigido por JSON, sem API dinâmica de servidor |
+| `/` (Home) | **ISR 300s** — desde a spec `home-produtos-carrossel` | `export const revalidate = 300` em `app/page.tsx` |
 | `/catalogo` | **ISR 300s** | `export const revalidate = 300` em `app/catalogo/page.tsx` |
 | `/produtos/[handle]` | **ISR 300s** + `dynamicParams` | `export const revalidate = 300` em `app/produtos/[handle]/page.tsx` |
 
@@ -69,17 +70,31 @@ sempre".
   declarando `export const revalidate` na rota. Isso é uma decisão de spec, não
   um bug.
 
-> **Já planejado:** a frente do **`ProductGrid` da Home por tag** (produtos em
-> destaque vindos da Shopify) **vai** tirar a Home de SSG puro e colocá-la em
-> **ISR**. É intencional e esperado. Quando isso acontecer, a tabela acima muda —
-> e a verificação "`/` é `○ (Static)`" da spec `carrinho-loja` deixa de valer,
-> substituída por "`/` é ISR". **Não trate essa verificação como proibição
-> permanente**: ela existe para pegar o carrinho tornando a Home dinâmica sem
-> querer.
+> **JÁ ACONTECEU — a spec `home-produtos-carrossel` fez a mudança.** A seção
+> "Nossos Produtos" da Home deixou de ser placeholder de template e passa a
+> mostrar produtos reais da Shopify, então a Home saiu de SSG puro e está em
+> **ISR 300s** (`export const revalidate = 300` em `app/page.tsx`). A tabela
+> acima já reflete isso.
+>
+> Duas correções ao que este bloco previa: a fonte é a **coleção `destaques`**
+> (`sortKey: MANUAL`, a ordem que o lojista arrasta no admin), **não uma tag**; e
+> o `ProductGrid` **não foi tocado** — a Home ganhou uma seção nova, `VitrineHome`,
+> ao lado dele, porque o `ProductGrid` é do template do Builder e continua
+> registrado no `componentMap` para os outros JSONs.
+>
+> A verificação "`/` é `○ (Static)`" da spec `carrinho-loja` **deixou de valer
+> para a Home** e é substituída por "**`/` é ISR**". Ela continua valendo para
+> `/sobre-nos`. O que aquela verificação sempre quis pegar era o **carrinho**
+> tornando a Home dinâmica sem querer — e isso segue proibido.
 
 Regra prática ao ler um `○` que virou `ƒ`/ISR: pergunte **qual spec mudou isso e
-se ela quis**. Carrinho mexendo no regime da Home = bug. `ProductGrid` por tag
-mexendo = a feature.
+se ela quis**. Carrinho mexendo no regime da Home = bug. A vitrine de produtos
+da Home mexendo = a feature.
+
+> ⚠️ Como LER a saída do build do Next 16: rotas de ISR aparecem com **`○` + um
+> valor na coluna `Revalidate`**, não com `ƒ`. O que distingue ISR de estático
+> puro é a **coluna `Revalidate`**, não o glifo — `/` e `/catalogo` mostram `5m`;
+> `/sobre-nos` mostra a coluna vazia.
 
 ## Restrições do conteúdo dirigido por JSON
 
@@ -159,8 +174,9 @@ Combinado com o usuário: **Build + verificação manual**.
 
 1. `npm run build` deve **passar sem erros de TypeScript**, e `npx tsc --noEmit`
    ficar limpo.
-2. Conferir na **saída do build** que `/` e `/sobre-nos` seguem `○ (Static)` e
-   que `/catalogo` e `/produtos/[handle]` seguem com ISR — regressão aqui é
+2. Conferir na **saída do build** que `/sobre-nos` segue `○ (Static)` e que `/`,
+   `/catalogo` e `/produtos/[handle]` seguem com **ISR** (`/` desde a spec
+   `home-produtos-carrossel` — ver "Home estática" acima) — regressão aqui é
    silenciosa.
 3. `npm run build` **sem `.env.local`** deve continuar passando.
 4. Verificar visualmente em `npm run dev` antes de considerar a tarefa concluída.
