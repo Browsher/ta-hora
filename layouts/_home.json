@@ -12,7 +12,7 @@
       "effect": "none",
       "content": {
         "navPosition": "fixa",
-        "linkCount": 4,
+        "linkCount": 3,
         "ctaVisible": true,
         "showLogo": true,
         "logoType": "texto",
@@ -20,10 +20,10 @@
         "link1Label": "Catálogo",
         "link1Href": "/catalogo",
         "link2Label": "Sobre Nós",
-        "link3Label": "Rastreio",
-        "link4Label": "Suporte",
-        "link4Href": "/suporte",
+        "link3Label": "Suporte",
+        "link3Href": "/suporte",
         "ctaLabel": "Quero Comprar",
+        "ctaHref": "/catalogo",
         "sectionBg": null,
         "link2Href": "/sobre-nos"
       },
@@ -45,6 +45,8 @@
         "badgeText": "Frete grátis acima de R$ 199",
         "headline": "O %%melhor preço%% em eletrônicos originais",
         "subheadline": "Entrega rápida pra todo o Brasil e parcelamento em até 12x.",
+        "ctaHref": "/catalogo",
+        "ctaSecHref": "/sobre-nos",
         "stat1Value": "+10000"
       },
       "paddingTop": 80,
@@ -208,7 +210,8 @@
         "headline": "%%Aproveite agora%% e receba em casa",
         "subtitle": "+20 mil clientes já compraram com frete rápido e garantia. Sua vez chegou.",
         "sectionBg": "linear-gradient(to top, #e59701, #834506)",
-        "ctaLabel": "Ver ofertas"
+        "ctaLabel": "Ver ofertas",
+        "ctaHref": "/catalogo"
       },
       "effects": {
         "preset": "personalizado",
@@ -230,9 +233,9 @@
         "column1Link1Label": "Catálogo",
         "column1Link1Href": "/catalogo",
         "column1Link2Label": "Sobre Nós",
-        "column1Link3Label": "Rastreio",
-        "column1Link4Label": "Suporte",
-        "column1Link4Href": "/suporte",
+        "column1Link3Label": "Suporte",
+        "column1Link3Href": "/suporte",
+        "column1Link4Label": "",
         "column2Link1Label": "Seja um Afiliado",
         "column2Link2Label": "Política de privacidade",
         "column2Link3Label": "Termos de uso",
