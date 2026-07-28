@@ -7,6 +7,7 @@ import { useEffectsMode } from "@/lib/EffectsModeContext"
 import { SectionLabel } from "@/components/ui/SectionLabel"
 import { Heading } from "@/components/ui/Heading"
 import { ProductCardLink } from "@/components/loja/ProductCardLink"
+import { CarrosselMobile } from "@/components/ui/CarrosselMobile"
 // import type: só o TIPO (apagado na compilação) — a fronteira cliente/servidor
 // fica intacta. Esta seção NUNCA busca nada: recebe a lista pronta do servidor.
 import type { ProductCard } from "@/lib/shopify/types"
@@ -89,13 +90,25 @@ export function VitrineHome({
               outro lado), e um componente sem Framer Motion não aceitaria essas
               props de animação. */}
           <motion.div {...itemProps}>
-            <div className="vitrine-home__grade">
+            {/* 🔴 O `id` da faixa vem de `idSecao`, NUNCA de uma constante: o
+                `PreviewContent` renderiza o que o JSON listar, e dois
+                `VitrineHome` no mesmo layout gerariam ids duplicados — os dois
+                pares de setas rolariam a primeira faixa. `section.id` já é
+                único por construção do JSON.
+                `classeFaixa`: a grade de desktop continua sendo esta classe; o
+                carrossel só se sobrepõe a ela dentro da media query de mobile. */}
+            <CarrosselMobile
+              id={`carrossel-vitrine-${idSecao}`}
+              rotulo="Nossos produtos"
+              quantidade={produtos.length}
+              classeFaixa="vitrine-home__grade"
+            >
               {produtos.map((produto) => (
                 // `verDetalhes`: a chamada do card, opt-in — os recomendados não
                 // a passam e seguem idênticos.
                 <ProductCardLink key={produto.id} product={produto} verDetalhes />
               ))}
-            </div>
+            </CarrosselMobile>
           </motion.div>
         </motion.div>
       </div>

@@ -1,5 +1,6 @@
 import { Heading } from "@/components/ui/Heading"
 import { ProductCardLink } from "@/components/loja/ProductCardLink"
+import { CarrosselMobile } from "@/components/ui/CarrosselMobile"
 import type { ProductCard } from "@/lib/shopify/types"
 
 // Server Component (SEM "use client"): monta a seção no servidor e renderiza os
@@ -25,11 +26,22 @@ export function RecomendadosRelacionados({ produtos }: { produtos: ProductCard[]
         color="var(--cor-texto)"
         accentColor="var(--cor-destaque)"
       />
-      <div className="recomendados-grade">
+      {/* A faixa substitui o <div className="recomendados-grade"> e CARREGA a
+          mesma classe: no desktop (≥768px) o layout é exatamente o de antes —
+          flex-wrap centralizado, base clamp(150px, 42vw, 240px), max-width 260px,
+          gap 20px. O carrossel só se sobrepõe dentro da media query de mobile.
+          🔴 `verDetalhes` NÃO é passado: os cards de recomendados seguem como
+          hoje (a chamada é só da vitrine da Home). */}
+      <CarrosselMobile
+        id="carrossel-recomendados"
+        rotulo="Você também pode gostar"
+        quantidade={produtos.length}
+        classeFaixa="recomendados-grade"
+      >
         {produtos.map((p) => (
           <ProductCardLink key={p.id} product={p} />
         ))}
-      </div>
+      </CarrosselMobile>
     </section>
   )
 }

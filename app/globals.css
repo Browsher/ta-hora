@@ -491,6 +491,102 @@ body {
   color:       var(--cor-destaque);
 }
 
+/* ─── Carrossel de mobile (feature home-produtos-carrossel) ───────────────────
+   Compartilhado pela vitrine da Home e por "Você também pode gostar". A faixa
+   carrega DUAS classes: a grade do consumidor (que governa o desktop e NÃO é
+   tocada aqui) e `.carrossel__faixa`, lida só dentro da media query abaixo.
+
+   🔴 A DECISÃO MOBILE/DESKTOP É `@media` PURA, nunca JavaScript. `useIsMobile`
+   devolve `false` no primeiro render: usá-lo faria o HTML do servidor sair
+   sempre no ramo de desktop, e o mobile só mudaria depois da hidratação — o
+   Google veria uma coisa e o visitante, outra.
+
+   ESTA PARTE É BASE (fora de media query) por um motivo só: as setas EXISTEM no
+   HTML sempre, e é o CSS que as revela no mobile. Esconder por JS traria de
+   volta o problema acima. */
+.carrossel__setas {
+  display: none;
+}
+/* Alvo de toque ≥40px nos dois eixos. Cores derivadas de --cor-destaque por
+   color-mix, mesmo padrão do `.catalogo-filtro`. Zero hex. */
+.carrossel__setas button {
+  min-width:     40px;
+  min-height:    40px;
+  border-radius: 999px;
+  border:        1px solid color-mix(in srgb, var(--cor-destaque) 22%, transparent);
+  background:    transparent;
+  color:         var(--cor-destaque);
+  font-size:     20px;
+  line-height:   1;
+  cursor:        pointer;
+  transition:    border-color 0.18s ease, background 0.18s ease;
+}
+.carrossel__setas button:hover {
+  border-color: color-mix(in srgb, var(--cor-destaque) 45%, transparent);
+  background:   color-mix(in srgb, var(--cor-destaque) 8%, transparent);
+}
+.carrossel__setas button:focus-visible {
+  outline:        2px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/* 🔴 TODO o resto do carrossel vive DENTRO desta media query, de propósito:
+   remover este bloco devolve EXATAMENTE o CSS de antes da feature. É a prova,
+   verificável por diff, de que o desktop não foi tocado — por isso este trecho
+   inverte a convenção mobile-first do resto do arquivo.
+
+   `767.98px` e não `767px`: cobre viewports fracionários (zoom/DPI) sem deixar
+   um vão de 1px onde nem o carrossel nem a grade se aplicariam. */
+@media (max-width: 767.98px) {
+  .carrossel__faixa[data-ativo="true"] {
+    flex-wrap:                  nowrap;         /* anula o wrap da grade */
+    justify-content:            flex-start;     /* anula o center da grade */
+    overflow-x:                 auto;
+    /* 🔴 `overflow-y: hidden` é OBRIGATÓRIO, não zelo: pelo CSS, quando um eixo
+       é `auto` o outro NÃO pode continuar `visible` — ele computa para `auto`
+       também. Sem isto a faixa viraria um container de rolagem VERTICAL, e o
+       `hover:-translate-y-1` que o card já tem seria clipado no mobile. É também
+       o que garante que o arrasto vertical passe direto para a página, em vez de
+       prender o dedo de quem arrasta na diagonal. */
+    overflow-y:                 hidden;
+    /* ⚠️ Os 12px são PREMISSA da conta da largura de card abaixo. A grade de
+       desktop usa 20px; mudar este valor exige refazer a conta. */
+    gap:                        12px;
+    padding-block:              6px;            /* respiro p/ o card levantar no hover */
+    scroll-snap-type:           x mandatory;
+    scroll-padding-inline:      16px;           /* o card focado não encosta na borda */
+    overscroll-behavior-inline: contain;        /* não encadeia no gesto de "voltar" */
+  }
+  /* ~1,5 item: o card ativo ocupa 72% da faixa e o próximo espia na borda.
+     Com os paddings reais das duas seções (clamp(20px, 5vw, 64px)) e o gap de
+     12px acima: 77,6px de espiada em 360px e 92,3px em 414px — bem acima do
+     mínimo de 24px, mesmo descontando o scroll-padding no pior caso (~61,6px).
+
+     Especificidade 0,2,0+elemento: vence `.recomendados-grade > *` (0,1,0), que
+     é o que permite anular a base e o max-width do desktop SEM tocar naquelas
+     regras. */
+  .carrossel__faixa[data-ativo="true"] > * {
+    flex:              0 0 72%;
+    max-width:         none;
+    scroll-snap-align: start;
+  }
+  .carrossel__setas {
+    display:         flex;
+    gap:             8px;
+    justify-content: center;
+    margin-top:      12px;
+  }
+}
+
+/* O par CSS do que o handler das setas já faz em JS: nenhuma rolagem suave da
+   faixa sob reduced-motion, venha ela de onde vier (inclusive de um
+   `scroll-behavior: smooth` herdado que alguém adicione no futuro). */
+@media (prefers-reduced-motion: reduce) {
+  .carrossel__faixa {
+    scroll-behavior: auto;
+  }
+}
+
 /* ─── Catálogo consultivo (feature catalogo-consultivo) ──────────────────────
    Blocos largos horizontais + barra de filtros. Mobile-first (mesmo precedente
    de `.produto-grid`): o padrão é coluna; a partir de 768px o bloco vira linha.
