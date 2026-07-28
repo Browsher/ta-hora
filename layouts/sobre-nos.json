@@ -12,7 +12,7 @@
       "effect": "none",
       "content": {
         "navPosition": "fixa",
-        "linkCount": 4,
+        "linkCount": 3,
         "ctaVisible": true,
         "showLogo": true,
         "logoType": "texto",
@@ -20,10 +20,10 @@
         "link1Label": "Catálogo",
         "link1Href": "/catalogo",
         "link2Label": "Sobre Nós",
-        "link3Label": "Rastreio",
-        "link4Label": "Suporte",
-        "link4Href": "/suporte",
+        "link3Label": "Suporte",
+        "link3Href": "/suporte",
         "ctaLabel": "Quero Comprar",
+        "ctaHref": "/catalogo",
         "sectionBg": null,
         "link2Href": "/sobre-nos"
       },
@@ -103,14 +103,13 @@
       "variation": "",
       "effect": "none",
       "content": {
-        "marketplaceCount": 3,
+        "marketplaceCount": 2,
         "nameVisible": true,
         "phraseVisible": true,
         "marketplace1Logo": "/uploads/mercado-libre-thumbnail--1538x1510--b612412b.webp",
         "marketplace1Href": "https://www.mercadolivre.com.br/pagina/cftv_ch",
         "marketplace2Logo": "/uploads/images.png",
-        "marketplace3Logo": "/uploads/tik-tok-ecommerce-fundo-preto.png",
-        "marketplace3Name": "TikTok",
+        "marketplace2Href": "https://shopee.com.br/shop/1139914848",
         "descriptionVisible": true,
         "descriptionText": "Mais de 10 mil vendas em marketplaces e agora com site próprio!"
       }
@@ -125,6 +124,7 @@
         "sectionLabel": "NÃO PERCA ESSA OPORTUNIDADE",
         "headline": "%%Faça%% parte dessa %%nova fase%%",
         "ctaLabel": "Aproveitar agora",
+        "ctaHref": "/catalogo",
         "subtitle": "Descontos maiores e vantagens exclusivas, direto na nossa plataforma."
       }
     },
@@ -143,9 +143,9 @@
         "column1Link1Label": "Catálogo",
         "column1Link1Href": "/catalogo",
         "column1Link2Label": "Sobre Nós",
-        "column1Link3Label": "Rastreio",
-        "column1Link4Label": "Suporte",
-        "column1Link4Href": "/suporte",
+        "column1Link3Label": "Suporte",
+        "column1Link3Href": "/suporte",
+        "column1Link4Label": "",
         "column2Link1Label": "Seja um Afiliado",
         "column2Link2Label": "Política de privacidade",
         "column2Link3Label": "Termos de uso",
