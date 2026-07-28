@@ -21,7 +21,25 @@ export interface Paleta {
   textoFraco?:      string
   destaque?:        string
   destaqueTexto?:   string
+  /** Accent LEGÍVEL como texto/foco sobre o fundo. Ver bloco abaixo. */
+  destaqueTextoForte?: string
 }
+
+// ─── Os três papéis do accent ────────────────────────────────────────────────
+// `destaque` é o accent de SUPERFÍCIE: fundo de botão sólido, preenchimento de
+// badge, pill, faixa, borda decorativa. Vibrante de propósito.
+//
+// `destaqueTexto` é o texto/ícone SOBRE essa superfície (o par do slot acima).
+//
+// `destaqueTextoForte` existe porque os dois de cima não resolvem um terceiro
+// caso: o accent usado como cor de TEXTO sobre o FUNDO da página. Num tema
+// escuro o mesmo hex serve para as duas coisas; num tema claro, não — o laranja
+// do site (#ff8903) sobre #FAFAF8 dá 2.28:1 e reprova no WCAG AA. O mesmo vale
+// para o anel de :focus-visible, que precisa de 3:1 (WCAG 1.4.11).
+//
+// Slot OPCIONAL: quem não o define não muda de comportamento. Os pontos de uso
+// escrevem `var(--cor-destaque-texto-forte, <accent>)`, então a ausência cai no
+// accent de sempre — layouts antigos continuam abrindo sem migração.
 
 // ─── Card: cor base → gradiente derivado ─────────────────────────────────────
 // O slot `card` guarda UMA cor base (hex simples, editável no ColorField).
@@ -50,8 +68,9 @@ export const PALETA_VARS: Record<keyof Paleta, string> = {
   texto:           "--cor-texto",
   textoSecundario: "--cor-texto-secundario",
   textoFraco:      "--cor-texto-fraco",
-  destaque:        "--cor-destaque",
-  destaqueTexto:   "--cor-destaque-texto",
+  destaque:           "--cor-destaque",
+  destaqueTexto:      "--cor-destaque-texto",
+  destaqueTextoForte: "--cor-destaque-texto-forte",
 }
 
 // Converte a paleta em CSS custom properties para o style do wrapper.

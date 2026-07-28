@@ -23,6 +23,14 @@
    vence naturalmente (é a mesma mecânica do campo "Fundo da seção" do
    Personalizar, que continua tendo prioridade sobre o global).                  */
 :root {
+  /* Esquema de cor do DOCUMENTO: barra de rolagem, autofill e controles nativos
+     (que vivem fora dos wrappers de paleta) precisam ser desenhados claros.
+     Acompanha a paleta CARIMBADA do site, não este :root — que segue escuro de
+     propósito: ele é o fallback de fábrica do builder e o detector do modo de
+     falha "slot de paleta ausente". Se o site voltar a ser escuro, os dois
+     voltam juntos. */
+  color-scheme: light;
+
   --cor-fundo:            #0D0A08;                                     /* fundo da página (body) */
   --cor-superficie:       #141210;                                    /* superfícies elevadas (navbar, cards planos) */
   --cor-card:             linear-gradient(160deg, #1c1508 0%, #110e06 100%); /* fundo de card (gradiente) */
@@ -32,6 +40,7 @@
   --cor-texto-fraco:      rgba(232, 220, 200, 0.55);                  /* legendas/placeholders — base bege, opacidade menor */
   --cor-destaque:         #D4A017;                                    /* cor de destaque (accent) */
   --cor-destaque-texto:   #000000;                                    /* par do accent: cor do texto/ícone SOBRE o accent — cada tema define os dois */
+  --cor-destaque-texto-forte: #D4A017;                                /* accent como TEXTO/FOCO sobre o fundo. Aqui = o próprio accent: sobre #0D0A08 o dourado dá 8.31:1, então a fábrica escura não precisa de tom fechado. Num tema CLARO os dois divergem (ver lib/paleta.ts) */
 }
 
 @keyframes gradient {
