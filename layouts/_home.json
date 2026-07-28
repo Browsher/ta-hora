@@ -22,6 +22,7 @@
         "link2Label": "Sobre Nós",
         "link3Label": "Rastreio",
         "link4Label": "Suporte",
+        "link4Href": "/suporte",
         "ctaLabel": "Quero Comprar",
         "sectionBg": null,
         "link2Href": "/sobre-nos"
@@ -231,6 +232,7 @@
         "column1Link2Label": "Sobre Nós",
         "column1Link3Label": "Rastreio",
         "column1Link4Label": "Suporte",
+        "column1Link4Href": "/suporte",
         "column2Link1Label": "Seja um Afiliado",
         "column2Link2Label": "Política de privacidade",
         "column2Link3Label": "Termos de uso",
