@@ -1,0 +1,1 @@
+export { VitrineHome } from "./VitrineHome"

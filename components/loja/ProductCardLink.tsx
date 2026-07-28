@@ -10,7 +10,18 @@ import type { ProductCard } from "@/lib/shopify/types"
 
 // Card clicável da vitrine: imagem + título + preço, linkando para a página do
 // produto. Reusa os primitivos de components/ui/.
-export function ProductCardLink({ product }: { product: ProductCard }) {
+//
+// `verDetalhes` é ADITIVO e OPT-IN (feature home-produtos-carrossel): a vitrine
+// da Home pede a chamada "Ver detalhes"; os recomendados ("Você também pode
+// gostar") NÃO. 🔴 O default `false` é o que mantém os recomendados renderizando
+// EXATAMENTE como hoje — nenhum outro consumidor precisou mudar.
+export function ProductCardLink({
+  product,
+  verDetalhes = false,
+}: {
+  product:      ProductCard
+  verDetalhes?: boolean
+}) {
   return (
     <Link
       href={`/produtos/${product.handle}`}
@@ -51,6 +62,13 @@ export function ProductCardLink({ product }: { product: ProductCard }) {
           }}
         />
         <PriceTag price={product.price.price} currency={product.price.currency} size="medio" />
+        {/* 🔴 <span>, NUNCA <button> nem um segundo <a>: o card INTEIRO já é o
+            link (o <Link> aqui em volta). Um controle aninhado dentro de um link
+            é DOM inválido, quebra teclado e leitor de tela, e dobraria a
+            navegação por Tab para o mesmo destino. Isto é aparência — a
+            semântica de "clicável" é do <Link>. Estilizado por
+            `.vitrine-home__ver-detalhes` em globals.css. */}
+        {verDetalhes && <span className="vitrine-home__ver-detalhes">Ver detalhes</span>}
       </div>
     </Link>
   )

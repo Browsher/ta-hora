@@ -95,16 +95,14 @@
     },
     {
       "id": "288b19de-0ab6-4e9c-bb47-a20b9ae7a85a",
-      "component": "ProductGrid",
+      "component": "VitrineHome",
       "type": "grid",
       "variation": "",
       "effect": "none",
       "content": {
         "gridWidth": "centralizado",
         "headline": "%%Escolha%% o modelo ideal para você",
-        "product1Name": "Produto 01",
-        "product2Name": "Produto 02",
-        "product3Name": "Produto 03"
+        "sectionLabel": "Nossos Produtos"
       },
       "effects": {
         "preset": "personalizado",

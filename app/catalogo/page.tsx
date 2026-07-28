@@ -36,8 +36,16 @@ export default async function CatalogoPage() {
       >
         {/* Cabeçalho centralizado (alinha com a barra de filtros .catalogo-filtros). */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8 }}>
-          <SectionLabel text="Nossos produtos" accentColor="var(--cor-destaque)" />
-          <Heading as="h1" size="medio" text="Catálogo" color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
+          {/* O SectionLabel já aplica `text-transform: uppercase` — o texto vem em
+              caixa normal aqui e sai "CATÁLOGO" na tela (mesmo padrão dos irmãos). */}
+          <SectionLabel text="Catálogo" accentColor="var(--cor-destaque)" />
+          <Heading
+            as="h1"
+            size="medio"
+            text="Encontre a câmera ideal para você"
+            color="var(--cor-texto)"
+            accentColor="var(--cor-destaque)"
+          />
         </div>
         {corpo}
       </div>

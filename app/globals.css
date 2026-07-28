@@ -457,6 +457,40 @@ body {
   max-width: 260px;
 }
 
+/* ─── Vitrine da Home — seção "Nossos Produtos" (feature home-produtos-carrossel)
+   Grade dos produtos reais da coleção `destaques`. Fora de qualquer media query:
+   ESTA é a grade de desktop, e ela vale em toda largura enquanto o carrossel do
+   mobile (Bloco 3) não existir.
+
+   🔴 ESPELHA `.recomendados-grade`, mas NÃO a reusa. Aquela classe está congelada
+   ("Você também pode gostar" tem de continuar idêntico ao de hoje); se a Home
+   dependesse dela, qualquer ajuste futuro na vitrine teria de sair por uma classe
+   nova de qualquer jeito — ou quebraria o congelamento. Separar custa ~6 linhas.
+
+   flex + wrap + justify-content:center: cards SEMPRE centralizados, de 1 até o
+   teto de 12, sem card solto esticado e sem estouro horizontal (um grid de
+   colunas fracionárias deixaria 1 card colado à esquerda). */
+.vitrine-home__grade {
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+  align-items:     stretch;          /* cards da mesma linha com a mesma altura */
+  gap:             20px;
+}
+.vitrine-home__grade > * {
+  flex:      0 1 clamp(150px, 42vw, 240px);
+  max-width: 260px;
+}
+
+/* A chamada "Ver detalhes" do card (prop opt-in `verDetalhes` do ProductCardLink).
+   É um <span> DENTRO do <a> do card — aparência, não controle: nada aqui pode
+   sugerir um segundo alvo clicável separado. Só variáveis --cor-*, zero hex. */
+.vitrine-home__ver-detalhes {
+  font-size:   0.8125rem;
+  font-weight: 600;
+  color:       var(--cor-destaque);
+}
+
 /* ─── Catálogo consultivo (feature catalogo-consultivo) ──────────────────────
    Blocos largos horizontais + barra de filtros. Mobile-first (mesmo precedente
    de `.produto-grid`): o padrão é coluna; a partir de 768px o bloco vira linha.

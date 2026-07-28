@@ -12,6 +12,10 @@ import { contrastColor } from "@/lib/utils"
 import { PALETA_ATIVA, paletaWrapperStyle } from "@/lib/paleta"
 import { getPaleta } from "@/lib/estilos"
 import type { Layout, SectionEffects } from "@/lib/types"
+// import type: só o TIPO. Este arquivo é "use client" — importar VALOR de
+// lib/shopify/ arrastaria o token para o bundle (e o `server-only` quebraria o
+// build, que é o ponto).
+import type { ProductCard } from "@/lib/shopify/types"
 
 // Static imports only — Turbopack requires statically analyzable import paths.
 // When a new component is approved, add its static import here manually.
@@ -27,6 +31,7 @@ import { HowItWorks } from "@/components/sections/HowItWorks"
 import { ProductGrid } from "@/components/sections/ProductGrid"
 import { Testimonials } from "@/components/sections/Testimonials"
 import { Marketplaces } from "@/components/sections/Marketplaces"
+import { VitrineHome } from "@/components/sections/VitrineHome"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
@@ -38,9 +43,14 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   Footer,
   HowItWorks,
   Navbar,
+  // 🔴 ProductGrid CONTINUA registrado: outros JSONs e o preview do Builder
+  // dependem dele. A vitrine da Home é uma seção NOVA ao lado, não uma
+  // substituição no mapa — removê-lo daqui seria regressão mesmo sem tocar no
+  // arquivo dele.
   ProductGrid,
   Testimonials,
   Marketplaces,
+  VitrineHome,
 }
 
 // ─── Parallax wrapper ─────────────────────────────────────────────────────────
@@ -72,6 +82,10 @@ function ParallaxSection({ children, amount }: { children: React.ReactNode; amou
 
 interface PreviewContentProps {
   layout: Layout
+  /** Produtos da vitrine da Home, buscados NO SERVIDOR (app/page.tsx).
+   *  OPCIONAL de propósito: /sobre-nos usa o mesmo renderizador e não tem
+   *  vitrine nenhuma — não deve ser obrigado a passar nada. */
+  produtosVitrine?: ProductCard[]
 }
 
 // Navbar e Footer têm entrada própria (navEntry/footerEntry) e não sofrem o
@@ -95,7 +109,7 @@ function disableEntry(effects: SectionEffects | null): SectionEffects | null {
   }
 }
 
-export function PreviewContent({ layout }: PreviewContentProps) {
+export function PreviewContent({ layout, produtosVitrine }: PreviewContentProps) {
   const globalEffects = initGlobalEffects(layout)
 
   // Paleta CARIMBADA no layout (as 9 cores). Fallback: nome (compat) → fábrica.
@@ -145,6 +159,24 @@ export function PreviewContent({ layout }: PreviewContentProps) {
           // p/ firstContentIdx acima — não colidem. As seções de conteúdo mantêm
           // o parallax exatamente como antes.
           const noParallax = OWN_ENTRY.has(section.component)
+          // ── Costura JSON ↔ Shopify ──────────────────────────────────────────
+          // Este renderizador é genérico DE PROPÓSITO: ele não sabe o que cada
+          // seção faz, só monta props a partir do JSON. Esta é a ÚNICA exceção,
+          // e ela é NOMEADA para ficar visível. Existe porque a vitrine da Home
+          // é a primeira seção cujo conteúdo NÃO vem do JSON — vem da Shopify
+          // ("os dados da loja NÃO moram em JSON"). Buscar aqui dentro é
+          // impossível: este arquivo é "use client". Então o servidor busca e
+          // injeta, e a exceção fica num lugar só, em vez de virar um
+          // `useEffect` escondido dentro da seção.
+          //
+          // `produtosVitrine ?? []` → em /sobre-nos a prop nem existe, e a
+          // VitrineHome (se algum JSON a listasse) devolveria null sozinha.
+          // `idSecao`: a seção precisa de um id único, e `section.id` é a única
+          // fonte de unicidade que o renderizador conhece.
+          const propsDaVitrine =
+            section.component === "VitrineHome"
+              ? { produtos: produtosVitrine ?? [], idSecao: section.id }
+              : null
           return (
             <ParallaxWrapper
               key={section.id}
@@ -171,6 +203,9 @@ export function PreviewContent({ layout }: PreviewContentProps) {
                     {...section.content}
                     content={section.content}
                     accentColor={resolvedAccent}
+                    // 🔴 DEPOIS de {...section.content}: se algum JSON antigo
+                    // tiver uma chave `produtos`, quem vence é o servidor.
+                    {...propsDaVitrine}
                   />
                 </div>
               </SectionEffectsContext.Provider>
