@@ -105,7 +105,9 @@ function CountdownBlock({
               <span style={{
                 fontSize:           digitSize,
                 fontWeight:         800,
-                color:              accentColor,
+                // Dígitos do contador = TEXTO. Esta seção recebe a faixa creme
+                // do tema claro; o accent vibrante daria 2.26:1 sobre ela.
+                color:              `var(--cor-destaque-texto-forte, ${accentColor})`,
                 lineHeight:         1,
                 fontVariantNumeric: "tabular-nums",
                 letterSpacing:      "-0.02em",
@@ -127,7 +129,8 @@ function CountdownBlock({
               <span style={{
                 fontSize:      Math.round(digitSize * 0.6),
                 fontWeight:    700,
-                color:         accentColor,
+                // Separador ":" do contador = TEXTO (ver dígitos acima).
+                color:         `var(--cor-destaque-texto-forte, ${accentColor})`,
                 lineHeight:    1,
                 paddingBottom: Math.round(digitSize * 0.28),
                 opacity:       0.65,

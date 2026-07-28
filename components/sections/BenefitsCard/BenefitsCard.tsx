@@ -57,7 +57,8 @@ function BenefitItem({ text, accentColor }: { text: string; accentColor: string 
   return (
     <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
       <span style={{
-        color:      accentColor,
+        // Glifo ✓ = TEXTO.
+        color:      `var(--cor-destaque-texto-forte, ${accentColor})`,
         flexShrink: 0,
         fontSize:   15,
         lineHeight: "1.6",
@@ -96,8 +97,9 @@ function CardIcon({
         hover={se?.icons?.hover}
         size={size}
         bgColor="transparent"
+        // Duplo uso: o anel é SUPERFÍCIE (vibrante), o ícone é TEXTO (tom forte).
         borderColor={accentColor}
-        color={accentColor}
+        color={`var(--cor-destaque-texto-forte, ${accentColor})`}
       />
     )
   }
@@ -107,7 +109,7 @@ function CardIcon({
         icon={iconEmoji}
         hover={se?.icons?.hover}
         size={size}
-        color={accentColor}
+        color={`var(--cor-destaque-texto-forte, ${accentColor})`}
       />
     )
   }

@@ -86,15 +86,18 @@ function NumberBadge({ num, accentColor, numberStyle }: {
   }
 
   if (numberStyle === "outline") {
+    // Duplo uso na MESMA linha: o dígito é TEXTO (tom forte), o anel é
+    // SUPERFÍCIE decorativa (accent vibrante). Não unificar os dois.
     return (
-      <div style={{ ...base, border: `2px solid ${accentColor}`, color: accentColor }}>
+      <div style={{ ...base, border: `2px solid ${accentColor}`, color: `var(--cor-destaque-texto-forte, ${accentColor})` }}>
         {num}
       </div>
     )
   }
   if (numberStyle === "ghost") {
+    // Número "ghost": só o dígito, sem superfície → TEXTO.
     return (
-      <div style={{ ...base, color: accentColor, fontSize: 22, fontWeight: 900 }}>
+      <div style={{ ...base, color: `var(--cor-destaque-texto-forte, ${accentColor})`, fontSize: 22, fontWeight: 900 }}>
         {String(num).padStart(2, "0")}
       </div>
     )

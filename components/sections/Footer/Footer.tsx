@@ -168,7 +168,8 @@ function FooterLink({
         lineHeight:     1.7,
         cursor:         "pointer",
         textDecoration: hover === "sublinhado" && hovered ? "underline" : "none",
-        color:          hover === "cor" && hovered ? accentColor : "var(--cor-texto-fraco)",
+        // Link em hover = TEXTO.
+        color:          hover === "cor" && hovered ? `var(--cor-destaque-texto-forte, ${accentColor})` : "var(--cor-texto-fraco)",
         transition:     "color 0.15s ease",
       }}
     >

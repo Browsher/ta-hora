@@ -45,7 +45,7 @@ function LogoText({ text, accentColor }: { text: string; accentColor: string }) 
     <span style={{ fontSize: "clamp(16px, 2vw, 20px)", fontWeight: 700, letterSpacing: "-0.01em", color: "var(--cor-texto)" }}>
       {parts.map((part, i) =>
         part.startsWith("%%") && part.endsWith("%%") ? (
-          <span key={i} style={{ color: accentColor }}>{part.slice(2, -2)}</span>
+          <span key={i} style={{ color: `var(--cor-destaque-texto-forte, ${accentColor})` }}>{part.slice(2, -2)}</span>
         ) : (
           <span key={i}>{part}</span>
         )
@@ -213,10 +213,12 @@ export function Navbar({
               aria-expanded={menuOpen}
               style={{
                 background:   "none",
-                border:       `1px solid color-mix(in srgb, ${accentColor} 20.78%, transparent)`,
+                // Esta borda é o ÚNICO contorno do botão (background: none) —
+                // identificação de controle, não decoração (WCAG 1.4.11) → tom forte.
+                border:       `1px solid color-mix(in srgb, var(--cor-destaque-texto-forte, ${accentColor}) 20.78%, transparent)`,
                 borderRadius: 6,
                 padding:      "6px 10px",
-                color:        accentColor,
+                color:        `var(--cor-destaque-texto-forte, ${accentColor})`,
                 fontSize:     18,
                 cursor:       "pointer",
                 lineHeight:   1,

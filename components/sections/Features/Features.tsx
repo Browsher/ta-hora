@@ -137,7 +137,9 @@ function renderIcon(
       icon={item.icon}
       hover={se?.icons?.hover}
       size={size}
-      color={accentColor}
+      // Ícone = glifo de TEXTO → tom forte. A caixa opcional (bgColor/borderColor
+      // abaixo) é SUPERFÍCIE e segue no accent vibrante.
+      color={`var(--cor-destaque-texto-forte, ${accentColor})`}
       {...(withBox
         ? { bgColor: `color-mix(in srgb, ${accentColor} 10.2%, transparent)`, borderColor: `color-mix(in srgb, ${accentColor} 25.1%, transparent)` }
         : {})}

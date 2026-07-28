@@ -115,7 +115,8 @@ function AccordionItem({
         </span>
         {/* Chevron: CSS rotate on <span>, not on motion element (armadilha #4) */}
         <span style={{
-          color:        accentColor,
+          // Chevron = glifo de TEXTO.
+          color:        `var(--cor-destaque-texto-forte, ${accentColor})`,
           fontSize:     18,
           flexShrink:   0,
           display:      "inline-block",
@@ -353,7 +354,8 @@ function FAQPorCategoria({ c, containerProps, itemProps, accentColor, items, ope
                       fontWeight:    700,
                       letterSpacing: "0.14em",
                       textTransform: "uppercase" as const,
-                      color:         accentColor,
+                      // Rótulo de categoria = TEXTO.
+                      color:         `var(--cor-destaque-texto-forte, ${accentColor})`,
                     }}>
                       {group.cat}
                     </span>

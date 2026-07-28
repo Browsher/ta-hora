@@ -246,7 +246,7 @@ function CardCanal({
         textDecoration:  "none",
       }}
     >
-      <span style={{ color: accentColor, display: "inline-flex", flexShrink: 0 }}>
+      <span style={{ color: `var(--cor-destaque-texto-forte, ${accentColor})`, display: "inline-flex", flexShrink: 0 }}>
         {icone}
       </span>
       <span style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
@@ -255,7 +255,8 @@ function CardCanal({
           fontWeight:    700,
           letterSpacing: "0.14em",
           textTransform: "uppercase",
-          color:         accentColor,
+          // Rótulo do card, sobre var(--cor-card) = TEXTO.
+          color:         `var(--cor-destaque-texto-forte, ${accentColor})`,
         }}>
           {titulo}
         </span>
@@ -333,7 +334,7 @@ function FaixaHorario({
       }}
     >
       {/* Decorativo: o texto ao lado já carrega a informação. */}
-      <IconSlot icon="clock" size={16} color={accentColor} aria-hidden="true" />
+      <IconSlot icon="clock" size={16} color={`var(--cor-destaque-texto-forte, ${accentColor})`} aria-hidden="true" />
       {/* texto-fraco = alpha 0.55, o piso permitido sobre fundo escuro. */}
       <Text size="pequeno" text={c.horarioTexto} color="var(--cor-texto-fraco)" />
     </motion.div>
