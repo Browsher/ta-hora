@@ -273,7 +273,10 @@ explícitos.
 
 ### Bloco 4 — Orquestração (o caminho da venda): a feature liga
 
-- [ ] 14. Criar o helper `recarimbar` em `lib/carrinho/acoes.ts`
+- [x] 14. Criar o helper `recarimbar` em `lib/carrinho/acoes.ts`
+  - ✅ Além da checagem de aceite, o carimbo preserva `aviso`/`erro` da operação
+    original (só o `carrinho` vem da resposta do carimbo) — mesma armadilha da
+    purga do cupom; ver comentário no código.
   - File: `lib/carrinho/acoes.ts`
   - `async function recarimbar(cartId, resultado, afiliadoRefAtual):
     Promise<ResultadoCarrinho>` — lê `lerRefDeAfiliado()`; devolve o
@@ -303,7 +306,7 @@ explícitos.
   - _Leverage: lib/afiliados/cookie.ts, lib/shopify/carrinho.ts (atualizarAtributos)_
   - _Requirements: 3.2, 3.4, 3.6, 3.7, 3.8, 3.9, 4.1, 4.4_
 
-- [ ] 15. Ligar o read-repair no `lerCarrinho()`
+- [x] 15. Ligar o read-repair no `lerCarrinho()`
   - File: `lib/carrinho/acoes.ts`
   - Após a leitura bem-sucedida, chamar `recarimbar(cartId, resultado,
     afiliadoRef)` e devolver o resultado dele
@@ -318,7 +321,7 @@ explícitos.
   - _Leverage: components/loja/CarrinhoProvider.tsx (sincronizar/mount — apenas como justificativa, NÃO alterar)_
   - _Requirements: 3.2, 3.8, 4.1_
 
-- [ ] 16. Carimbar na criação do carrinho com fallback sem attributes em `criarEGravar`
+- [x] 16. Carimbar na criação do carrinho com fallback sem attributes em `criarEGravar`
   - File: `lib/carrinho/acoes.ts`
   - `criarEGravar(merchandiseId)`: lê `lerRefDeAfiliado()`; com ref válido →
     `criarCarrinhoCom(merchandiseId, 1, [{ key: CHAVE_ATRIBUTO, value: ref }])`
@@ -335,7 +338,7 @@ explícitos.
   - _Leverage: lib/shopify/carrinho.ts (criarCarrinhoCom)_
   - _Requirements: 3.1, 3.3, 3.5, 3.9, 4.2_
 
-- [ ] 17. Adicionar o recarimbo defensivo no ramo de carrinho preexistente do `adicionarItem`
+- [x] 17. Adicionar o recarimbo defensivo no ramo de carrinho preexistente do `adicionarItem`
   - File: `lib/carrinho/acoes.ts`
   - No ramo em que `adicionarLinhas` devolveu carrinho, chamar `recarimbar`
     com o `afiliadoRef` **da própria resposta** — custo zero quando já

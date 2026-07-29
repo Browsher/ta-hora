@@ -7,6 +7,7 @@ import {
   atualizarLinhas,
   removerLinhas,
   definirCupons,
+  atualizarAtributos,
   buscarVarianteParaCarrinho,
   ERRO_DA_SHOPIFY,
 } from "@/lib/shopify/carrinho"
@@ -16,6 +17,8 @@ import {
   gravarIdDoCarrinho,
   descartarIdDoCarrinho,
 } from "./cookie"
+import { lerRefDeAfiliado } from "@/lib/afiliados/cookie"
+import { CHAVE_ATRIBUTO } from "@/lib/afiliados/ref"
 import type { ResultadoCarrinho, ProductCard } from "@/lib/shopify/types"
 
 // A FRONTEIRA cliente/servidor. Esta é a ÚNICA superfície que o cliente toca.
@@ -74,6 +77,99 @@ async function comTratamentoDeErro(
   }
 }
 
+// ─── Rastreamento de afiliados (spec rastreamento-afiliados) ─────────────────
+//
+// O carimbo `afiliado_ref` no carrinho, para o pedido chegar ao webhook do
+// sistema de afiliados com a atribuição. Três princípios governam tudo abaixo:
+//
+//   1. SEM COOKIE, NADA MUDA. Sem ref válido não há mutation extra, não há
+//      round-trip extra e o comportamento é byte a byte o de antes da feature.
+//   2. O CARIMBO NUNCA ATRAPALHA A VENDA. Toda falha de rastreamento é
+//      silenciosa e devolve o carrinho que existiria sem ele. O pior caso
+//      aceito é "venda sem crédito"; "venda perdida" é inaceitável.
+//   3. IDEMPOTÊNCIA DE GRAÇA. O fragmento traz `attributes`, então saber o ref
+//      atual não custa rede: só carimbamos quando DIVERGE.
+
+/**
+ * Garante que o carrinho carregue o ref do cookie — e devolve o carrinho que o
+ * cliente deve ver.
+ *
+ * `afiliadoRefAtual` é o que a operação anterior JÁ leu do carrinho (vem junto
+ * do resultado, sem round-trip). `resultado` é o que devolvemos se não houver
+ * nada a fazer — ou se o carimbo falhar.
+ *
+ * ⚠️⚠️ POR QUE `try/catch` AQUI NÃO BASTA — leia antes de "simplificar".
+ *
+ * `atualizarAtributos` roda sobre `executarMutation`, que **NÃO LANÇA** quando a
+ * Shopify devolve `userErrors`: ele devolve um `ResultadoCarrinho` com
+ * `erro: ERRO_DA_SHOPIFY` e, possivelmente, `carrinho: null`. Um `catch` nunca
+ * veria isso. E como esta função roda dentro do `lerCarrinho()`, que o
+ * `CarrinhoProvider` dispara no mount de TODA página:
+ *
+ *   • propagar aquele `erro` faria o `comTratamentoDeErro` traduzi-lo para
+ *     "Não foi possível atualizar seu carrinho" — no site inteiro, para todo
+ *     visitante com cookie de afiliado;
+ *   • propagar aquele `carrinho: null` ESVAZIARIA o drawer de quem tem itens.
+ *
+ * Por isso a regra é de ACEITE, não de exceção: só usamos a resposta do carimbo
+ * quando ela é inequivocamente boa (`erro === null && carrinho !== null`).
+ * Qualquer outra coisa — erro, userError, carrinho nulo ou exceção — devolve o
+ * `resultado` original INTACTO. O `try/catch` existe por cima disso, para a
+ * rede caindo; ele não substitui a checagem.
+ */
+async function recarimbar(
+  cartId:           string,
+  resultado:        ResultadoCarrinho,
+  afiliadoRefAtual: string | null,
+): Promise<ResultadoCarrinho> {
+  try {
+    const ref = await lerRefDeAfiliado()
+
+    // Sem ref (visitante orgânico, cookie expirado ou valor adulterado): nada a
+    // fazer, e nenhuma chamada à Shopify (princípio 1).
+    if (!ref) return resultado
+
+    // Já carimbado com o mesmo valor: nada a fazer (princípio 3).
+    if (ref === afiliadoRefAtual) return resultado
+
+    // Cookie ausente + carrinho carimbado NÃO cai aqui (sai no `!ref` acima), e
+    // isso é deliberado: nunca REMOVEMOS um carimbo. Ele valeu na janela em que
+    // aconteceu; um cookie que expirou depois não descredita a atribuição.
+    const carimbado = await atualizarAtributos(cartId, [
+      // Só `afiliado_ref`. NÃO adicionar `afiliado_ref_ts`: o webhook o ignora
+      // (Req 3.9), e a mutation SUBSTITUI a lista inteira de attributes.
+      { key: CHAVE_ATRIBUTO, value: ref },
+    ])
+
+    // A CHECAGEM DE ACEITE — ver o aviso grande acima. Não relaxe para
+    // `carimbado.carrinho ?? resultado.carrinho`: um `erro` não-nulo ainda
+    // subiria.
+    if (carimbado.erro === null && carimbado.carrinho !== null) {
+      // ⚠️ SÓ O CARRINHO vem do carimbo. `aviso` e `erro` são SEMPRE os da
+      // operação original — é a MESMA armadilha da purga do cupom, algumas
+      // funções abaixo: a 2ª mutation responde `aviso: null`, e propagá-la
+      // inteira APAGARIA a mensagem que o cliente ainda não leu.
+      //
+      // Concreto: cliente pede 99 unidades, a Shopify limita ao estoque e avisa
+      // "Ajustamos a quantidade ao estoque disponível" — e o recarimbo, rodando
+      // logo em seguida, engoliria esse aviso. O número na tela mudaria sozinho,
+      // sem explicação. Um `erro` do `cartLinesAdd` sumiria do mesmo jeito.
+      return {
+        carrinho: carimbado.carrinho,
+        aviso:    resultado.aviso,
+        erro:     resultado.erro,
+      }
+    }
+
+    return resultado
+  } catch {
+    // Rede caindo, env ausente, o que for. Deliberadamente sem `console.error`:
+    // a mensagem de `storefrontFetch` inclui o endpoint, e isto rodaria a cada
+    // carga de página.
+    return resultado
+  }
+}
+
 // ─── Leitura (tarefa 11) ──────────────────────────────────────────────────────
 
 /**
@@ -92,14 +188,24 @@ export async function lerCarrinho(): Promise<ResultadoCarrinho> {
   if (!cartId) return VAZIO
 
   return comTratamentoDeErro(async () => {
-    const { resultado } = await lerCarrinhoPorId(cartId)
+    const { resultado, afiliadoRef } = await lerCarrinhoPorId(cartId)
     // `cart: null` = expirado/inexistente/finalizado. Autocorrige para vazio,
     // sem erro ao cliente (Req 2.3/2.6).
     if (!resultado.carrinho) {
       await descartarIdDoCarrinho()
       return VAZIO
     }
-    return resultado
+
+    // ⚠️ ESTE É O PONTO DE SINCRONIZAÇÃO DO REF — e ele mora numa função de
+    // LEITURA de propósito. O motivo é estrutural: o `CarrinhoProvider` dispara
+    // `lerCarrinho()` no mount de TODA página, e chegar por um link de afiliado
+    // é sempre uma navegação completa (o proxy redireciona). Então o cookie já
+    // existe quando a página monta, e o recarimbo acontece ANTES de qualquer
+    // clique — inclusive no cenário "cliente já tinha carrinho, chega com ref
+    // novo e vai direto ao checkout sem adicionar nada" (Req 3.8), que nenhum
+    // gancho no `adicionarItem` alcançaria. Não existe caminho até o botão de
+    // finalizar que não passe por um mount.
+    return recarimbar(cartId, resultado, afiliadoRef)
   })
 }
 
@@ -127,21 +233,62 @@ export async function adicionarItem(handle: string): Promise<ResultadoCarrinho> 
     // Sem carrinho → cria JÁ COM a linha: UMA mutation (Req 1.2).
     if (!cartId) return criarEGravar(variante.merchandiseId)
 
-    const { resultado } = await adicionarLinhas(cartId, variante.merchandiseId)
+    const { resultado, afiliadoRef } = await adicionarLinhas(
+      cartId,
+      variante.merchandiseId,
+    )
 
     // Carrinho expirado/finalizado no meio do caminho: descarta e recria, SEM
     // erro para o cliente — ele só queria comprar (Req 2.3/2.6).
+    //
+    // Não precisa de recarimbo: a recriação passa pelo `criarEGravar`, que já
+    // nasce carimbado.
     if (!resultado.carrinho && !resultado.erro) {
       await descartarIdDoCarrinho()
       return criarEGravar(variante.merchandiseId)
     }
 
-    return resultado
+    // Cinto-e-suspensório: a fonte principal do carimbo em carrinho existente é
+    // o `lerCarrinho()` acima, que roda no mount. Este aqui cobre o caso raro de
+    // aquele repair ter falhado por rede. Custa ZERO quando já está
+    // sincronizado — o `afiliadoRef` veio junto da resposta do `cartLinesAdd`.
+    return recarimbar(cartId, resultado, afiliadoRef)
   })
 }
 
-/** Cria o carrinho e grava o cookie. O `id` não sai daqui. */
+/**
+ * Cria o carrinho e grava o cookie. O `id` não sai daqui.
+ *
+ * É o funil dos DOIS caminhos de criação: carrinho novo e recriação silenciosa
+ * de um carrinho expirado/finalizado. Por isso o carimbo mora aqui — cobre os
+ * dois de uma vez.
+ */
 async function criarEGravar(merchandiseId: string): Promise<ResultadoCarrinho> {
+  // `lerRefDeAfiliado` já valida o cookie (`^[A-Z0-9]{8}$`): um valor forjado
+  // vira `null` e nunca chega à Shopify.
+  const ref = await lerRefDeAfiliado().catch(() => null)
+
+  if (ref) {
+    const comCarimbo = await criarCarrinhoCom(merchandiseId, 1, [
+      // Só `afiliado_ref` — sem `afiliado_ref_ts` (Req 3.9).
+      { key: CHAVE_ATRIBUTO, value: ref },
+    ])
+
+    if (comCarimbo.id) {
+      await gravarIdDoCarrinho(comCarimbo.id)
+      return comCarimbo.resultado
+    }
+
+    // A criação COM attributes falhou. RETENTA UMA VEZ SEM ELES (Req 4.2): é
+    // melhor um carrinho sem crédito que nenhum carrinho. O read-repair do
+    // `lerCarrinho()` tenta carimbar de novo na próxima carga de página.
+    //
+    // Trade honesto: este retry também dispara em falhas alheias ao attribute
+    // (produto indisponível, rede), gastando 1 round-trip num caminho já raro.
+    // Aceito — a alternativa seria diagnosticar a causa do erro para decidir, e
+    // errar esse diagnóstico custaria a venda.
+  }
+
   const { id, resultado } = await criarCarrinhoCom(merchandiseId)
   if (id) await gravarIdDoCarrinho(id)
   return resultado
