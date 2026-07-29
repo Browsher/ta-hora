@@ -111,7 +111,7 @@ explícitos.
 
 ### Bloco 2 — Captura (`proxy.ts`): cookie gravado, ninguém lê
 
-- [ ] 5. Criar `proxy.ts` na raiz com o guard e o `matcher`
+- [x] 5. Criar `proxy.ts` na raiz com o guard e o `matcher`
   - File: `proxy.ts` (novo, raiz do projeto)
   - Next 16.2.9: a convenção é **`proxy.ts`** (rename oficial de
     `middleware.ts`), com `export function proxy(request: NextRequest)`
@@ -126,7 +126,7 @@ explícitos.
   - Purpose: instalar a interceptação sem ainda mudar nada
   - _Requirements: 1.1, 2.1, 2.3_
 
-- [ ] 6. Gravar `tahora_ref` e redirecionar 307 para a URL limpa em `proxy.ts`
+- [x] 6. Gravar `tahora_ref` e redirecionar 307 para a URL limpa em `proxy.ts`
   - File: `proxy.ts` (continuação da tarefa 5)
   - `normalizarRef(searchParams.get("ref"))` — `get` devolve a **primeira**
     ocorrência (Req 1.7); inválido → `NextResponse.next()` **sem** cookie e
@@ -149,7 +149,9 @@ explícitos.
   - _Leverage: lib/afiliados/ref.ts, lib/carrinho/cookie.ts (opções do cookie)_
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 4.1_
 
-- [ ] 7. Verificar a captura em `npm run dev` e o regime das rotas no build
+- [x] 7. Verificar a captura em `npm run dev` e o regime das rotas no build
+  - ✅ Verificado por `curl` em dev (8 casos, todos passaram) + build limpo.
+    Falta só a conferência visual do cookie no DevTools pelo usuário.
   - Files: nenhum (verificação)
   - Em dev: `/?ref=abcd1234` → redirect para `/`, cookie `tahora_ref` com
     valor `ABCD1234` (nome minúsculo, valor maiúsculo) em DevTools →
