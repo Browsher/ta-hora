@@ -92,14 +92,14 @@ export async function lerCarrinho(): Promise<ResultadoCarrinho> {
   if (!cartId) return VAZIO
 
   return comTratamentoDeErro(async () => {
-    const r = await lerCarrinhoPorId(cartId)
+    const { resultado } = await lerCarrinhoPorId(cartId)
     // `cart: null` = expirado/inexistente/finalizado. Autocorrige para vazio,
     // sem erro ao cliente (Req 2.3/2.6).
-    if (!r.carrinho) {
+    if (!resultado.carrinho) {
       await descartarIdDoCarrinho()
       return VAZIO
     }
-    return r
+    return resultado
   })
 }
 
@@ -127,16 +127,16 @@ export async function adicionarItem(handle: string): Promise<ResultadoCarrinho> 
     // Sem carrinho → cria JÁ COM a linha: UMA mutation (Req 1.2).
     if (!cartId) return criarEGravar(variante.merchandiseId)
 
-    const r = await adicionarLinhas(cartId, variante.merchandiseId)
+    const { resultado } = await adicionarLinhas(cartId, variante.merchandiseId)
 
     // Carrinho expirado/finalizado no meio do caminho: descarta e recria, SEM
     // erro para o cliente — ele só queria comprar (Req 2.3/2.6).
-    if (!r.carrinho && !r.erro) {
+    if (!resultado.carrinho && !resultado.erro) {
       await descartarIdDoCarrinho()
       return criarEGravar(variante.merchandiseId)
     }
 
-    return r
+    return resultado
   })
 }
 
@@ -234,8 +234,8 @@ export async function removerCupom(codigo: string): Promise<ResultadoCarrinho> {
 
 /** Cupons aplicáveis hoje — a mutation substitui a lista, então precisa deles. */
 async function cuponsAtuais(cartId: string): Promise<string[]> {
-  const r = await lerCarrinhoPorId(cartId)
-  return r.carrinho?.cupons.map((c) => c.codigo) ?? []
+  const { resultado } = await lerCarrinhoPorId(cartId)
+  return resultado.carrinho?.cupons.map((c) => c.codigo) ?? []
 }
 
 // ─── Acessórios sugeridos (tarefa 9) ──────────────────────────────────────────

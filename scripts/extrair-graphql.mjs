@@ -40,6 +40,8 @@ const OPERACOES_DO_CARRINHO = [
   "ATUALIZAR_LINHAS_MUTATION",
   "REMOVER_LINHAS_MUTATION",
   "DEFINIR_CUPONS_MUTATION",
+  // Rastreamento de afiliados: carimba `afiliado_ref` em carrinho já existente.
+  "ATUALIZAR_ATRIBUTOS_MUTATION",
 ]
 
 // De `queries.ts`. As do catálogo entram para provar NÃO-REGRESSÃO (não deviam

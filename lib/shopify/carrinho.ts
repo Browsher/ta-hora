@@ -9,7 +9,9 @@ import {
   ATUALIZAR_LINHAS_MUTATION,
   REMOVER_LINHAS_MUTATION,
   DEFINIR_CUPONS_MUTATION,
+  ATUALIZAR_ATRIBUTOS_MUTATION,
 } from "./queriesCarrinho"
+import { CHAVE_ATRIBUTO } from "@/lib/afiliados/ref"
 import {
   normalizeCarrinho,
   traduzirAvisos,
@@ -108,6 +110,25 @@ async function executarMutation<K extends string>(
   return paraResultado(data[chave])
 }
 
+// ─── Rastreamento de afiliados: leitura do carimbo ────────────────────────────
+
+/** Um cart attribute a enviar. Espelha o `AttributeInput` do schema. */
+export interface AtributoDoCarrinho {
+  key:   string
+  value: string
+}
+
+/**
+ * O `afiliado_ref` carimbado num carrinho — `null` quando não há.
+ *
+ * Este valor é INTERNO da camada `server-only`: ele existe para o orquestrador
+ * comparar com o cookie e decidir se precisa recarimbar. Ele NÃO entra no tipo
+ * `Carrinho` e NÃO cruza para o cliente — a UI não tem nada a fazer com ele.
+ */
+function extrairRef(carrinho: RawCarrinho | null): string | null {
+  return carrinho?.attributes?.find((a) => a.key === CHAVE_ATRIBUTO)?.value ?? null
+}
+
 // ─── Operações (tarefa 8) ─────────────────────────────────────────────────────
 
 /**
@@ -117,14 +138,20 @@ async function executarMutation<K extends string>(
  * é o único sinal disponível — a 2026-01 não expõe flag de "carrinho concluído".
  * A action descarta o cookie e trata como vazio, sem mostrar erro (Req 2.3/2.6).
  */
-export async function lerCarrinhoPorId(cartId: string): Promise<ResultadoCarrinho> {
+export async function lerCarrinhoPorId(
+  cartId: string,
+): Promise<{ resultado: ResultadoCarrinho; afiliadoRef: string | null }> {
   const data = await storefrontFetch<{ cart: RawCarrinho | null }>(
     CARRINHO_QUERY,
     { id: cartId },
     { semCache: true },
   )
-  if (!data.cart) return SEM_CARRINHO
-  return { carrinho: normalizeCarrinho(data.cart), aviso: null, erro: null }
+  if (!data.cart) return { resultado: SEM_CARRINHO, afiliadoRef: null }
+
+  return {
+    resultado:   { carrinho: normalizeCarrinho(data.cart), aviso: null, erro: null },
+    afiliadoRef: extrairRef(data.cart),
+  }
 }
 
 /**
@@ -138,25 +165,71 @@ export async function lerCarrinhoPorId(cartId: string): Promise<ResultadoCarrinh
 export async function criarCarrinhoCom(
   merchandiseId: string,
   quantidade = 1,
+  /**
+   * Attributes do carrinho novo (rastreamento de afiliados). OMITIDO quando não
+   * há ref — e omitir importa: a variável `$attributes` é nullable, então sem
+   * ela esta mutation é exatamente a que rodava antes desta feature.
+   */
+  atributos?: AtributoDoCarrinho[],
 ): Promise<{ id: string | null; resultado: ResultadoCarrinho }> {
   const data = await storefrontFetch<EnvelopeDeMutation<"cartCreate">>(
     CRIAR_CARRINHO_MUTATION,
-    { lines: [{ merchandiseId, quantity: quantidade }] },
+    {
+      lines: [{ merchandiseId, quantity: quantidade }],
+      // `...(cond && {...})` em vez de `attributes: atributos ?? null`: mandar
+      // `null` explícito não é o mesmo que não mandar nada.
+      ...(atributos?.length ? { attributes: atributos } : {}),
+    },
     { semCache: true },
   )
   const payload = data.cartCreate
   return { id: payload.cart?.id ?? null, resultado: paraResultado(payload) }
 }
 
+/**
+ * Carimba os attributes de um carrinho existente.
+ *
+ * ⚠️ A mutation SUBSTITUI a lista inteira (não faz merge) — ver o comentário da
+ * `ATUALIZAR_ATRIBUTOS_MUTATION`. Hoje `afiliado_ref` é o único attribute da
+ * loja, então enviar só ele é correto.
+ */
+export async function atualizarAtributos(
+  cartId:    string,
+  atributos: AtributoDoCarrinho[],
+): Promise<ResultadoCarrinho> {
+  return executarMutation(ATUALIZAR_ATRIBUTOS_MUTATION, "cartAttributesUpdate", {
+    cartId,
+    attributes: atributos,
+  })
+}
+
+/**
+ * Adiciona linhas e devolve, junto, o `afiliado_ref` que o carrinho tem AGORA.
+ *
+ * ⚠️ Esta é a única mutation que NÃO usa `executarMutation` — de propósito.
+ * `executarMutation` descarta o payload cru depois do `paraResultado`, e aqui
+ * precisamos dele para ler os `attributes`. A alternativa seria mudar o
+ * `executarMutation`, mas ele é compartilhado por outras 3 mutations
+ * (`cartLinesUpdate`, `cartLinesRemove`, `cartDiscountCodesUpdate`) e mexer
+ * nele para servir a um único chamador espalharia o custo por todas. Segue o
+ * mesmo padrão do `criarCarrinhoCom`, que também chama `storefrontFetch` direto.
+ */
 export async function adicionarLinhas(
   cartId:        string,
   merchandiseId: string,
   quantidade = 1,
-): Promise<ResultadoCarrinho> {
-  return executarMutation(ADICIONAR_LINHAS_MUTATION, "cartLinesAdd", {
-    cartId,
-    lines: [{ merchandiseId, quantity: quantidade }],
-  })
+): Promise<{ resultado: ResultadoCarrinho; afiliadoRef: string | null }> {
+  const data = await storefrontFetch<EnvelopeDeMutation<"cartLinesAdd">>(
+    ADICIONAR_LINHAS_MUTATION,
+    { cartId, lines: [{ merchandiseId, quantity: quantidade }] },
+    { semCache: true },
+  )
+  const payload = data.cartLinesAdd
+
+  return {
+    resultado:   paraResultado(payload),
+    afiliadoRef: extrairRef(payload.cart),
+  }
 }
 
 export async function atualizarLinhas(

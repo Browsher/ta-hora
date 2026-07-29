@@ -37,6 +37,18 @@ const CAMPOS_DO_CARRINHO = /* GraphQL */ `
     id
     checkoutUrl
     totalQuantity
+    # Os cart attributes — hoje só o 'afiliado_ref' (rastreamento de afiliados).
+    #
+    # POR QUE ESTÁ NO FRAGMENTO COMPARTILHADO, e não numa query própria: é o que
+    # torna a reconciliação do ref GRÁTIS EM REDE. Como TODA resposta de carrinho
+    # (a query e as 5 mutations) já diz qual ref está carimbado, o servidor
+    # compara com o cookie localmente e só dispara 'cartAttributesUpdate' quando
+    # DIVERGE. Sem isto, saber o ref atual custaria um round-trip por operação.
+    #
+    # ⚠️ Campo de OBJETO, não escalar — foi por isso que as 6 operações do
+    # carrinho precisaram ser revalidadas no Dev MCP ao adicioná-lo (ver o aviso
+    # na nota do fragmento em 'product { ... tags }' e scripts/extrair-graphql.mjs).
+    attributes { key value }
     cost {
       subtotalAmount { amount currencyCode }
       totalAmount    { amount currencyCode }
@@ -113,11 +125,16 @@ export const CARRINHO_QUERY = /* GraphQL */ `
 /**
  * Cria o carrinho JÁ COM as linhas — um único round-trip (Req 1.2).
  * Nunca `cartCreate` seguido de `cartLinesAdd`.
+ *
+ * `$attributes` é NULLABLE de propósito (`[AttributeInput!]`, sem o `!` final):
+ * quando o visitante não vem de link de afiliado, a variável é OMITIDA e esta
+ * mutation é byte a byte a que rodava antes do rastreamento. É o que mantém o
+ * caminho comum — a esmagadora maioria das compras — exatamente como estava.
  */
 export const CRIAR_CARRINHO_MUTATION = /* GraphQL */ `
   ${CAMPOS_DO_CARRINHO}
-  mutation CriarCarrinho($lines: [CartLineInput!]) {
-    cartCreate(input: { lines: $lines }) {
+  mutation CriarCarrinho($lines: [CartLineInput!], $attributes: [AttributeInput!]) {
+    cartCreate(input: { lines: $lines, attributes: $attributes }) {
       ${RETORNO_DA_MUTATION}
     }
   }
@@ -159,6 +176,26 @@ export const DEFINIR_CUPONS_MUTATION = /* GraphQL */ `
   ${CAMPOS_DO_CARRINHO}
   mutation DefinirCupons($cartId: ID!, $discountCodes: [String!]!) {
     cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+      ${RETORNO_DA_MUTATION}
+    }
+  }
+`
+
+/**
+ * Carimba os attributes de um carrinho JÁ EXISTENTE (rastreamento de afiliados).
+ *
+ * Como a `cartDiscountCodesUpdate`, esta mutation **SUBSTITUI** a lista inteira
+ * — não faz merge. Hoje isso é inofensivo porque `afiliado_ref` é o ÚNICO
+ * attribute que a loja usa. **Se um dia houver um segundo**, quem chamar precisa
+ * enviar `[...os outros, afiliado_ref]`, senão o carimbo novo apaga o antigo.
+ *
+ * `$attributes` aqui é NÃO-NULO (`[AttributeInput!]!`), ao contrário do
+ * `cartCreate`: só chamamos esta mutation quando há algo a carimbar.
+ */
+export const ATUALIZAR_ATRIBUTOS_MUTATION = /* GraphQL */ `
+  ${CAMPOS_DO_CARRINHO}
+  mutation AtualizarAtributos($cartId: ID!, $attributes: [AttributeInput!]!) {
+    cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
       ${RETORNO_DA_MUTATION}
     }
   }

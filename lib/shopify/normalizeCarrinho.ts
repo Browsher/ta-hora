@@ -67,6 +67,12 @@ interface RawCupom {
   applicable: boolean
 }
 
+/** Um cart attribute cru (`attributes { key value }` do fragmento). */
+interface RawAtributo {
+  key:   string
+  value: string | null
+}
+
 export interface RawCarrinho {
   id:            string
   checkoutUrl:   string
@@ -77,6 +83,15 @@ export interface RawCarrinho {
   }
   discountCodes: RawCupom[]
   lines:         { nodes: RawLinha[] }
+  /**
+   * Cart attributes — hoje só `afiliado_ref`.
+   *
+   * NÃO passa por `normalizeCarrinho`: o tipo `Carrinho` do domínio (o que
+   * cruza para o cliente) não tem attributes e não deve ter — a UI não precisa
+   * saber de rastreamento. Quem lê isto é `lib/shopify/carrinho.ts`, do lado
+   * `server-only`, para comparar com o cookie.
+   */
+  attributes?: RawAtributo[]
 }
 
 /** Um aviso de mutation (a Shopify sinaliza limite de estoque SÓ por aqui). */

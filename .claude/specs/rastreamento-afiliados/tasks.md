@@ -169,7 +169,7 @@ explícitos.
 
 ### Bloco 3 — Camada Shopify: formas novas, comportamento idêntico
 
-- [ ] 8. Adicionar `attributes { key value }` ao fragmento e a mutation nova em `queriesCarrinho.ts`
+- [x] 8. Adicionar `attributes { key value }` ao fragmento e a mutation nova em `queriesCarrinho.ts`
   - File: `lib/shopify/queriesCarrinho.ts`
   - `CAMPOS_DO_CARRINHO` ganha `attributes { key value }` — comentar que é o
     que torna a comparação do read-repair **grátis em rede** (toda resposta já
@@ -188,7 +188,7 @@ explícitos.
   - _Leverage: lib/shopify/queriesCarrinho.ts (RETORNO_DA_MUTATION, CAMPOS_DO_CARRINHO)_
   - _Requirements: 3.1, 3.2, 3.5, 3.7_
 
-- [ ] 9. Registrar a mutation nova em `scripts/extrair-graphql.mjs`
+- [x] 9. Registrar a mutation nova em `scripts/extrair-graphql.mjs`
   - File: `scripts/extrair-graphql.mjs`
   - Adicionar `"ATUALIZAR_ATRIBUTOS_MUTATION"` ao array
     `OPERACOES_DO_CARRINHO` — o script monta as operações com as interpolações
@@ -201,7 +201,9 @@ explícitos.
   - _Leverage: scripts/extrair-graphql.mjs_
   - _Requirements: 5.2_
 
-- [ ] 10. Validar as 7 operações no Dev MCP (Storefront 2026-01)
+- [x] 10. Validar as 7 operações no Dev MCP (Storefront 2026-01)
+  - ✅ 11/11 válidas (7 do carrinho + 4 de catálogo p/ não-regressão), zero
+    avisos de depreciação
   - Files: nenhum (verificação) — entrada é a saída da tarefa 9
   - `validate_graphql_codeblocks`, `api: storefront-graphql`,
     `version: 2026-01`, para as 7 operações
@@ -211,7 +213,7 @@ explícitos.
     operações existentes
   - _Requirements: 5.2, 4.3_
 
-- [ ] 11. Adicionar `atributos` opcional ao `criarCarrinhoCom` e criar `atualizarAtributos`
+- [x] 11. Adicionar `atributos` opcional ao `criarCarrinhoCom` e criar `atualizarAtributos`
   - File: `lib/shopify/carrinho.ts`
   - `criarCarrinhoCom(merchandiseId, quantidade = 1, atributos?: { key:
     string; value: string }[])` — quando ausente, **omitir a variável**
@@ -225,7 +227,7 @@ explícitos.
   - _Leverage: lib/shopify/carrinho.ts (executarMutation, paraResultado)_
   - _Requirements: 3.1, 3.2_
 
-- [ ] 12. Expor `afiliadoRef` no retorno de `lerCarrinhoPorId` e `adicionarLinhas` (refactor mecânico)
+- [x] 12. Expor `afiliadoRef` no retorno de `lerCarrinhoPorId` e `adicionarLinhas` (refactor mecânico)
   - Files: `lib/shopify/carrinho.ts`, `lib/carrinho/acoes.ts`
   - Adicionar `attributes` ao tipo `RawCarrinho` em
     `lib/shopify/normalizeCarrinho.ts` (linha ~70 — é onde o tipo mora, e ele
@@ -254,7 +256,11 @@ explícitos.
   - _Leverage: lib/shopify/carrinho.ts (padrão do `{ id, resultado }` do criarCarrinhoCom)_
   - _Requirements: 3.2, 3.7, 4.3_
 
-- [ ] 13. Fechar o Bloco 3 com `tsc`, build e clique manual no carrinho
+- [x] 13. Fechar o Bloco 3 com `tsc`, build e clique manual no carrinho
+  - ✅ `tsc` limpo, build limpo (regimes intactos), e teste de fumaça contra a
+    Shopify REAL: 20 checks, incluindo o aviso `DISCOUNT_NOT_FOUND` do cupom
+    inválido (o caminho de regressão do `cuponsAtuais`). Falta a conferência
+    visual do usuário no navegador.
   - Files: nenhum (verificação)
   - `npx tsc --noEmit` limpo; `rm -rf .next && npm run build` passando
   - Em dev, o fluxo inteiro **sem `?ref=`**: adicionar, alterar quantidade,
