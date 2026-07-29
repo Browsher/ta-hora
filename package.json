@@ -13,7 +13,8 @@
     "verificar:resumo": "node --env-file=.env.local scripts/verificar-resumo.mjs",
     "verificar:especificacoes": "node --env-file=.env.local scripts/verificar-especificacoes.mjs",
     "verificar:destaques": "node --env-file=.env.local scripts/verificar-destaques.mjs",
-    "verificar:vitrine": "node --env-file=.env.local scripts/verificar-vitrine.mjs"
+    "verificar:vitrine": "node --env-file=.env.local scripts/verificar-vitrine.mjs",
+    "verificar:afiliado": "node --env-file=.env.local scripts/verificar-afiliado.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

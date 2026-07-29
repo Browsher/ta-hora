@@ -350,7 +350,11 @@ explícitos.
   - Purpose: cumprir o Req 3.2 literal sem custo no caminho comum
   - _Requirements: 3.2, 3.7_
 
-- [ ] 18. Verificar o Bloco 4 em dev: carimbo, idempotência e ausência de ref
+- [x] 18. Verificar o Bloco 4 em dev: carimbo, idempotência e ausência de ref
+  - ✅ Validado pelo usuário no Bloco 4 (a feature liga; o carrinho SEM ref
+    funciona igual). O carimbo em si ficou provado pelo teste E2E real da
+    tarefa 21 (pedido #1001), que é evidência mais forte que a inspeção do
+    Network.
   - Files: nenhum (verificação)
   - **Sem cookie**: adicionar item → nenhuma chamada nova, comportamento
     idêntico ao atual (Req 3.6)
@@ -367,7 +371,9 @@ explícitos.
 
 ### Bloco 5 — Auditoria: prova de que carimba e de que nada regrediu
 
-- [ ] 19. Criar `scripts/verificar-afiliado.mjs` (inspeção do carrinho por ID)
+- [x] 19. Criar `scripts/verificar-afiliado.mjs` (inspeção do carrinho por ID)
+  - ✅ Testado nos 3 estados: carimbado (exit 0), sem carimbo (exit 1),
+    carrinho inexistente (exit 1)
   - Files: `scripts/verificar-afiliado.mjs` (novo), `package.json`
   - Segue o padrão dos `verificar-*.mjs` existentes: lê env com
     `node --env-file=.env.local`, consulta a Storefront API e imprime
@@ -381,7 +387,9 @@ explícitos.
   - _Leverage: scripts/verificar-tags.mjs (padrão de script de verificação)_
   - _Requirements: 5.3_
 
-- [ ] 20. Auditar regimes de renderização e build limpo
+- [x] 20. Auditar regimes de renderização e build limpo
+  - ✅ `tsc` limpo; build com `rm -rf .next` com regimes intactos; build **sem
+    `.env.local`** passa (exit 0) e o arquivo foi restaurado
   - Files: nenhum (verificação)
   - `rm -rf .next && npm run build`: `/`, `/catalogo`, `/produtos/[handle]`
     com Revalidate `5m`; `/sobre-nos` `○` sem Revalidate; linha `ƒ Proxy`
@@ -391,7 +399,11 @@ explícitos.
   - Purpose: fechar as portas de regressão silenciosa do projeto
   - _Requirements: 2.1, 2.2, 2.3_
 
-- [ ] 21. 🧑 **HUMANO** — Teste E2E real: pedido com `?ref=` → `afiliado_ref` no pedido Shopify
+- [x] 21. 🧑 **HUMANO** — Teste E2E real: pedido com `?ref=` → `afiliado_ref` no pedido Shopify
+  - ✅ **PROVADO — pedido de teste #1001.** Visita a `?ref=TESTE001` →
+    `afiliado_ref = TESTE001` nos **note_attributes** do pedido (seção
+    "Informações adicionais"), confirmado no admin da Shopify pelo usuário.
+    O caminho inteiro está verificado: link → cookie → carrinho → pedido.
   - Files: nenhum (verificação em produção/preview)
   - ⚠️ **Não executável por agente**: exige pedido real com pagamento e acesso
     ao admin da Shopify. Um executor automático deve **parar aqui e pedir ao
@@ -407,7 +419,11 @@ explícitos.
     da spec
   - _Requirements: 5.1_
 
-- [ ] 22. Auditar regressão do fluxo de compra sem `?ref=`
+- [x] 22. Auditar regressão do fluxo de compra sem `?ref=`
+  - ✅ Fluxos validados pelo usuário no Bloco 4 + teste de fumaça contra a
+    Shopify real reexecutado após o Bloco 4 (20 checks, inclui o aviso do cupom
+    inválido). `components/`, `app/`, `layouts/`, `lib/shopify/client.ts` e
+    `normalize.ts`: **zero** arquivos tocados na spec inteira.
   - Files: nenhum (verificação)
   - Sessão limpa (sem cookie `tahora_ref`): adicionar, alterar quantidade,
     remover, cupom válido, cupom inválido (aviso aparece), carrinho expirado
@@ -417,7 +433,7 @@ explícitos.
   - Purpose: a garantia do Req 4.3 — a venda ficou intocada
   - _Requirements: 3.6, 4.3_
 
-- [ ] 23. Registrar a dependência do dashboard de afiliados
+- [x] 23. Registrar a dependência do dashboard de afiliados
   - File: `.claude/specs/rastreamento-afiliados/DEPENDENCIA-DASHBOARD.md` (novo)
   - Documentar: o dashboard do **projeto Afiliados** (separado) gera links
     para o domínio Shopify; precisa passar a gerar
@@ -431,8 +447,57 @@ explícitos.
 
 ---
 
-## Evidências (preencher durante a execução)
+## Evidências
 
-- Operações validadas no Dev MCP (2026-01): _(tarefa 10)_
-- Pedido de teste com `afiliado_ref`: _(tarefa 21 — nº do pedido)_
-- Saída do build com os regimes: _(tarefa 20)_
+**Operações validadas no Dev MCP** (Storefront 2026-01, tarefa 10) — **11/11
+✅, zero avisos de depreciação**. As 7 do carrinho (`CARRINHO_QUERY`,
+`CRIAR_CARRINHO_MUTATION`, `ADICIONAR_LINHAS_MUTATION`,
+`ATUALIZAR_LINHAS_MUTATION`, `REMOVER_LINHAS_MUTATION`,
+`DEFINIR_CUPONS_MUTATION`, `ATUALIZAR_ATRIBUTOS_MUTATION`) mais as 4 de
+catálogo, para provar não-regressão. Montadas do código real por
+`scripts/extrair-graphql.mjs`.
+
+**Pedido de teste com `afiliado_ref`** (tarefa 21) — **pedido #1001**.
+`?ref=TESTE001` → `afiliado_ref = TESTE001` nos `note_attributes`, confirmado
+no admin da Shopify. É a prova de que o webhook de afiliados vai creditar.
+
+**Saída do build** (tarefa 20) — regimes intactos:
+
+```
+┌ ○ /                     5m   1y      ← ISR preservado
+├ ○ /catalogo             5m   1y      ← ISR preservado
+├ ● /produtos/[handle]    5m   1y      ← ISR preservado
+├ ○ /sobre-nos                         ← Static
+└ ○ /suporte                           ← Static
+
+ƒ Proxy (Middleware)                   ← a linha nova
+```
+
+Build **sem `.env.local`** passa (exit 0). `npx tsc --noEmit` limpo.
+
+**Comportamento do proxy** (tarefa 7) — 8 casos verificados por `curl` em dev:
+captura com normalização de caixa, ref inválido ignorado, params preservados,
+ref duplicado usa a primeira ocorrência, passthrough sem ref, last-touch
+sobrescrevendo, cookie preservado em ref inválido, e ausência de loop de
+redirect.
+
+**Camada Shopify** (tarefas 13 e 22) — teste de fumaça contra a loja **real**,
+20 checks, reexecutado após o Bloco 4. Inclui o caminho de regressão do cupom
+(`DISCOUNT_NOT_FOUND` continua avisando) e a confirmação **medida** de que o
+carimbo **persiste** numa leitura nova — a premissa que dispensou o polling do
+snippet original deixou de ser argumento e virou medição.
+
+**Superfície tocada** — a spec inteira mexeu em: `proxy.ts` (novo),
+`lib/afiliados/` (novo), `lib/shopify/queriesCarrinho.ts`,
+`lib/shopify/carrinho.ts`, `lib/shopify/normalizeCarrinho.ts`,
+`lib/carrinho/acoes.ts`, `scripts/extrair-graphql.mjs`,
+`scripts/verificar-afiliado.mjs` (novo) e `package.json`. **Zero** arquivos em
+`components/`, `app/` e `layouts/` — o `CarrinhoProvider` e toda a UI ficaram
+intocados.
+
+## Pendência conhecida (fora desta spec)
+
+O dashboard do **projeto Afiliados** ainda gera links para o domínio Shopify.
+Enquanto isso não mudar, os links distribuídos não passam pelo `proxy.ts` e
+nenhuma venda é atribuída — por mais correta que esteja a loja. Ver
+[`DEPENDENCIA-DASHBOARD.md`](./DEPENDENCIA-DASHBOARD.md).
