@@ -38,6 +38,8 @@
       "effect": "none",
       "content": {
         "rightContent": "imagem",
+        "imageSrc": "/uploads/Promocao_placa.webp",
+        "imageAlt": "Placa de aviso de monitoramento 24 horas oferecida como brinde na compra de câmeras",
         "badgeVisible": true,
         "ctaSecVisible": true,
         "statsVisible": true,
