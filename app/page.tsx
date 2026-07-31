@@ -2,13 +2,16 @@ import { PreviewContent } from "@/components/preview/PreviewContent"
 import { getPaleta } from "@/lib/estilos"
 import { getVitrineHome } from "@/lib/shopify/products"
 import type { Layout } from "@/lib/types"
+import { semNotasInternas } from "@/lib/semNotasInternas"
 import type { ProductCard } from "@/lib/shopify/types"
 import layoutData from "@/layouts/_home.json"
 
 // Rota do site: "Home". O layout já vem RESOLVIDO (navbar/footer/paleta
 // compartilhados do site embutidos) — o projeto exportado não conhece "Site",
 // cada rota é um Layout completo renderizado pelo mesmo PreviewContent.
-const layout = layoutData as unknown as Layout
+// semNotasInternas: tira as chaves `_*` (anotacao de quem edita o JSON) antes
+// de o layout virar prop de um componente client e vazar no payload RSC.
+const layout = semNotasInternas(layoutData as unknown as Layout)
 const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?.estilo)
 const fundo = paleta?.fundo ?? "#0D0A08"
 

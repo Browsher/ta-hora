@@ -44,7 +44,7 @@
         "ctaSecVisible": true,
         "statsVisible": true,
         "statCount": 2,
-        "badgeText": "Frete grátis acima de R$ 199",
+        "badgeText": "ENVIO EM 24H · DIRETO DO BRASIL",
         "headline": "O %%melhor preço%% em eletrônicos originais",
         "subheadline": "Entrega rápida pra todo o Brasil e parcelamento em até 12x.",
         "ctaHref": "/catalogo",
@@ -192,7 +192,7 @@
         "faq2Question": "Posso trocar ou devolver o produto?",
         "faq2Answer": "Sim. Você tem até 7 dias após o recebimento para solicitar troca ou devolução, conforme o CDC.",
         "faq3Question": "Os produtos têm garantia?",
-        "faq3Answer": "Todos são originais, acompanham nota fiscal e têm garantia do fabricante.",
+        "faq3Answer": "Sim. Todo produto tem 3 meses de garantia, dada direto pela nossa loja — sem assistência técnica no meio do caminho. Deu problema, você fala com a gente e a gente troca.",
         "faq4Question": "Quais as formas de pagamento?",
         "faq4Answer": "Cartão de crédito em até 12x, PIX com desconto e boleto bancário."
       },
@@ -210,7 +210,7 @@
       "content": {
         "sectionLabel": "Ofertas por tempo limitado",
         "headline": "%%Aproveite agora%% e receba em casa",
-        "subtitle": "+20 mil clientes já compraram com frete rápido e garantia. Sua vez chegou.",
+        "subtitle": "Frete rápido para todo o Brasil e 3 meses de garantia direto com a loja.",
         "sectionBg": "linear-gradient(to top, #FFF8EF, #FBE8D2)",
         "ctaLabel": "Ver ofertas",
         "ctaHref": "/catalogo"
@@ -241,7 +241,7 @@
         "column2Link1Label": "Seja um Afiliado",
         "column2Link2Label": "Política de privacidade",
         "column2Link3Label": "Termos de uso",
-        "column2Link4Label": "",
+        "column2Link4Label": "Trocas e devoluções",
         "column1Link2Href": "/sobre-nos"
       },
       "paddingBottom": 0,

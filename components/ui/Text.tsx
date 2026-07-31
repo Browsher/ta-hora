@@ -14,6 +14,12 @@ export type TextProps = Omit<MotionProps, "ref"> & {
   accentColor?:    string
   highlightColor?: string  // overrides accentColor for %% spans
   className?:      string
+  // `children` vem do MotionProps e serve de escape hatch para conteúdo inline
+  // rico (links, p. ex.), quando o texto não cabe numa string com o parser de
+  // %%. Se presente, SUBSTITUI `text` — quem passa children aplica o próprio
+  // realce. Usado por TextoLegal, que precisa de <a> no meio do parágrafo.
+  // Não é redeclarado aqui de propósito: as seções fazem spread de MotionProps
+  // em <Text>, e estreitar o tipo quebraria esses call sites.
 }
 
 // ─── Size scale ───────────────────────────────────────────────────────────────
@@ -61,6 +67,7 @@ export function Text({
   accentColor    = "#D4A017",
   highlightColor,
   className,
+  children,
   style,
   ...rest
 }: TextProps) {
@@ -79,7 +86,7 @@ export function Text({
       } as MotionProps["style"]}
       {...(rest as MotionProps)}
     >
-      {renderText(text, resolvedHL)}
+      {children ?? renderText(text, resolvedHL)}
     </motion.p>
   )
 }

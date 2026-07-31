@@ -1,17 +1,23 @@
+import type { Metadata } from "next"
 import { PreviewContent } from "@/components/preview/PreviewContent"
 import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
 import { semNotasInternas } from "@/lib/semNotasInternas"
-import layoutData from "@/layouts/sobre-nos.json"
+import layoutData from "@/layouts/termos-de-uso.json"
 
-// Rota do site: "Sobre-nos". O layout já vem RESOLVIDO (navbar/footer/paleta
-// compartilhados do site embutidos) — o projeto exportado não conhece "Site",
-// cada rota é um Layout completo renderizado pelo mesmo PreviewContent.
+// Rota do site: "Termos de Uso". Mesmo padrão do /suporte — layout RESOLVIDO,
+// renderizado pelo PreviewContent. Estática (○): documento legal, sem Shopify.
 // semNotasInternas: tira as chaves `_*` (anotacao de quem edita o JSON) antes
 // de o layout virar prop de um componente client e vazar no payload RSC.
 const layout = semNotasInternas(layoutData as unknown as Layout)
 const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?.estilo)
 const fundo = paleta?.fundo ?? "#0D0A08"
+
+export const metadata: Metadata = {
+  title: "Termos de Uso | Ta Hora",
+  description:
+    "Condições de uso do site do Ta Hora: compras, pagamentos, entrega, responsabilidades e direitos do consumidor.",
+}
 
 export default function Page() {
   return (

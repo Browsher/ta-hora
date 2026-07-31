@@ -56,45 +56,56 @@ interface FooterContent {
   copyright?: string
 }
 
+// Defaults da LOJA (não de template SaaS). Todo layout em layouts/*.json pode
+// sobrescrever qualquer chave; o que não sobrescrever cai aqui. Regra do bloco:
+// nenhum default aponta para destino inexistente — link cujo destino ainda não
+// existe entra com label "" e some via .filter(l => l.label) do buildColumns.
 const DEFAULT_CONTENT: Required<FooterContent> = {
-  logoText:    "%%Marca%%",
+  logoText:    "TA%%Hora%%",
   logoImage:   "",
-  description: "Transformando a maneira como você trabalha com soluções inteligentes e personalizadas.",
+  description: "Câmeras de segurança Wi-Fi originais, com nota fiscal e entrega para todo o Brasil.",
 
-  column1Title:      "Produto",
-  column1Link1Label: "Recursos",         column1Link1Href: "#recursos",
-  column1Link2Label: "Preços",           column1Link2Href: "#precos",
-  column1Link3Label: "Changelog",        column1Link3Href: "#changelog",
-  column1Link4Label: "Roadmap",          column1Link4Href: "#roadmap",
+  column1Title:      "Loja",
+  column1Link1Label: "Catálogo",         column1Link1Href: "/catalogo",
+  column1Link2Label: "Sobre Nós",        column1Link2Href: "/sobre-nos",
+  column1Link3Label: "Suporte",          column1Link3Href: "/suporte",
+  column1Link4Label: "",                 column1Link4Href: "",
 
+  // Os LABELS desta coluna são sobrescritos pelos layouts ("Seja um Afiliado",
+  // "Política de privacidade", "Termos de uso"); os HREFS não — vivem só aqui.
+  // Era daqui que saíam os #blog / #carreiras que apontavam para lugar nenhum.
   column2Title:      "Empresa",
+  // ⚠️ Link1: os layouts rotulam este item como "Seja um Afiliado" e a página de
+  // afiliados não existe — o href segue morto DE PROPÓSITO, para não fingir que
+  // leva a algum lugar. Corrigir junto com a criação de /afiliados.
   column2Link1Label: "Sobre nós",        column2Link1Href: "#sobre",
-  column2Link2Label: "Blog",             column2Link2Href: "#blog",
-  column2Link3Label: "Carreiras",        column2Link3Href: "#carreiras",
-  column2Link4Label: "Contato",          column2Link4Href: "#contato",
+  column2Link2Label: "Política de privacidade", column2Link2Href: "/politica-de-privacidade",
+  column2Link3Label: "Termos de uso",    column2Link3Href: "/termos-de-uso",
+  column2Link4Label: "Trocas e devoluções",     column2Link4Href: "/trocas-e-devolucoes",
 
   column3Title:      "Suporte",
-  column3Link1Label: "Central de ajuda", column3Link1Href: "#ajuda",
-  column3Link2Label: "Documentação",     column3Link2Href: "#docs",
-  column3Link3Label: "Status",           column3Link3Href: "#status",
-  column3Link4Label: "Comunidade",       column3Link4Href: "#comunidade",
+  column3Link1Label: "Fale com a gente", column3Link1Href: "/suporte",
+  column3Link2Label: "",                 column3Link2Href: "",
+  column3Link3Label: "",                 column3Link3Href: "",
+  column3Link4Label: "",                 column3Link4Href: "",
 
+  // Preenchida quando /politica-de-privacidade e /termos-de-uso existirem.
   column4Title:      "Legal",
-  column4Link1Label: "Privacidade",      column4Link1Href: "#privacidade",
-  column4Link2Label: "Termos de uso",    column4Link2Href: "#termos",
-  column4Link3Label: "Cookies",          column4Link3Href: "#cookies",
+  column4Link1Label: "",                 column4Link1Href: "",
+  column4Link2Label: "",                 column4Link2Href: "",
+  column4Link3Label: "",                 column4Link3Href: "",
   column4Link4Label: "",                 column4Link4Href: "",
 
-  newsletterLabel:       "Fique por dentro das novidades",
+  newsletterLabel:       "Receba as ofertas por email",
   newsletterPlaceholder: "Seu melhor email",
   newsletterCta:         "Assinar",
 
-  social1Icon: "instagram", social1Href: "#instagram",
-  social2Icon: "linkedin",  social2Href: "#linkedin",
-  social3Icon: "github",    social3Href: "#github",
-  social4Icon: "youtube",   social4Href: "#youtube",
+  social1Icon: "instagram", social1Href: "https://instagram.com/tahora.com.br",
+  social2Icon: "",          social2Href: "",
+  social3Icon: "",          social3Href: "",
+  social4Icon: "",          social4Href: "",
 
-  copyright: "© 2026 Marca. Todos os direitos reservados.",
+  copyright: "© 2026 Ta Hora — CH CFTV & Eletrônicos — CNPJ 46.340.461/0001-04 — Rua André de Leão, 78, Brás, São Paulo/SP, CEP 03101-010",
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

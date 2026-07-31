@@ -69,7 +69,7 @@
         "faq1Question": "Qual é o prazo de entrega?",
         "faq1Answer": "O prazo varia conforme a sua região e a forma de envio escolhida no checkout. Assim que o pedido é despachado, você recebe a confirmação com os dados de acompanhamento.",
         "faq2Question": "Os produtos têm garantia?",
-        "faq2Answer": "Sim, todos os produtos têm garantia. Se algo chegar com defeito, fale com a gente pelo WhatsApp que a gente te orienta no próximo passo.",
+        "faq2Answer": "Sim, 3 meses de garantia contados do recebimento, dada pela nossa loja. Se algo chegar com defeito, chame no WhatsApp que a gente troca direto, sem laudo e sem assistência.",
         "faq3Question": "Quais são as formas de pagamento?",
         "faq3Answer": "As formas de pagamento disponíveis aparecem na hora de finalizar a compra, no checkout.",
         "faq4Question": "Como acompanho meu pedido?",
@@ -98,7 +98,7 @@
         "column2Link1Label": "Seja um Afiliado",
         "column2Link2Label": "Política de privacidade",
         "column2Link3Label": "Termos de uso",
-        "column2Link4Label": ""
+        "column2Link4Label": "Trocas e devoluções"
       },
       "paddingBottom": 0,
       "paddingTop": 40

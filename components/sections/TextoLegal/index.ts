@@ -1,0 +1,1 @@
+export { TextoLegal } from "./TextoLegal"

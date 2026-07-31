@@ -1,0 +1,178 @@
+{
+  "id": "legal-tro-0000-0000-000000000000",
+  "name": "Trocas e Devoluções",
+  "template": "",
+  "updatedAt": "1970-01-01T00:00:00.000Z",
+  "globalSettings": {
+    "estilo": "elegante",
+    "paleta": {
+      "fundo": "#FAFAF8",
+      "superficie": "#F0EFEB",
+      "card": "#FFFFFF",
+      "borda": "#E2E0DA",
+      "texto": "#1A1A1A",
+      "textoSecundario": "#5A5A57",
+      "textoFraco": "#8E8B85",
+      "destaque": "#ff8903",
+      "destaqueTexto": "#000000",
+      "destaqueTextoForte": "#ff8903"
+    }
+  },
+  "sections": [
+    {
+      "id": "nav-tro-0000-0000-000000000000",
+      "component": "Navbar",
+      "type": "flutuante",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "navPosition": "fixa",
+        "linkCount": 3,
+        "ctaVisible": true,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "link1Label": "Catálogo",
+        "link1Href": "/catalogo",
+        "link2Label": "Sobre Nós",
+        "link2Href": "/sobre-nos",
+        "link3Label": "Suporte",
+        "link3Href": "/suporte",
+        "ctaLabel": "Quero Comprar",
+        "ctaHref": "/catalogo",
+        "sectionBg": null
+      },
+      "paddingTop": 0,
+      "paddingBottom": 0
+    },
+    {
+      "id": "txt-tro-0000-0000-000000000000",
+      "component": "TextoLegal",
+      "type": "",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "_naoPublicarAssim": "NAO PUBLICAR ASSIM. Rascunho de trabalho, nao revisado por advogado. Pendencias e roteiro de correcao na Shopify: docs/legal-pendencias.md",
+        "rotulo": "POLÍTICA",
+        "titulo": "Trocas e Devoluções",
+        "atualizadoEm": "Última atualização: 30 de julho de 2026",
+        "introducao": "Comprar câmera pela internet tem que ser tranquilo. Se algo não sair como você esperava, resolvemos direto com você — sem assistência técnica, sem laudo e sem enrolação. Abaixo estão as regras, os prazos e o passo a passo.",
+        "blocos": [
+          {
+            "titulo": "Resumo rápido",
+            "lista": [
+              "Mudou de ideia: você tem 7 dias corridos após receber para desistir da compra, sem precisar justificar.",
+              "Produto com defeito: garantia de 3 meses dada pela nossa loja, com troca direta.",
+              "Produto errado, avariado ou faltando item: avise em até 3 dias corridos após o recebimento.",
+              "O frete de devolução é sempre por nossa conta.",
+              "A placa de aviso recebida como brinde não precisa ser devolvida em nenhuma hipótese."
+            ]
+          },
+          {
+            "titulo": "Se você mudou de ideia (arrependimento)",
+            "paragrafos": [
+              "Você tem 7 dias corridos, contados a partir da data em que recebeu o produto, para desistir da compra. Não precisa dar motivo nenhum — é um direito garantido pelo Código de Defesa do Consumidor (Lei nº 8.078/1990, art. 49).",
+              "Para a devolução por arrependimento, pedimos que o produto esteja sem uso, na embalagem original e com todos os acessórios que vieram na caixa.",
+              "Devolvemos o valor integral que você pagou, incluindo o frete da compra."
+            ]
+          },
+          {
+            "titulo": "Se o produto apresentar defeito",
+            "paragrafos": [
+              "Todos os nossos produtos têm 3 meses de garantia, contados a partir do recebimento. Essa garantia é dada pela nossa loja, diretamente.",
+              "Na prática, isso é uma vantagem para você: não existe assistência técnica no meio do caminho. Você não precisa procurar rede autorizada, deixar a câmera em um balcão nem esperar laudo técnico para saber se tem direito à troca. Você fala com a gente, a gente confere e troca o produto.",
+              "Se o defeito aparecer dentro dos 3 meses, é troca direta: enviamos outra unidade do mesmo produto. Nesse caso não exigimos a embalagem original — sabemos que ninguém guarda caixa por três meses.",
+              "Defeitos causados por mau uso, queda, contato indevido com água em modelos de uso interno, tentativa de reparo por conta própria ou instalação elétrica inadequada não são cobertos."
+            ]
+          },
+          {
+            "titulo": "Se chegou o produto errado, avariado ou faltando alguma coisa",
+            "paragrafos": [
+              "Avise em até 3 dias corridos após o recebimento. Esse prazo é curto de propósito: quanto antes soubermos, mais fácil é resolver com a transportadora e mandar o produto certo para você.",
+              "Peça apenas isto: envie uma foto do produto e uma foto da embalagem. Não exigimos vídeo de abertura do pacote.",
+              "Confirmado o problema, corrigimos o pedido sem nenhum custo para você."
+            ]
+          },
+          {
+            "titulo": "Atenção aos dois prazos",
+            "paragrafos": [
+              "São regras diferentes e é importante não confundir uma com a outra.",
+              "O prazo de 7 dias é o do arrependimento: vale quando você simplesmente mudou de ideia sobre a compra.",
+              "O prazo de 3 dias vale apenas para avisar que o produto chegou errado, avariado ou incompleto. Ele não reduz, não limita e não substitui o seu direito de arrependimento de 7 dias.",
+              "E nenhum dos dois se confunde com a garantia de 3 meses, que cobre defeito do produto."
+            ]
+          },
+          {
+            "titulo": "Como solicitar",
+            "paragrafos": [
+              "É só falar com a gente por um destes canais, informando o número do pedido e o que aconteceu:"
+            ],
+            "lista": [
+              "WhatsApp — respondemos em até 1 dia útil.",
+              "E-mail — respondemos em até 2 dias úteis."
+            ]
+          },
+          {
+            "titulo": "Quem paga o frete da devolução",
+            "paragrafos": [
+              "Nós. O frete de devolução é por nossa conta tanto no caso de arrependimento quanto no caso de defeito, produto errado ou avaria. Você não paga nada para devolver."
+            ]
+          },
+          {
+            "titulo": "Para onde enviar o produto",
+            "paragrafos": [
+              "O endereço de devolução é informado por nós assim que sua solicitação for aberta. Não envie nada antes de falar com a gente — sem a solicitação registrada, não conseguimos identificar o pacote quando ele chegar."
+            ]
+          },
+          {
+            "titulo": "Prazos de conferência e reembolso",
+            "paragrafos": [
+              "Depois que o produto devolvido chegar até nós, temos até 3 dias úteis para conferi-lo. Aprovada a conferência, o reembolso é feito em até 5 dias úteis."
+            ],
+            "lista": [
+              "Pagamento no cartão de crédito: o estorno aparece na sua fatura conforme o prazo da operadora do cartão, que varia de acordo com a data de fechamento.",
+              "Pagamento no PIX: devolvemos na mesma chave usada na compra, em até 5 dias úteis."
+            ]
+          },
+          {
+            "titulo": "E a placa de brinde?",
+            "paragrafos": [
+              "A placa de aviso de monitoramento que acompanha a compra é um presente e é sua. Você não precisa devolvê-la em nenhuma hipótese, e não descontamos o valor dela do seu reembolso."
+            ]
+          }
+        ],
+        "contatoTitulo": "Precisa resolver alguma coisa?",
+        "contatoTexto": "Chame no WhatsApp ou escreva para icamera6688@gmail.com com o número do pedido. A gente responde e resolve direto com você."
+      },
+      "paddingTop": 0,
+      "paddingBottom": 0
+    },
+    {
+      "id": "foo-tro-0000-0000-000000000000",
+      "component": "Footer",
+      "type": "compacto",
+      "variation": "",
+      "effect": "none",
+      "content": {
+        "columnCount": 2,
+        "showSocial": false,
+        "showLogo": true,
+        "logoType": "texto",
+        "logoText": "TA%%Hora%%",
+        "column1Link1Label": "Catálogo",
+        "column1Link1Href": "/catalogo",
+        "column1Link2Label": "Sobre Nós",
+        "column1Link2Href": "/sobre-nos",
+        "column1Link3Label": "Suporte",
+        "column1Link3Href": "/suporte",
+        "column1Link4Label": "",
+        "column2Link1Label": "Seja um Afiliado",
+        "column2Link2Label": "Política de privacidade",
+        "column2Link3Label": "Termos de uso",
+        "column2Link4Label": "Trocas e devoluções"
+      },
+      "paddingBottom": 0,
+      "paddingTop": 40
+    }
+  ]
+}

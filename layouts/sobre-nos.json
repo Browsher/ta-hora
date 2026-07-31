@@ -63,7 +63,8 @@
         "benefit3": "Agora com descontos maiores, direto com você",
         "benefit4": "Condições de compra que só a nossa plataforma tem",
         "highlightNumber": "4 anos",
-        "highlightCaption": "Dentro desse mercado"
+        "highlightCaption": "Dentro desse mercado",
+        "benefit5": "Garantia de 3 meses direto com a loja"
       }
     },
     {
@@ -149,7 +150,7 @@
         "column2Link1Label": "Seja um Afiliado",
         "column2Link2Label": "Política de privacidade",
         "column2Link3Label": "Termos de uso",
-        "column2Link4Label": "",
+        "column2Link4Label": "Trocas e devoluções",
         "column1Link2Href": "/sobre-nos"
       },
       "paddingBottom": 0,

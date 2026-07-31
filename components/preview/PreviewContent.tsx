@@ -33,6 +33,7 @@ import { ProductGrid } from "@/components/sections/ProductGrid"
 import { Testimonials } from "@/components/sections/Testimonials"
 import { Marketplaces } from "@/components/sections/Marketplaces"
 import { VitrineHome } from "@/components/sections/VitrineHome"
+import { TextoLegal } from "@/components/sections/TextoLegal"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
@@ -53,6 +54,9 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   Testimonials,
   Marketplaces,
   VitrineHome,
+  // Texto corrido das páginas legais (/politica-de-privacidade, /termos-de-uso,
+  // /trocas-e-devolucoes). Nenhuma outra seção renderiza documento longo.
+  TextoLegal,
 }
 
 // ─── Parallax wrapper ─────────────────────────────────────────────────────────

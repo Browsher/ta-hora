@@ -41,7 +41,10 @@ const DEFAULT_CONTENT: Required<BenefitsCardContent> = {
   benefit2:         "Suporte dedicado em tempo real",
   benefit3:         "Sem taxa de adesão ou contrato",
   benefit4:         "Acesso completo a todas as funções",
-  benefit5:         "Garantia de satisfação ou devolução",
+  // ⚠️ Default que RENDERIZA: sobre-nos.json define benefitCount 5 e sobrescreve
+  // só benefit1..4, então este texto vai ao ar. Mantenha-o verdadeiro — a
+  // garantia real é de 3 meses, dada pela loja, não "de satisfação".
+  benefit5:         "Garantia de 3 meses direto com a loja",
   ctaLabel:         "Quero começar agora",
   ctaHref:          "#",
   iconEmoji:        "⚡",

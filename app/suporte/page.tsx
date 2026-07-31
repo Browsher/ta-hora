@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { PreviewContent } from "@/components/preview/PreviewContent"
 import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
+import { semNotasInternas } from "@/lib/semNotasInternas"
 import layoutData from "@/layouts/suporte.json"
 
 // Rota do site: "Suporte". Mesmo padrão do /sobre-nos — o layout já vem RESOLVIDO
@@ -11,7 +12,9 @@ import layoutData from "@/layouts/suporte.json"
 // Esta rota é ○ (Static) DE PROPÓSITO: é conteúdo editorial, não dado da Shopify.
 // Sem cookies()/headers(), sem `export const revalidate`, sem fetch — qualquer um
 // dos três a tiraria do estático SEM erro visível, só sumindo o ○ do build.
-const layout = layoutData as unknown as Layout
+// semNotasInternas: tira as chaves `_*` (anotacao de quem edita o JSON) antes
+// de o layout virar prop de um componente client e vazar no payload RSC.
+const layout = semNotasInternas(layoutData as unknown as Layout)
 const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?.estilo)
 const fundo = paleta?.fundo ?? "#0D0A08"
 

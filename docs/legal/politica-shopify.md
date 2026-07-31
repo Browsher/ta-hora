@@ -1,0 +1,135 @@
+Política de Privacidade
+
+Última atualização: 30 de julho de 2026
+
+A Ta Hora é responsável por esta loja e site, incluindo todas as informações, conteúdos, funcionalidades, ferramentas, produtos e serviços relacionados, com o objetivo de oferecer a você, cliente, uma experiência de compra personalizada (os “Serviços”). A Ta Hora é desenvolvida com tecnologia da Shopify, que nos permite disponibilizar os Serviços para você. Esta Política de privacidade descreve como coletamos, usamos e compartilhamos suas informações pessoais quando você visita, utiliza ou realiza uma compra ou outra transação por meio dos Serviços, ou ainda quando se comunica conosco de qualquer outra forma. Em caso de conflito entre nossos Termos de Serviço e esta Política de privacidade, prevalecerá o disposto nesta Política de privacidade no que diz respeito à coleta, ao processamento e ao compartilhamento das suas informações pessoais.
+
+Leia esta Política de privacidade com atenção. Ao utilizar e acessar qualquer um dos Serviços, você reconhece que leu esta Política de privacidade e compreende a forma como suas informações são coletadas, usadas e compartilhadas, conforme descrito nesta Política.
+
+Informações pessoais que coletamos ou processamos
+
+Quando usamos o termo "informações pessoais", estamos nos referindo a informações que identificam ou podem estar associadas a você ou outra pessoa. Informações pessoais não incluem dados coletados de forma anônima ou que tenham sido desvinculados da identidade do titular, de modo que não possam identificar nem ser associados a você. Podemos coletar ou processar as seguintes categorias de informações pessoais, incluindo inferências obtidas a partir dessas informações, dependendo de como você interage com os Serviços, do local onde você reside e conforme permitido ou exigido pela legislação aplicável:
+
+— Informações de contato incluindo seu nome, endereço, endereço de faturamento, endereço de entrega, telefone e e-mail.
+
+— Informações financeiras incluindo números de cartão de crédito, cartão de débito e contas financeiras, informações de cartões de pagamento, dados de contas bancárias, informações de transações, forma de pagamento, comprovantes e demais informações relacionadas ao pagamento.
+
+— Informações da conta incluindo seu nome de usuário, senha, perguntas de segurança, preferências e configurações.
+
+— Informações de transações incluindo os itens que você visualiza, adiciona ao carrinho, adiciona à lista de desejos, compra, devolve, troca ou cancela, além de suas transações anteriores.
+
+— Comunicações conosco incluindo a informação que você fornece quando se comunica conosco, como quando consulta nosso atendimento ao cliente.
+
+— Informações de dispositivo incluindo informações sobre dispositivo, navegador ou rede de conexão, seu endereço de IP ou outros identificadores únicos.
+
+— Informações de uso incluindo informações sobre a sua interação com os Serviços, como e quando você acessa ou navega por algum deles.
+
+Fontes de informações pessoais
+
+Podemos coletar informações pessoais das seguintes formas:
+
+— Diretamente de você incluindo quando você cria uma conta, visita ou utiliza os Serviços, comunica-se conosco ou fornece suas informações pessoais de qualquer outra forma.
+
+— Automaticamente, através dos Serviços incluindo seu dispositivo quando você utiliza nossos produtos ou serviços ou visita nossos sites, e através de cookies ou tecnologias similares.
+
+— Dos nossos provedores de serviços incluindo quando os contratamos para viabilizar determinadas tecnologias e quando eles coletam ou processam suas informações pessoais em nosso nome;
+
+— Dos nossos parceiros ou de terceiros.
+
+Como usamos suas informações pessoais
+
+Dependendo de como você interage conosco ou de quais Serviços utiliza, podemos usar suas informações pessoais para os seguintes fins:
+
+— Fornecer, personalizar e melhorar os Serviços. Usamos suas informações pessoais para oferecer Serviços a você, o que inclui cumprir o contrato firmado, processar seus pagamentos e pedidos, lembrar suas preferências e os itens do seu interesse, enviar notificações relacionadas à sua conta, processar compras, devoluções, trocas ou outras transações, criar, manter e gerenciar sua conta, organizar o envio de pedidos, facilitar eventuais devoluções e trocas, permitir que você publique avaliações e proporcionar uma experiência de compra personalizada, como a recomendação de produtos relacionados às suas compras. Isso pode incluir usar suas informações pessoais para personalizar e melhorar os Serviços.
+
+— Marketing e publicidade. Usamos suas informações pessoais para fins de marketing e promoção, como o envio de comunicações promocionais, publicitárias e de marketing por e-mail, mensagem de texto ou correspondência, além da exibição de anúncios online sobre produtos ou serviços, tanto nos nossos Serviços quanto em outros sites, inclusive com base em itens que você já comprou, adicionou ao carrinho ou em outras atividades realizadas nos Serviços.
+
+— Segurança e prevenção contra fraudes. Usamos suas informações pessoais para autenticar sua conta, garantir uma experiência de compra e pagamento segura, detectar, investigar ou tomar medidas em relação a possíveis atividades fraudulentas, ilegais, inseguras ou mal-intencionadas, proteger a segurança pública e manter a segurança dos nossos serviços. Se você optar por usar os Serviços e criar uma conta, será responsável por manter suas credenciais de acesso em segurança. Para sua segurança, evite compartilhar seu nome de usuário, senha ou qualquer informação de acesso com outras pessoas.
+
+— Comunicações com você. Usamos suas informações pessoais para oferecer atendimento ao cliente, responder às suas solicitações, fornecer serviços eficientes e manter nosso relacionamento comercial com você.
+
+— Razões jurídicas. Usamos suas informações pessoais para cumprir a legislação aplicável ou responder a processos legais válidos, incluindo solicitações de autoridades policiais ou órgãos governamentais, para investigar ou participar de processos judiciais civis, potenciais ou efetivos, ou outras disputas legais, bem como para aplicar ou investigar possíveis violações dos nossos termos ou políticas.
+
+Como compartilhamos suas informações pessoais
+
+Em determinadas circunstâncias, podemos compartilhar suas informações pessoais com terceiros para fins legítimos, conforme estabelecido nesta Política de privacidade. Entre essas circunstâncias, estão:
+
+— Com a Shopify, fabricantes e outros parceiros que prestam serviços em nosso nome (como gestão de TI, processamento de pagamentos, análise de dados, atendimento ao cliente, armazenamento em nuvem, processamento de pedidos e frete).
+
+— Com parceiros comerciais e de marketing para oferecer serviços de marketing e propaganda para você. Por exemplo, usamos a Shopify para viabilizar publicidade personalizada com serviços de terceiros, com base na sua atividade online em diferentes lojistas e sites. Nossos parceiros comerciais e de marketing utilizarão suas informações de acordo com os próprios avisos sobre políticas de privacidade. Dependendo da sua localização, você pode ter o direito de nos solicitar que não compartilhemos suas informações para exibir anúncios e ações de marketing personalizados com base na sua atividade online em diferentes sites e lojistas.
+
+— Quando você nos autoriza, solicita ou consente com o compartilhamento de determinadas informações com terceiros, por exemplo, para o envio de produtos ou ao utilizar widgets de redes sociais ou integrações de login.
+
+— Com nossos afiliados ou outras empresas do mesmo grupo econômico.
+
+— Em conexão com transações comerciais, como fusões ou falências, para cumprir obrigações legais aplicáveis (incluindo o atendimento a intimações, mandados de busca e solicitações similares), para fazer valer os termos de serviço ou políticas vigentes, e para proteger ou defender os Serviços, nossos direitos e os direitos de nossos usuários ou terceiros.
+
+Cookies e tecnologias similares
+
+Como indicado acima, os Serviços utilizam cookies e tecnologias similares. Os cookies necessários ao funcionamento da loja, do carrinho e do checkout são administrados pela plataforma Shopify e estão descritos na política de privacidade dela, referenciada nesta página.
+
+Cookie de indicação de afiliados
+
+Quando você acessa nosso site por um link de indicação de um afiliado (um endereço com o parâmetro “?ref=”), gravamos em seu navegador um cookie próprio chamado “tahora_ref”, com validade de 30 dias.
+
+Esse cookie armazena exclusivamente o código de identificação do afiliado que indicou a loja — uma sequência de 8 caracteres. Ele não armazena seu nome, e-mail, CPF, endereço, histórico de navegação ou qualquer dado que identifique você, e não é utilizado para publicidade, perfilamento ou acompanhamento da sua atividade em outros sites. É um cookie do tipo httpOnly, o que significa que não pode ser lido por scripts executados na página.
+
+Finalidade: atribuir corretamente a comissão ao afiliado responsável pela indicação. Se você concluir uma compra dentro dos 30 dias, esse código é anexado ao seu pedido para que o pagamento ao afiliado seja calculado. Caso você acesse o site por mais de um link de indicação, prevalece o mais recente.
+
+Base legal (LGPD): legítimo interesse do controlador, nos termos do art. 7º, inciso IX, da Lei nº 13.709/2018, para viabilizar a remuneração devida aos nossos parceiros divulgadores e prevenir fraudes na atribuição de vendas. Por não conter dados que identifiquem você, o tratamento é limitado ao mínimo necessário para essa finalidade.
+
+Como recusar ou remover: você pode bloquear ou apagar esse cookie a qualquer momento nas configurações do seu navegador, sem qualquer prejuízo à sua navegação, à sua compra ou às condições comerciais oferecidas. A remoção afeta apenas a atribuição da comissão ao afiliado.
+
+Relacionamento com a Shopify
+
+Os Serviços são hospedados pela Shopify, que coleta e processa informações pessoais sobre seu acesso e uso dos Serviços para oferecer e aprimorar os Serviços para você. As informações que você enviar aos Serviços serão transmitidas e compartilhadas com a Shopify, assim como com terceiros que podem estar localizados em países diferentes do seu local de residência, para oferecer e aprimorar os Serviços para você. Além disso, para ajudar a proteger, expandir e melhorar nosso negócio, utilizamos alguns recursos avançados da Shopify que incorporam dados e informações obtidas a partir das suas interações com nossa loja, com outros lojistas e com a própria Shopify. Para fornecer esses recursos aprimorados, a Shopify pode utilizar informações pessoais coletadas sobre suas interações com nossa loja, com outros lojistas e com a Shopify. Nesses casos, a Shopify é responsável pelo processamento dessas informações pessoais, inclusive para responder às suas solicitações relacionadas ao exercício dos seus direitos sobre o uso dessas informações para essas finalidades. Para saber mais sobre como a Shopify usa suas informações pessoais e quais direitos você pode ter, acesse a Política de privacidade do consumidor da Shopify. Dependendo da sua localização, você pode exercer determinados direitos em relação às suas informações pessoais na Política de privacidade da Shopify (https://privacy.shopify.com/en).
+
+Sites e links de terceiros
+
+Os Serviços podem conter links para sites ou outras plataformas online operadas por terceiros. Caso você acesse esses links para sites que não são afiliados nem controlados por nós, recomendamos que revise as políticas de privacidade e de segurança, bem como os termos e condições desses terceiros. Não garantimos nem nos responsabilizamos pelas práticas de privacidade ou segurança desses sites, incluindo a precisão, integridade ou confiabilidade das informações que eles disponibilizam. As informações que você compartilha em ambientes públicos ou semipúblicos, como redes sociais de terceiros, também podem ser visualizadas por outros usuários dos Serviços e/ou dessas plataformas, sem qualquer limitação de uso por nós ou por terceiros. A inclusão desses links nos Serviços não representa, por si só, qualquer endosso do conteúdo dessas plataformas ou de seus proprietários e operadores, salvo se indicado expressamente nos próprios Serviços.
+
+Informações de crianças
+
+Os Serviços não são destinados ao uso por crianças e não coletamos, intencionalmente, nenhuma informação pessoal de menores de idade, conforme definido pela legislação aplicável em sua jurisdição. Se você for pai, mãe ou responsável legal de uma criança que compartilhou informações pessoais conosco, poderá entrar em contato pelos canais indicados abaixo para solicitar a exclusão desses dados. No início da vigência desta Política de privacidade, não temos conhecimento real de que "compartilhamos" ou "vendemos" (nos termos definidos pela legislação aplicável) informações pessoais de pessoas com menos de 16 anos.
+
+Segurança e retenção das suas informações
+
+Embora adotemos medidas de segurança adequadas para proteger suas informações pessoais, nenhum sistema é completamente infalível. Por isso, não podemos garantir “segurança absoluta”. Além disso, os dados transmitidos para nós podem não estar protegidos durante o trajeto. Por esse motivo, recomendamos que você evite enviar informações sensíveis ou confidenciais por meios não seguros.
+
+O período pelo qual retemos suas informações pessoais pode variar conforme diversos fatores, incluindo a necessidade de manter sua conta ativa, fornecer os Serviços, cumprir obrigações legais, resolver contestações ou fazer cumprir contratos e políticas aplicáveis.
+
+Seus direitos e escolhas
+
+Dependendo da sua localização, você pode ter alguns ou todos os direitos listados abaixo em relação às suas informações pessoais. No entanto, esses direitos não são absolutos, podem se aplicar apenas em determinadas circunstâncias e, em alguns casos, a Shopify poderá recusar a solicitação, conforme permitido por lei.
+
+— Direito de acesso/conhecimento. Você pode ter o direito de solicitar acesso às informações pessoais que mantemos sobre você.
+
+— Direito de exclusão. Você pode ter o direito de solicitar que excluamos as informações pessoais que temos sobre você.
+
+— Direito de correção. Você pode ter o direito de solicitar a correção de informações pessoais imprecisas que mantemos sobre você.
+
+— Direito à portabilidade. Você pode ter o direito de receber uma cópia das suas informações pessoais e de solicitar que elas sejam transferidas para terceiros, em determinadas circunstâncias e com algumas exceções.
+
+— Gerenciamento das preferências de comunicação. Podemos enviar e-mails promocionais para você, e você pode desativá-los a qualquer momento, utilizando a opção de cancelamento de inscrição disponível nos próprios e-mails. Mesmo que você desative as comunicações promocionais, ainda poderemos enviar mensagens não promocionais, como notificações sobre sua conta ou pedidos realizados.
+
+Você pode exercer qualquer um desses direitos diretamente nos Serviços, quando disponível, ou entrando em contato conosco pelos dados informados abaixo. Para saber mais sobre como a Shopify usa suas informações pessoais e quais direitos você pode ter, incluindo aqueles relacionados ao processamento de dados feito pela Shopify, acesse https://privacy.shopify.com/en.
+
+Nós não discriminaremos você por exercer qualquer um desses direitos. Você pode ter que verificar sua identidade antes de processarmos suas solicitações, como permitido ou exigido pela lei aplicável. Conforme as leis aplicáveis, você pode nomear um representante autorizado para fazer solicitações em seu nome para exercer seus direitos. Antes de aceitar esse tipo de solicitação feita por um representante, exigiremos a comprovação de autorização para agir em seu nome. Também poderemos solicitar que você confirme sua identidade diretamente conosco. Responderemos à solicitação dentro do prazo exigido pela legislação aplicável.
+
+Reclamações
+
+Se você tiver alguma reclamação sobre o modo como processamos suas informações pessoais, entre em contato conosco usando os dados informados abaixo. Dependendo da sua localização, você pode ter o direito de contestar nossa decisão entrando em contato conosco novamente pelos mesmos canais, ou de apresentar uma reclamação diretamente à autoridade local de proteção de dados.
+
+Transferências internacionais
+
+É possível que suas informações pessoais sejam transferidas, armazenadas e processadas fora do país em que você reside.
+
+Se transferirmos suas informações pessoais para fora do Espaço Econômico Europeu ou do Reino Unido, utilizaremos mecanismos de transferência reconhecidos, como as Cláusulas contratuais padrão da Comissão Europeia ou contratos equivalentes emitidos pela autoridade competente do Reino Unido, conforme o caso, exceto quando a transferência for feita para um país considerado como tendo um nível adequado de proteção.
+
+Alterações nesta Política de privacidade
+
+Podemos atualizar esta Política de privacidade periodicamente, seja para refletir mudanças em nossas práticas ou por outras razões operacionais, legais ou regulatórias. Publicaremos a versão revisada desta Política de privacidade neste site, atualizaremos a data de “Última atualização” e forneceremos aviso conforme exigido pela legislação aplicável.
+
+Contato
+
+Se você tiver alguma dúvida sobre nossas práticas de privacidade ou sobre esta Política de privacidade, ou se desejar exercer qualquer um dos seus direitos, entre em contato conosco pelo telefone +55 11 98418-8541, pelo e-mail icamera6688@gmail.com, ou no endereço Rua André de Leão, 78 — Brás, São Paulo/SP, CEP 03101-010, Brasil

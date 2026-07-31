@@ -4,6 +4,7 @@ import { Footer } from "@/components/sections/Footer"
 import { getPaleta } from "@/lib/estilos"
 import { paletaWrapperStyle } from "@/lib/paleta"
 import type { Layout } from "@/lib/types"
+import { semNotasInternas } from "@/lib/semNotasInternas"
 import homeData from "@/layouts/_home.json"
 
 // Chrome compartilhado das rotas da loja (/catalogo, /produtos/[handle]):
@@ -15,7 +16,10 @@ import homeData from "@/layouts/_home.json"
 // useEffectsMode) têm default null → funcionam standalone, sem os providers do
 // Builder. Fora do modo "preview", a Navbar renderiza relative (não fixed).
 
-const layout        = homeData as unknown as Layout
+// semNotasInternas: o `content` da Navbar e do Footer vai como prop para
+// componentes client em TODA página de loja. Sem o filtro, uma nota `_*` que
+// alguém acrescente nessas duas seções do _home.json vazaria no payload RSC.
+const layout        = semNotasInternas(homeData as unknown as Layout)
 const paleta        = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?.estilo)
 const navSection    = layout.sections.find((s) => s.component === "Navbar")
 const footerSection = layout.sections.find((s) => s.component === "Footer")
