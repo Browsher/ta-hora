@@ -48,14 +48,49 @@ export async function generateMetadata(
   try {
     const produto = await getProductByHandle(handle)
     if (produto) {
+      const descricao = `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e até 12x sem juros no Ta Hora.`
+
+      // 🔴 `openGraph` de uma rota SUBSTITUI o do layout raiz INTEIRO — não
+      // mescla campo a campo. Enquanto este bloco declarava só `title` e `url`,
+      // as 7 PDPs saíam sem `og:image`, `og:site_name`, `og:locale` e `og:type`:
+      // link de produto no WhatsApp aparecia sem prévia nenhuma. Por isso tudo
+      // que o raiz define e continua valendo aqui é REPETIDO abaixo. Ao mexer
+      // no openGraph do app/layout.tsx, revisar este bloco junto.
+      const foto = produto.images[0]
+
       return {
         title:       produto.title,
-        description: `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e até 12x sem juros no Ta Hora.`,
+        description: descricao,
         alternates:  { canonical },
-        // Herda `type`, `locale`, `siteName` e a imagem de OG do layout raiz;
-        // só título e descrição são específicos do produto. A imagem do produto
-        // exigiria a URL absoluta do CDN da Shopify e é trabalho de outra rodada.
-        openGraph: { title: produto.title, url: canonical },
+        openGraph: {
+          type:     "website",
+          locale:   "pt_BR",
+          siteName: "Ta Hora",
+          title:    produto.title,
+          description: descricao,
+          url:      canonical,
+          images: [
+            foto
+              // `foto.url` já vem ABSOLUTA do CDN da Shopify — o `metadataBase`
+              // não a toca. width/height só entram se a Shopify informou: OG
+              // aceita a ausência, mas dimensão errada faz o WhatsApp recortar
+              // mal ou descartar a prévia.
+              ? {
+                  url:    foto.url,
+                  ...(foto.width  ? { width:  foto.width  } : {}),
+                  ...(foto.height ? { height: foto.height } : {}),
+                  alt:    foto.altText ?? produto.title,
+                }
+              // Produto sem foto cadastrada: cai na arte genérica do site, que
+              // é melhor do que link sem prévia.
+              : {
+                  url:    "/uploads/og-image.webp",
+                  width:  1200,
+                  height: 630,
+                  alt:    "Ta Hora — câmeras de segurança Wi-Fi originais",
+                },
+          ],
+        },
       }
     }
   } catch {

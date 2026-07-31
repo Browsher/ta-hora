@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
   title: {
     // Usado por `/` e por qualquer rota sem título próprio.
-    default:  "Ta Hora — Câmeras de Segurança Wi-Fi Originais",
+    default:  "Ta Hora — Câmeras de segurança Wi-Fi",
     // 🔴 As rotas filhas passam SÓ o próprio nome: "Suporte", não
     // "Suporte | Ta Hora". O sufixo é acrescentado aqui. Quem repetir o sufixo
     // no `title` da página gera "Suporte | Ta Hora | Ta Hora" — e isso NÃO quebra
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s | Ta Hora",
   },
   description:
-    "Câmeras de segurança Wi-Fi originais com nota fiscal. Entrega para todo o Brasil, até 12x sem juros e suporte por WhatsApp.",
+    "Você mesmo instala em minutos, sem obra e sem técnico. Loja com CNPJ, nota fiscal e 3 meses de garantia direto com a gente.",
 
   // 🔴 O CANONICAL É O ITEM CRÍTICO DESTE ARQUIVO, e a razão é o /afiliados:
   // cada link de afiliado carrega `?ref=` e, sem canonical, o Google vê uma URL
@@ -46,16 +46,17 @@ export const metadata: Metadata = {
     url:      "/",
     title:    "Ta Hora — Câmeras de Segurança Wi-Fi Originais",
     description:
-      "Câmeras Wi-Fi originais, com nota fiscal, entrega para todo o Brasil e até 12x sem juros.",
+      "Você mesmo instala em minutos, sem obra e sem técnico. Loja com CNPJ, nota fiscal e 3 meses de garantia direto com a gente.",
     images: [
       {
-        // Mesma imagem do Hero da Home. As dimensões abaixo são as REAIS do
-        // arquivo (1200×1000) — declarar dimensão que não bate faz o WhatsApp
-        // recortar errado ou descartar a prévia.
-        url:    "/uploads/Promocao_placa.webp",
+        // Arte dedicada de Open Graph — NÃO é a imagem do Hero (essa segue no
+        // `_home.json`, intocada). As dimensões abaixo são as REAIS do arquivo
+        // — declarar dimensão que não bate faz o WhatsApp recortar errado ou
+        // descartar a prévia.
+        url:    "/uploads/og-image.webp",
         width:  1200,
-        height: 1000,
-        alt:    "Placa de aviso de monitoramento 24 horas, brinde na compra de câmeras Ta Hora",
+        height: 630,
+        alt:    "Mão segurando celular com a imagem ao vivo de uma câmera Ta Hora apontada para o portão de uma casa, ao lado da chamada “Veja de onde estiver”",
       },
     ],
   },
