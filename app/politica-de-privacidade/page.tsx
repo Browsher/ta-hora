@@ -18,9 +18,11 @@ const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?
 const fundo = paleta?.fundo ?? "#0D0A08"
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade | Ta Hora",
+  // Sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
+  title: "Política de Privacidade",
   description:
     "Como o Ta Hora coleta, usa e protege os seus dados pessoais, incluindo cookies e a base legal de cada tratamento.",
+  alternates: { canonical: "/politica-de-privacidade" },
 }
 
 export default function Page() {

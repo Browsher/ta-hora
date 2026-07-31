@@ -4,10 +4,64 @@ import { CarrinhoDrawer } from "@/components/loja/CarrinhoDrawer"
 import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
 import homeData from "@/layouts/_home.json"
+import { SITE_URL } from "@/lib/site"
 import "./globals.css"
 
+// Metadata RAIZ — herdada por toda rota que não declarar a sua.
+//
+// Antes disto o site inteiro tinha `<title>Ta Hora</title>` em `/`, `/catalogo` e
+// `/sobre-nos` (três páginas, um título), zero meta description e zero Open Graph:
+// todo link colado no WhatsApp aparecia como texto cru. Para um negócio que vende
+// por indicação e tem programa de afiliados, o Open Graph abaixo é o item de maior
+// consequência deste arquivo.
 export const metadata: Metadata = {
-  title: "Ta Hora",
+  // Torna RELATIVAS todas as URLs de metadata (canonical, imagens de OG) —
+  // sem isto o Next emite `og:image` sem origem e nenhum crawler resolve.
+  // ⚠️ O domínio vive em lib/site.ts. Trocar lá quando o tahora.com.br entrar.
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    // Usado por `/` e por qualquer rota sem título próprio.
+    default:  "Ta Hora — Câmeras de Segurança Wi-Fi Originais",
+    // 🔴 As rotas filhas passam SÓ o próprio nome: "Suporte", não
+    // "Suporte | Ta Hora". O sufixo é acrescentado aqui. Quem repetir o sufixo
+    // no `title` da página gera "Suporte | Ta Hora | Ta Hora" — e isso NÃO quebra
+    // o build, só sai errado na aba e no Google.
+    template: "%s | Ta Hora",
+  },
+  description:
+    "Câmeras de segurança Wi-Fi originais com nota fiscal. Entrega para todo o Brasil, até 12x sem juros e suporte por WhatsApp.",
+
+  // 🔴 O CANONICAL É O ITEM CRÍTICO DESTE ARQUIVO, e a razão é o /afiliados:
+  // cada link de afiliado carrega `?ref=` e, sem canonical, o Google vê uma URL
+  // NOVA por afiliado — a mesma PDP diluída em N duplicatas. O canonical relativo
+  // resolve contra o `metadataBase` SEM a query, colapsando todas de volta numa
+  // URL só. Cada rota declara o seu; esta é a da Home.
+  alternates: { canonical: "/" },
+
+  openGraph: {
+    type:     "website",
+    locale:   "pt_BR",
+    siteName: "Ta Hora",
+    url:      "/",
+    title:    "Ta Hora — Câmeras de Segurança Wi-Fi Originais",
+    description:
+      "Câmeras Wi-Fi originais, com nota fiscal, entrega para todo o Brasil e até 12x sem juros.",
+    images: [
+      {
+        // Mesma imagem do Hero da Home. As dimensões abaixo são as REAIS do
+        // arquivo (1200×1000) — declarar dimensão que não bate faz o WhatsApp
+        // recortar errado ou descartar a prévia.
+        url:    "/uploads/Promocao_placa.webp",
+        width:  1200,
+        height: 1000,
+        alt:    "Placa de aviso de monitoramento 24 horas, brinde na compra de câmeras Ta Hora",
+      },
+    ],
+  },
+
+  twitter: { card: "summary_large_image" },
+  robots:  { index: true, follow: true },
 }
 
 // Paleta do site, resolvida AQUI (Server Component) e passada ao drawer por prop.

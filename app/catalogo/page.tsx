@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { getProducts } from "@/lib/shopify/products"
 import { CatalogoConsultivo } from "@/components/loja/CatalogoConsultivo"
 import { StoreShell } from "@/components/loja/StoreShell"
@@ -6,6 +7,16 @@ import { SectionLabel } from "@/components/ui/SectionLabel"
 
 // ISR: revalida a cada 5 min (preço/estoque frescos sem novo deploy).
 export const revalidate = 300
+
+// Metadata ESTÁTICA (objeto, não generateMetadata): não toca no regime ISR acima.
+// `title` sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
+// `canonical` colapsa os `?ref=` dos links de afiliado numa URL só.
+export const metadata: Metadata = {
+  title: "Catálogo de Câmeras de Segurança Wi-Fi",
+  description:
+    "Todas as câmeras de segurança Wi-Fi do Ta Hora: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal e até 12x.",
+  alternates: { canonical: "/catalogo" },
+}
 
 export default async function CatalogoPage() {
   let corpo: React.ReactNode

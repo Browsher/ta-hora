@@ -14,9 +14,11 @@ const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?
 const fundo = paleta?.fundo ?? "#0D0A08"
 
 export const metadata: Metadata = {
-  title: "Trocas e Devoluções | Ta Hora",
+  // Sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
+  title: "Trocas e Devoluções",
   description:
     "Prazos e condições para trocar ou devolver um produto comprado no Ta Hora, incluindo o direito de arrependimento de 7 dias previsto no CDC.",
+  alternates: { canonical: "/trocas-e-devolucoes" },
 }
 
 export default function Page() {

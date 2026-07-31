@@ -14,9 +14,11 @@ const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?
 const fundo = paleta?.fundo ?? "#0D0A08"
 
 export const metadata: Metadata = {
-  title: "Termos de Uso | Ta Hora",
+  // Sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
+  title: "Termos de Uso",
   description:
     "Condições de uso do site do Ta Hora: compras, pagamentos, entrega, responsabilidades e direitos do consumidor.",
+  alternates: { canonical: "/termos-de-uso" },
 }
 
 export default function Page() {

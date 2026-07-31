@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { PreviewContent } from "@/components/preview/PreviewContent"
 import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
@@ -12,6 +13,15 @@ import layoutData from "@/layouts/sobre-nos.json"
 const layout = semNotasInternas(layoutData as unknown as Layout)
 const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?.estilo)
 const fundo = paleta?.fundo ?? "#0D0A08"
+
+// Metadata ESTÁTICA (objeto, não generateMetadata): mantém a rota ○ (Static).
+// `title` sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
+export const metadata: Metadata = {
+  title: "Sobre Nós",
+  description:
+    "Quem é o Ta Hora: 4 anos vendendo eletrônicos originais em marketplaces, agora com loja própria. Produtos lacrados, nota fiscal e suporte por WhatsApp.",
+  alternates: { canonical: "/sobre-nos" },
+}
 
 export default function Page() {
   return (

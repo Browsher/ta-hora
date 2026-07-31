@@ -30,17 +30,38 @@ export async function generateStaticParams() {
 }
 
 // C1 — tolerante: erro → título genérico (não quebra o build).
+//
+// 🔴 O SUFIXO SAIU DAQUI. O `· Ta Hora` que este arquivo acrescentava à mão foi
+// substituído pelo `template: "%s | Ta Hora"` do app/layout.tsx — mantê-lo
+// produziria "Camera Q8 · Ta Hora | Ta Hora". O separador mudou de `·` para `|`
+// junto com o resto do site, que agora é uniforme.
+//
+// O `canonical` é o item de maior consequência desta rota: os links de afiliado
+// apontam para PDPs com `?ref=<código>`, e sem ele cada afiliado criava uma URL
+// distinta da MESMA página aos olhos do Google. Relativo, resolvido contra o
+// `metadataBase` — e sem a query, que é o ponto.
 export async function generateMetadata(
   { params }: { params: Promise<{ handle: string }> },
 ): Promise<Metadata> {
   const { handle } = await params
+  const canonical = `/produtos/${handle}`
   try {
     const produto = await getProductByHandle(handle)
-    if (produto) return { title: `${produto.title} · Ta Hora` }
+    if (produto) {
+      return {
+        title:       produto.title,
+        description: `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e até 12x sem juros no Ta Hora.`,
+        alternates:  { canonical },
+        // Herda `type`, `locale`, `siteName` e a imagem de OG do layout raiz;
+        // só título e descrição são específicos do produto. A imagem do produto
+        // exigiria a URL absoluta do CDN da Shopify e é trabalho de outra rodada.
+        openGraph: { title: produto.title, url: canonical },
+      }
+    }
   } catch {
     // ignora — cai no título genérico
   }
-  return { title: "Produto · Ta Hora" }
+  return { title: "Produto", alternates: { canonical } }
 }
 
 export default async function ProdutoPage(

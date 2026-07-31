@@ -19,11 +19,12 @@ const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?
 const fundo = paleta?.fundo ?? "#0D0A08"
 
 // Metadata ESTÁTICA (objeto, não generateMetadata): não torna a rota dinâmica.
-// Sem isto a página herdaria o `title: "Ta Hora"` genérico do app/layout.tsx.
+// `title` sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
 export const metadata: Metadata = {
-  title: "Suporte | Ta Hora",
+  title: "Suporte",
   description:
     "Fale com o Ta Hora pelo WhatsApp, e-mail ou Instagram. Tire suas dúvidas sobre entrega, garantia, pagamento e acompanhamento do pedido.",
+  alternates: { canonical: "/suporte" },
 }
 
 export default function Page() {
