@@ -42,7 +42,7 @@ export interface RawProductCard {
   //
   // 🔴 ESTES 4 SÃO VALORES CRUS, direto da Shopify — NENHUM passou pelas regras de
   // `destaques.ts`. Este é o lado SUJO da fronteira: aqui ainda existem
-  // "Lente única", "Aplicativo" e "Noticação". No `ProductCard`, não existem mais.
+  // "Lente única", "Aplicativo" e "Notificação". No `ProductCard`, não existem mais.
   selo?:         { value: string } | null   // `custom.selo`
   resolucao?:    { value: string } | null   // `custom.tipo_de_resolucao`
   // ⚠️ MESMO NOME de `ProductCard.lentes`, SEMÂNTICA OPOSTA. Este é o valor cru e
@@ -122,7 +122,7 @@ export function normalizeProductCard(raw: RawProductCard): ProductCard {
     // ── Destaques do bloco (feature catalogo-destaques) ──────────────────────
     //
     // 🔴 AQUI É A FRONTEIRA. Acima desta linha o `raw` ainda tem "Lente única",
-    // "Aplicativo" e "Noticação"; abaixo dela, o `ProductCard` não tem mais. A
+    // "Aplicativo" e "Notificação"; abaixo dela, o `ProductCard` não tem mais. A
     // decisão de "aparece ou não" é tomada NO SERVIDOR, de propósito: o valor que
     // não deve ser exibido nunca chega ao cliente, então nenhum refactor futuro
     // da UI consegue renderizá-lo por engano (Req 3.2, 4.2).

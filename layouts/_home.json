@@ -45,11 +45,14 @@
         "statsVisible": true,
         "statCount": 2,
         "badgeText": "ENVIO EM 24H · DIRETO DO BRASIL",
-        "headline": "O %%melhor preço%% em eletrônicos originais",
-        "subheadline": "Entrega rápida pra todo o Brasil e parcelamento em até 12x.",
+        "headline": "Saiba %%quem está na sua porta%%, mesmo quando você não está",
+        "subheadline": "Câmera Wi-Fi com alerta no celular. Instala em minutos, sem obra.",
         "ctaHref": "/catalogo",
         "ctaSecHref": "/sobre-nos",
-        "stat1Value": "+10000"
+        "stat1Value": "+10 mil",
+        "stat1Label": "vendas nos marketplaces",
+        "stat2Value": "4,7",
+        "stat2Label": "no Mercado Livre e Shopee"
       },
       "paddingTop": 80,
       "paddingBottom": 160,

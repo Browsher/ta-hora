@@ -25,9 +25,21 @@ export function useCounter(rawValue: string, enabled: boolean): UseCounterReturn
     const duration   = 1500 // ms
     const startTime  = performance.now()
 
+    // O valor cru é a forma AUTORITATIVA — o contador tem de pousar exatamente
+    // nele, senão o número muda de aparência ao rolar a página. Dois detalhes
+    // que o `toFixed` sozinho perde:
+    //
+    //  separador — `toFixed(1)` devolve sempre ponto. Num site pt-BR, "4,7"
+    //    virava "4.7" no fim da animação.
+    //  espaço    — `parseCounterValue` faz `.trim()` no sufixo, então "+10 mil"
+    //    remontava como "+10mil".
+    const separador = rawValue.includes(",") ? "," : "."
+    const espaco    = /\d\s/.test(rawValue) ? " " : ""
+
     function format(val: number): string {
-      const formatted = hasDecimal ? val.toFixed(1) : Math.round(val).toString()
-      return `${prefix}${formatted}${suffix}`
+      const formatted = (hasDecimal ? val.toFixed(1) : Math.round(val).toString())
+        .replace(".", separador)
+      return `${prefix}${formatted}${espaco}${suffix}`
     }
 
     function tick(now: number) {

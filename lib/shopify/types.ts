@@ -68,7 +68,7 @@ export interface ProductCard {
   // 🔴 A REGRA JÁ FOI APLICADA quando estes campos chegam aqui. Este é o lado
   // LIMPO da fronteira: `normalizeProductCard` chamou `lib/shopify/destaques.ts`
   // e os valores que não devem aparecer — "Lente única", "Aplicativo",
-  // "Noticação" — ficaram para trás, no `RawProductCard`. A UI não tem como
+  // "Notificação" — ficaram para trás, no `RawProductCard`. A UI não tem como
   // renderizar o que não recebeu. Ver `normalize.ts`.
   //
   // Aditivos e OBRIGATÓRIOS pelo mesmo argumento do bloco acima:
@@ -88,7 +88,7 @@ export interface ProductCard {
   /** VEREDITO, não valor: `custom.com_alarme === "Alarme sonoro"`.
    *  🔴 É `boolean` DE PROPÓSITO. O texto exibido é o rótulo FIXO "Alarme sonoro",
    *  nunca o metafield — e um booleano torna impossível exibir por engano o valor
-   *  cru ("Aplicativo" na A31H, "Noticação" nas demais). Ver Req 4.3. */
+   *  cru ("Aplicativo" na A31H, "Notificação" nas demais). Ver Req 4.3. */
   alarmeSonoro:  boolean
 }
 

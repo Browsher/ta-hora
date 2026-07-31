@@ -8,7 +8,7 @@ import { Video, Aperture, Siren } from "lucide-react"
 // 🔴 ESTE COMPONENTE NÃO DECIDE REGRA DE NEGÓCIO — só PRESENÇA. Quando ele recebe
 // `lentes`, o valor JÁ passou pelo gatilho no servidor: "Lente única" virou `null`
 // lá em `normalizeProductCard`, e nunca chega aqui. Idem `alarmeSonoro`, que é um
-// booleano justamente para que o valor cru ("Aplicativo" na A31H, "Noticação" nas
+// booleano justamente para que o valor cru ("Aplicativo" na A31H, "Notificação" nas
 // demais) não tenha como ser exibido por engano. Ver `lib/shopify/destaques.ts`.
 //
 // Props explícitas em vez de `produto: ProductCard` de propósito: o componente

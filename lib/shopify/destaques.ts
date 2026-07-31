@@ -11,13 +11,14 @@
 // arrastar nada.
 //
 // 🔴 QUEM CHAMA ISTO É O SERVIDOR (`normalizeProductCard`), NÃO A UI. O objetivo é
-// que os valores que NÃO devem aparecer — "Lente única", "Aplicativo", "Noticação"
+// que os valores que NÃO devem aparecer — "Lente única", "Aplicativo", "Notificação"
 // — morram no servidor e nunca cheguem ao cliente. A UI recebe `lentes: null` e
 // `alarmeSonoro: false`, sem ter como renderizar o que não deve.
 //
-// ⚠️ COMPARAÇÃO INSENSÍVEL A MAIÚSCULAS/MINÚSCULAS, e o motivo é concreto: o admin
-// desta loja JÁ ERRA GRAFIA — `custom.com_alarme` está gravado como "Noticação"
-// (sem o segundo "fi"), confirmado na sondagem ao vivo. Se alguém digitar
+// ⚠️ COMPARAÇÃO INSENSÍVEL A MAIÚSCULAS/MINÚSCULAS, e o motivo é concreto: estes
+// metafields são texto livre digitado no admin, e esta loja JÁ ERROU grafia —
+// `custom.com_alarme` ficou gravado como "Noticação" (sem o segundo "fi") até
+// 31/07/2026, quando foi corrigido para "Notificação". Se alguém digitar
 // "alarme sonoro" em minúsculas, uma comparação sensível a caixa desligaria a
 // sirene em SILÊNCIO. `npm run verificar:destaques` é quem pega o resto.
 //
@@ -28,7 +29,7 @@
 //
 // Valores REAIS confirmados na loja (7/7 câmeras, coleção `cameras`):
 //   custom.numero_de_lentes → "Lente única" | "Lente dupla" | "Lente tripla"
-//   custom.com_alarme       → "Alarme sonoro" | "Noticação" | "Aplicativo"
+//   custom.com_alarme       → "Alarme sonoro" | "Notificação" | "Aplicativo"
 
 /** Normaliza para comparação: trata ausente/nulo e apara/abaixa a caixa. */
 function paraComparar(valor: string | null | undefined): string {
@@ -63,7 +64,7 @@ export function temLenteMultipla(valor: string | null | undefined): boolean {
  * metafield é um enum de fato (3 valores conhecidos), então igualdade é a
  * comparação honesta.
  *
- * Fail-closed: "Noticação", "Aplicativo", qualquer outro valor, ausente ou vazio
+ * Fail-closed: "Notificação", "Aplicativo", qualquer outro valor, ausente ou vazio
  * → `false`. Em particular a A31H tem "Aplicativo" e NÃO pode mostrar a sirene —
  * é o falso positivo que esta regra existe para evitar (Req 4.2).
  */
