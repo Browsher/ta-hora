@@ -5,6 +5,7 @@ import { sanitizarDescricao } from "@/lib/shopify/sanitizarDescricao"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { ProductGallery } from "@/components/loja/ProductGallery"
 import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
+import { ApresentacaoProduto } from "@/components/loja/ApresentacaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
@@ -178,6 +179,12 @@ export default async function ProdutoPage(
         {/* Coluna direita — descrição rica, só quando há conteúdo. */}
         {temDescricao && <DescricaoProduto html={descricaoLimpa} />}
       </article>
+
+      {/* Apresentação — IRMÃ do <article> (largura total, coluna de texto a
+          680px), entre a compra/descrição e a ficha técnica: narrativa antes de
+          tabela. Some sozinha quando `custom.apresentacao` está vazio.
+          NUNCA um 3º filho do grid — quebraria as 2 colunas. */}
+      <ApresentacaoProduto texto={produto.apresentacao} />
 
       {/* Ficha técnica — IRMÃ do <article> (largura total, centralizada), entre a
           compra/descrição e os recomendados. Some sozinha quando o produto não tem

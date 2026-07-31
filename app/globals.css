@@ -905,3 +905,101 @@ body {
     margin-left: 148px;   /* vão central entre as 2 colunas (48 + 100) */
   }
 }
+/* ─── Apresentação do produto (feature apresentacao-produto) ─────────────────
+   Seção-irmã de largura total (mesmo envelope de `.ficha-tecnica`), com a
+   COLUNA DE TEXTO estreita: 680px é medida de leitura confortável para texto
+   corrido — o envelope de 1200px daria linha longa demais, e este é o único
+   bloco de prosa da PDP.
+
+   Nada aqui esconde nada: a omissão (metafield vazio, sem lista, sem ressalva)
+   é decidida no componente, no servidor. */
+
+.apresentacao {
+  max-width:     1200px;
+  margin-inline: auto;                 /* igual à ficha: o mx-auto do TW falha aqui */
+  padding:       0 clamp(20px, 5vw, 64px) 72px;
+}
+
+.apresentacao-coluna {
+  max-width:     680px;
+  margin-inline: auto;
+}
+
+/* h2 SEMÂNTICO com aparência de rótulo — o <h1> da página é o nome do produto,
+   então este precisa ser h2 para a hierarquia fechar (h1 → h2 → h3). O tamanho
+   pequeno é estilo, não semântica. */
+.apresentacao-rotulo {
+  font-size:      12px;
+  font-weight:    700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:          var(--cor-destaque-texto-forte, #ff8903);
+  margin:         0 0 20px;
+}
+
+.apresentacao-paragrafo {
+  font-size:   clamp(15px, 1.2vw, 17px);
+  line-height: 1.75;
+  color:       var(--cor-texto-secundario);
+  margin:      0 0 20px;
+}
+
+.apresentacao-subtitulo {
+  font-size:   clamp(17px, 1.5vw, 20px);
+  font-weight: 700;
+  color:       var(--cor-texto);
+  margin:      32px 0 16px;
+}
+
+.apresentacao-lista {
+  list-style: none;                    /* o marcador é o ícone de check */
+  margin:     0 0 20px;
+  padding:    0;
+  display:        flex;
+  flex-direction: column;
+  gap:            14px;
+}
+
+.apresentacao-item {
+  display:     flex;
+  gap:         12px;
+  align-items: flex-start;
+  line-height: 1.6;
+  color:       var(--cor-texto-secundario);
+}
+
+/* `flex-shrink: 0` — sem ele o ícone AMASSA quando o texto do item é longo, que
+   é o caso normal aqui. `margin-top` alinha o check com a primeira linha do
+   texto, não com o centro do bloco. */
+.apresentacao-check {
+  flex-shrink: 0;
+  margin-top:  2px;
+  color:       var(--cor-destaque-texto-forte, #ff8903);
+}
+
+.apresentacao-item-rotulo {
+  font-weight: 600;
+  color:       var(--cor-texto);
+}
+.apresentacao-item-detalhe {
+  font-weight: 400;
+  color:       var(--cor-texto-secundario);
+}
+
+/* Caixa da ressalva. Fundo fixo #F0EFEB (o mesmo token `superficie` da paleta
+   clara) — aprovado pelo lojista. Texto menor e secundário: é informação que
+   evita compra errada, não argumento de venda. */
+.apresentacao-ressalva {
+  display:       block;
+  background:    #F0EFEB;
+  border-radius: 14px;
+  padding:       18px 20px;
+  margin-top:    28px;
+  font-size:     clamp(13px, 1vw, 15px);
+  line-height:   1.65;
+  color:         var(--cor-texto-secundario);
+}
+.apresentacao-ressalva-titulo {
+  font-weight: 700;
+  color:       var(--cor-texto);
+}

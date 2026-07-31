@@ -108,6 +108,15 @@ export interface Product {
   images:          ProductImage[]
   price:           FormattedPrice
   specs:           Spec[]
+  /**
+   * Texto de apresentação do produto (`custom.apresentacao`), CRU — com os `\n`
+   * como vieram da Shopify. Quem interpreta a convenção de blocos é
+   * `lib/apresentacao.ts`; aqui é só transporte.
+   *
+   * `null` quando o metafield está ausente, vazio ou só com espaços — e é isso
+   * que faz a seção não renderizar. Ver `ApresentacaoProduto`.
+   */
+  apresentacao:    string | null
 }
 
 // ─── Carrinho ─────────────────────────────────────────────────────────────────

@@ -105,6 +105,19 @@ export const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       tags
       images(first: 20) { nodes { url altText width height } }
       priceRange { minVariantPrice { amount currencyCode } }
+      # Texto de apresentação (feature apresentacao-produto). ALIASADO, e não
+      # dentro de SPEC_METAFIELDS de propósito: aquela lista alimenta a ficha
+      # técnica, e este texto viraria um card de especificação com rótulo e
+      # valor. Mesmo molde do resumo na PRODUCTS_QUERY.
+      #
+      # Tipo multi_line_text_field: o value é a string CRUA, com as quebras de
+      # linha como o lojista digitou. Não é HTML e não passa pelo sanitizador —
+      # quem interpreta a convenção de blocos é lib/apresentacao.ts, que devolve
+      # nós React (nunca dangerouslySetInnerHTML).
+      #
+      # ⚠️ SEM CRASE NESTE COMENTÁRIO. A query inteira é um template literal do
+      # JS: uma crase aqui dentro FECHA a string e o arquivo deixa de compilar.
+      apresentacao: metafield(namespace: "custom", key: "apresentacao") { value }
       metafields(identifiers: $identifiers) {
         namespace
         key

@@ -72,6 +72,9 @@ export interface RawProduct {
   // `metafields(identifiers:)` retorna a lista NA ORDEM dos identifiers, com
   // `null` para os ausentes.
   metafields:      (RawMetafield | null)[]
+  // Metafield ALIASADO `custom.apresentacao` (feature apresentacao-produto).
+  // Opcional: só a PRODUCT_BY_HANDLE_QUERY o seleciona. Ausente → null.
+  apresentacao?:   { value: string } | null
 }
 
 // ─── Formatação de dinheiro (correção M4: respeita currencyCode) ──────────────
@@ -166,5 +169,9 @@ export function normalizeProduct(raw: RawProduct): Product {
     images,
     price:           formatMoney(raw.priceRange.minVariantPrice),
     specs,
+    // "" / só espaços / ausente → null. Mesma linha do `resumo` em
+    // `normalizeProductCard`: é o `|| null` aqui que faz a seção sumir sozinha
+    // lá na frente, sem o componente precisar saber de metafield.
+    apresentacao:    raw.apresentacao?.value?.trim() || null,
   }
 }
