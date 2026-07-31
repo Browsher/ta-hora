@@ -116,3 +116,50 @@ export async function getProductByHandle(handle: string): Promise<Product | null
   if (!data.product) return null
   return normalizeProduct(data.product)
 }
+
+/**
+ * O handle tem PÁGINA no site?
+ *
+ * A coleção `cameras` é a fonte única de "o que tem página" — a MESMA que já
+ * governa o /catalogo, o `generateStaticParams` e o /sitemap.xml. Acessórios
+ * (cartão de memória, cabo) vivem fora dela de propósito: existem na Shopify e
+ * são sugeridos no drawer POR TAG (`acessorio`), mas não têm PDP.
+ *
+ * Sem esta guarda, `dynamicParams = true` renderiza uma PDP completa para
+ * qualquer handle que exista na loja — inclusive os acessórios, que nunca
+ * aparecem no catálogo nem no sitemap. A URL direta era a única porta aberta.
+ *
+ * 🔴 DEGRADA PARA "DEIXA PASSAR", e isto é o ponto mais importante da função.
+ * Shopify fora do ar, coleção despublicada do canal Storefront, ou qualquer
+ * falha de rede → `getProducts()` devolve `[]` ou lança. Se lista vazia
+ * significasse "nada tem página", uma instabilidade da Shopify 404-aria as 7
+ * PDPs de uma vez: trocaríamos duas páginas vazando por A LOJA INTEIRA fora do
+ * ar. Só bloqueia quando a lista veio PREENCHIDA e o handle não está nela.
+ *
+ * ⚠️ CUSTO REAL, MEDIDO — não presuma dedup. `storefrontFetch` faz POST sem
+ * `force-cache`, e desde o Next 15 o `fetch` não cacheia por default: o
+ * `next: { revalidate }` deste client é INERTE (ver o bloco de cache no topo de
+ * `client.ts`). Ou seja, NÃO há Data Cache compartilhado entre o catálogo, o
+ * sitemap e esta guarda.
+ *
+ * Medido em build limpo (31/07/2026), contando acessos reais à rede:
+ *   sem a guarda → 3 × PRODUCTS_QUERY   (generateStaticParams, sitemap, catálogo)
+ *   com a guarda → 10 × PRODUCTS_QUERY  (+1 por PDP renderizada)
+ *
+ * O que segura o custo NÃO é cache de fetch, é o ISR do route segment
+ * (`export const revalidate = 300` na PDP): a página é servida do HTML
+ * pré-renderizado e só re-renderiza a cada 5 min. Então é +1 requisição por
+ * revalidação de PDP, não por visita — teto de 7 a cada 300s no catálogo atual.
+ */
+export async function handleTemPagina(handle: string): Promise<boolean> {
+  let vendaveis
+  try {
+    vendaveis = await getProducts()
+  } catch {
+    // Falha de rede/Shopify: não é papel desta guarda derrubar a página.
+    return true
+  }
+  // Lista vazia = não sabemos nada, e "não sei" nunca vira 404.
+  if (vendaveis.length === 0) return true
+  return vendaveis.some((p) => p.handle === handle)
+}

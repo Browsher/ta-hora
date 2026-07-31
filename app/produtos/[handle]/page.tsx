@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getProducts, getProductByHandle } from "@/lib/shopify/products"
+import { getProducts, getProductByHandle, handleTemPagina } from "@/lib/shopify/products"
 import { sanitizarDescricao } from "@/lib/shopify/sanitizarDescricao"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { ProductGallery } from "@/components/loja/ProductGallery"
@@ -41,6 +41,30 @@ export async function generateStaticParams() {
 // apontam para PDPs com `?ref=<código>`, e sem ele cada afiliado criava uma URL
 // distinta da MESMA página aos olhos do Google. Relativo, resolvido contra o
 // `metadataBase` — e sem a query, que é o ponto.
+// ⚠️ ESTA FUNÇÃO NÃO CHECA `handleTemPagina`, E ISSO É DECISÃO REGISTRADA — não
+// "conserte" sem ler o custo abaixo.
+//
+// Sintoma que parece bug: um handle fora da coleção `cameras` (cartão, cabo)
+// 404-a na página, mas AINDA ASSIM sai com metadata completa — título, og:image,
+// e um `canonical` apontando para a URL que não existe.
+//
+// Por que fica assim: o único jeito de saber se o handle tem página é consultar
+// a coleção, e `getProducts()` NÃO é deduplicado — `storefrontFetch` faz POST
+// sem `force-cache`, e desde o Next 15 o `fetch` não cacheia por default (ver o
+// bloco de cache no topo de `lib/shopify/client.ts`). Medido em build limpo
+// (31/07/2026), contando acessos reais à rede:
+//
+//     sem a guarda na página →  3 × PRODUCTS_QUERY
+//     com a guarda na página → 10 × PRODUCTS_QUERY   (+1 por PDP)
+//     + guarda aqui também   → 17 × PRODUCTS_QUERY   (+1 por PDP, de novo)
+//
+// Seria DOBRAR o custo em todas as 7 PDPs — que são as páginas que vendem — para
+// limpar a metadata de duas URLs que não estão no sitemap, não são linkadas de
+// lugar nenhum e ninguém acessa. Otimizar o caso raro pagando no caso comum.
+//
+// E o ganho seria nulo na prática: a resposta é 404, e o status HTTP é a
+// instrução autoritativa para o crawler — ele descarta a página e a metadata
+// junto, `index, follow` ou não.
 export async function generateMetadata(
   { params }: { params: Promise<{ handle: string }> },
 ): Promise<Metadata> {
@@ -122,6 +146,17 @@ export default async function ProdutoPage(
     )
   }
   if (!produto) notFound()
+
+  // O produto EXISTE na Shopify, mas tem página no site? A coleção `cameras`
+  // decide — a mesma regra do /catalogo, do generateStaticParams e do sitemap.
+  // Acessórios (cartão, cabo) existem na loja e são sugeridos no drawer por tag,
+  // mas não têm PDP; sem esta linha, `dynamicParams = true` os renderizava para
+  // quem digitasse a URL.
+  //
+  // FORA do try acima pelo mesmo motivo do `notFound()` de cima: o catch
+  // engoliria o NEXT_NOT_FOUND. `handleTemPagina` já trata a própria falha e
+  // devolve `true` (deixa passar) quando a Shopify não responde.
+  if (!(await handleTemPagina(handle))) notFound()
 
   // Sanitiza no SERVIDOR (fronteira única). "" quando não há conteúdo visível —
   // é isso que decide o layout: 2 colunas (com descrição) x 1 coluna centrada.
