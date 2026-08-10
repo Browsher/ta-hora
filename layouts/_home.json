@@ -190,32 +190,6 @@
       }
     },
     {
-      "id": "c1b7a2e4-5d38-4f61-9a0c-2e7b4d16f803",
-      "component": "Marketplaces",
-      "type": "grade",
-      "variation": "",
-      "effect": "none",
-      "content": {
-        "marketplaceCount": 2,
-        "badgeVisible": true,
-        "badgeText": "Onde comprar",
-        "titleVisible": true,
-        "titleText": "Confira nossas avaliações nos %%marketplaces%%",
-        "descriptionVisible": true,
-        "descriptionText": "Nota 4,7 no Mercado Livre. Clique nos logos e confira as avaliações na íntegra.",
-        "nameVisible": true,
-        "phraseVisible": true,
-        "marketplace1Logo": "/uploads/mercado-libre-thumbnail--1538x1510--b612412b.webp",
-        "marketplace1Href": "https://www.mercadolivre.com.br/pagina/cftv_ch",
-        "marketplace2Logo": "/uploads/images.png",
-        "marketplace2Href": "https://shopee.com.br/shop/1139914848"
-      },
-      "effects": {
-        "preset": "personalizado",
-        "sectionEntry": "subir"
-      }
-    },
-    {
       "id": "353e2d21-2c57-4b35-bcfc-e4b0d6990fb4",
       "component": "FAQ",
       "type": "accordion",
