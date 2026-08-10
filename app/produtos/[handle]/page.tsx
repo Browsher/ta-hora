@@ -7,6 +7,7 @@ import { ProductGallery } from "@/components/loja/ProductGallery"
 import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
 import { ApresentacaoProduto } from "@/components/loja/ApresentacaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
+import { BarraCompraMobile } from "@/components/loja/BarraCompraMobile"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
 import { SelosConfianca } from "@/components/loja/SelosConfianca"
@@ -193,8 +194,16 @@ export default async function ProdutoPage(
     }
   }
 
+  // Parcelamento calculado UMA vez: alimenta o PriceTag da página e a barra fixa
+  // de mobile. Duas chamadas dariam o mesmo resultado (a função é pura), mas a
+  // segunda seria uma oportunidade de as duas divergirem no futuro.
+  const parc = parcelamento(produto.precoNumerico)
+
   return (
-    <StoreShell>
+    // `compensarBarraFixa`: o padding que impede a barra de tapar o rodapé mora
+    // no div raiz do StoreShell, não aqui — o rodapé é irmão do <main> e um
+    // wrapper nesta página não o alcança. Ver o comentário na prop.
+    <StoreShell compensarBarraFixa>
       <article
         // Layout em globals.css (classes explícitas — o mx-auto do Tailwind não
         // é gerado neste projeto): `produto-grid` = 60/40 centrado com esquerda
@@ -213,8 +222,11 @@ export default async function ProdutoPage(
               <ProductGallery images={produto.images} title={produto.title} />
             </div>
 
-            {/* Info empilhada. Há espaço para crescer abaixo do botão (specs, etc.). */}
-            <div className="produto-info">
+            {/* Info empilhada. Há espaço para crescer abaixo do botão (specs, etc.).
+                O `id` é o ALVO do IntersectionObserver da barra fixa de mobile:
+                quando este bloco sai da tela por cima, a barra entra. Renomear o
+                id exige acertar a prop `alvoId` lá embaixo. */}
+            <div className="produto-info" id="produto-compra">
               <Heading as="h1" size="pequeno" text={produto.title} color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
 
               {/* `installments` pela MESMA função da meta description (ver
@@ -224,14 +236,14 @@ export default async function ProdutoPage(
               <PriceTag
                 price={produto.price.price}
                 currency={produto.price.currency}
-                installments={parcelamento(produto.precoNumerico)?.texto}
+                installments={parc?.texto}
                 size="grande"
               />
 
               {/* O handle da rota — nunca um merchandiseId: o servidor resolve a
                   variante (o cliente não escolhe o que vai pro carrinho). Abre o
                   drawer e dispara os acessórios sugeridos — intocado. */}
-              <BotaoAdicionar handle={handle} />
+              <BotaoAdicionar handle={handle} disponivel={produto.disponivel} />
 
               {/* Garantia / NF / devolução / alcance de entrega. Server
                   component: sai no HTML do ISR, que é o ponto — esses fatos
@@ -261,6 +273,18 @@ export default async function ProdutoPage(
           centralizada), NUNCA um 3º filho do grid de 2 colunas. Some sozinha
           quando `recomendados` é []. */}
       <RecomendadosRelacionados produtos={recomendados} />
+
+      {/* Barra de compra fixa — SÓ no mobile, e só depois que o bloco de compra
+          (#produto-compra) sai da tela. É `position: fixed`, então não participa
+          do fluxo: fica aqui no fim por legibilidade, não por layout. */}
+      <BarraCompraMobile
+        handle={handle}
+        preco={produto.price.price}
+        moeda={produto.price.currency}
+        parcela={parc?.texto}
+        disponivel={produto.disponivel}
+        alvoId="produto-compra"
+      />
     </StoreShell>
   )
 }

@@ -72,7 +72,7 @@ const ITENS = [
     // 240px, "(CDC art. 49)" gasta uma linha inteira para dizer ao comprador
     // comum algo que ele não decodifica — e o texto integral da lei está no
     // destino do link, a um clique.
-    texto: "7 dias para devolver, frete por nossa conta",
+    texto: "7 dias para devolver sem custo",
     href:  HREF_DEVOLUCAO,
   },
   {
@@ -99,10 +99,10 @@ export function SelosConfianca() {
               {href && (
                 <>
                   {/* O separador é do CÓDIGO, não da copy. Sem ele a linha lê
-                      como frase contínua — "frete por nossa conta Como
-                      funciona" — em vez de afirmação + link (visto na tela, não
-                      no código: a string do item termina sem pontuação e o link
-                      encosta nela). */}
+                      como frase contínua — "devolver sem custo Como funciona" —
+                      em vez de afirmação + link (visto na tela, não no código: a
+                      string do item termina sem pontuação e o link encosta
+                      nela). */}
                   {" · "}
                   <a href={href} className="selos-confianca-link">
                     Como funciona

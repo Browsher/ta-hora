@@ -67,6 +67,11 @@ export interface RawProduct {
   // `product.tags` — `[String!]!` no schema. Pode não vir se a query não pedir;
   // por isso `normalizeProduct` aplica `?? []`. É a marca da câmera.
   tags:            string[]
+  // `product.availableForSale` — true se alguma variante está disponível.
+  // OPCIONAL no tipo de propósito: só a PRODUCT_BY_HANDLE_QUERY o seleciona, e
+  // `normalizeProduct` aplica `?? true` (ver lá o porquê de degradar para
+  // "disponível", e não para "esgotado").
+  availableForSale?: boolean
   images:          { nodes: RawImage[] }
   priceRange:      RawPriceRange
   // `metafields(identifiers:)` retorna a lista NA ORDEM dos identifiers, com
@@ -166,6 +171,13 @@ export function normalizeProduct(raw: RawProduct): Product {
     // `?? []` defensivo: garante que `Product.tags` nunca é undefined, o que
     // seguraria o `marcaDoProduto(produto.tags)` (não explode no `.includes`).
     tags:            raw.tags ?? [],
+    // 🔴 `?? true` — DEGRADA PARA "DISPONÍVEL", mesma escolha do `handleTemPagina`
+    // (lib/shopify/products.ts). Campo ausente significa "a query não perguntou",
+    // não "acabou o estoque": degradar para `false` marcaria a loja inteira como
+    // esgotada por um campo esquecido numa query, que é o pior erro possível aqui.
+    // Fail-open custa o comportamento de ANTES desta feature (botão vivo, erro no
+    // drawer); fail-closed derruba a venda de tudo.
+    disponivel:      raw.availableForSale ?? true,
     images,
     price:           formatMoney(raw.priceRange.minVariantPrice),
     // Mesma origem e mesma premissa do `precoNumerico` de `normalizeProductCard`

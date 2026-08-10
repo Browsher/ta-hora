@@ -105,6 +105,18 @@ export interface Product {
    * em `normalizeProduct`.
    */
   tags:            string[]
+  /**
+   * Alguma variante está à venda? (`product.availableForSale` da Storefront API.)
+   *
+   * Existe para a UI poder desabilitar o botão de compra ANTES do clique — na PDP
+   * e na barra fixa de mobile. **Não** é autorização de venda: quem decide se o
+   * item entra no carrinho continua sendo `resolverVariante` no servidor
+   * (`lib/shopify/carrinho.ts`), que relê o estoque no momento da adição. Este
+   * campo vem do ISR e pode estar até `revalidate` segundos velho.
+   *
+   * Nunca `undefined`: `normalizeProduct` aplica `?? true` (fail-open — ver lá).
+   */
+  disponivel:      boolean
   images:          ProductImage[]
   price:           FormattedPrice
   /**

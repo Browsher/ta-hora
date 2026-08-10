@@ -103,6 +103,18 @@ export const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       # a marca (eseecloud/icsee) sai daqui, sem uma segunda busca. Escalar
       # aditivo; esta query é usada SÓ por getProductByHandle (não pelo carrinho).
       tags
+      # availableForSale do PRODUTO: true se ALGUMA variante está disponível — a
+      # mesma pergunta que resolverVariante responde no servidor na hora de
+      # adicionar (lib/shopify/carrinho.ts). Aqui é só para a UI poder desabilitar
+      # o botão ANTES do clique; a decisão de vender continua sendo do servidor.
+      #
+      # ⚠️ SEM CRASE NESTE COMENTÁRIO — ver o aviso do metafield logo abaixo: a
+      # query é um template literal, e uma crase aqui fecha a string.
+      #
+      # Sem isto a PDP não sabia o estoque: o filtro de esgotados só existe no
+      # /catalogo e nos destaques, então a página de um produto esgotado abria com
+      # o botão vivo e o cliente só descobria dentro do drawer.
+      availableForSale
       images(first: 20) { nodes { url altText width height } }
       priceRange { minVariantPrice { amount currencyCode } }
       # Texto de apresentação (feature apresentacao-produto). ALIASADO, e não

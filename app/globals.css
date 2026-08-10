@@ -483,6 +483,112 @@ body {
   }
 }
 
+/* ─── Barra de compra fixa do MOBILE (components/loja/BarraCompraMobile.tsx) ───
+   O PAR do sticky logo acima. Aquele bloco exige `min-width: 768px`, então abaixo
+   disso a coluna de compra colapsa e o botão sobe para o topo do documento — com
+   a apresentação, a ficha técnica e os recomendados depois dele, são ~2.000px de
+   rolagem sem caminho de compra. Esta barra cobre exatamente essa faixa.
+
+   🔴 A VISIBILIDADE É `@media` PURA, o ESTADO é JS. A regra do carrossel (mais
+   abaixo neste arquivo) vale aqui igual: quem decide mobile/desktop é o CSS,
+   nunca `useIsMobile`. O componente sai no HTML do servidor SEMPRE; este
+   `display: none` é o que o mantém fora do desktop, aconteça o que acontecer com
+   o IntersectionObserver. Só o alterna entre escondida/visível é que é JS
+   (`data-visivel`).
+
+   Ao mexer na ALTURA daqui (padding, fontes), refazer o `padding-bottom` de
+   `.pdp-com-barra` na mesma media query — é ele que impede a barra de tapar o fim
+   dos recomendados e o topo do rodapé. */
+.barra-compra-mobile {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .barra-compra-mobile {
+    display:         flex;
+    position:        fixed;
+    left:            0;
+    right:           0;
+    bottom:          0;
+    /* Abaixo da Navbar (999/1000) e MUITO abaixo do drawer do carrinho
+       (2000/2001, CarrinhoDrawer.tsx): quando o carrinho abre, a barra fica atrás
+       do overlay, que é o comportamento correto — o drawer é a tarefa ativa. */
+    z-index:         900;
+    align-items:     center;
+    justify-content: space-between;
+    gap:             12px;
+    /* `env(safe-area-inset-bottom)`: sem isto o indicador de home do iPhone corta
+       a base do botão. O fallback 0px cobre todo navegador que não conhece env(). */
+    padding:         10px clamp(12px, 4vw, 20px);
+    padding-bottom:  calc(10px + env(safe-area-inset-bottom, 0px));
+    background:      var(--cor-fundo);
+    border-top:      1px solid var(--cor-borda);
+    box-shadow:      0 -2px 12px color-mix(in srgb, var(--cor-texto) 8%, transparent);
+    /* Escondida: fora da tela E `visibility: hidden`. A visibilidade é o que tira
+       o botão do tab order — só `translateY` deixaria um botão invisível
+       focalizável, e o Tab pularia para um alvo fora da tela. */
+    transform:       translateY(100%);
+    visibility:      hidden;
+    transition:      transform 0.22s ease, visibility 0.22s;
+  }
+
+  .barra-compra-mobile[data-visivel="true"] {
+    transform:  translateY(0);
+    visibility: visible;
+  }
+
+  .barra-compra-mobile__preco {
+    display:        flex;
+    flex-direction: column;
+    gap:            1px;
+    min-width:      0;          /* deixa o texto encolher em vez de empurrar o botão */
+  }
+
+  /* 17px, e não a escala do PriceTag: aqui o preço acompanha o botão, não lidera
+     a página. O PriceTag da PDP continua em `grande` logo acima, intocado. */
+  .barra-compra-mobile__valor {
+    font-size:   17px;
+    font-weight: 800;
+    line-height: 1.15;
+    color:       var(--cor-texto);
+    white-space: nowrap;
+  }
+
+  /* Mesma escala do `installments` do PriceTag e dos selos de confiança (13px é
+     o teto ali; 11px aqui porque a barra tem metade da altura). */
+  .barra-compra-mobile__parcela {
+    font-size:     11px;
+    line-height:   1.25;
+    color:         var(--cor-texto-fraco);
+    white-space:   nowrap;
+    overflow:      hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Compensa a barra fixa: sem isto ela tapa os últimos ~64px do documento.
+     Vive na MESMA media query da barra, então some junto com ela no desktop.
+
+     🔴 A CLASSE VAI NO DIV RAIZ DO StoreShell, nunca num wrapper da página. O
+     rodapé é IRMÃO do `<main>` (StoreShell.tsx) — padding em qualquer coisa
+     dentro do `<main>` empurra o conteúdo mas deixa o rodapé como último
+     elemento da página, que é o que a barra tapa. Foi assim que este bloco
+     nasceu errado; o div raiz é o único que contém navbar + main + rodapé.
+
+     Quem liga é a prop `compensarBarraFixa` — /catalogo e 404 compartilham o
+     StoreShell e não devem ganhar faixa vazia. */
+  .shell-com-barra-fixa {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Sob reduced-motion a barra aparece e some sem deslizar — o conteúdo é o mesmo,
+   só o trajeto sai. Mesmo tratamento que o carrossel recebe mais abaixo. */
+@media (prefers-reduced-motion: reduce) {
+  .barra-compra-mobile {
+    transition: none;
+  }
+}
+
 /* ─── Seção "Você também pode gostar" (produtos-recomendados) ──────────────────
    Faixa de recomendação ABAIXO do <article> de 2 colunas, largura total e
    centralizada. Container alinhado ao do /catalogo (max 1200px). */

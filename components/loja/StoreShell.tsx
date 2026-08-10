@@ -27,9 +27,31 @@ const footerSection = layout.sections.find((s) => s.component === "Footer")
 const accentOf = (s?: { content?: Record<string, unknown> }) =>
   (s?.content?.accentColor as string | undefined) ?? "var(--cor-destaque)"
 
-export function StoreShell({ children }: { children: React.ReactNode }) {
+interface StoreShellProps {
+  children: React.ReactNode
+  /**
+   * A rota tem barra de compra fixa no mobile? (Hoje só a PDP.)
+   *
+   * 🔴 O PADDING TEM DE VIR AQUI, e não na página. O rodapé é irmão do `<main>`,
+   * montado por ESTE componente — então `padding-bottom` em qualquer wrapper que
+   * a página renderize cria espaço ANTES do rodapé, dentro do `<main>`, e o
+   * rodapé continua sendo a última coisa da página: exatamente o que a barra
+   * fixa tapa. Só este div raiz contém navbar + main + rodapé, então só aqui o
+   * espaço nasce ABAIXO de tudo.
+   *
+   * Opt-in por rota de propósito: /catalogo e o 404 usam o mesmo StoreShell e
+   * NÃO têm barra — se o padding fosse incondicional, ganhariam uma faixa vazia
+   * de 76px embaixo do rodapé sem nada para ocupá-la.
+   */
+  compensarBarraFixa?: boolean
+}
+
+export function StoreShell({ children, compensarBarraFixa = false }: StoreShellProps) {
   return (
-    <div style={{ minHeight: "100vh", ...paletaWrapperStyle(paleta) }}>
+    <div
+      className={compensarBarraFixa ? "shell-com-barra-fixa" : undefined}
+      style={{ minHeight: "100vh", ...paletaWrapperStyle(paleta) }}
+    >
       {navSection && (
         <Navbar
           type={navSection.type as React.ComponentProps<typeof Navbar>["type"]}
