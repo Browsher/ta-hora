@@ -37,7 +37,14 @@ const DEFAULT_CONTENT: Required<FAQContent> = {
   faq2Answer:    "Sim, oferecemos 14 dias gratuitos sem necessidade de cartão de crédito.",
   faq2Category:  "Início",
   faq3Question:  "Quais formas de pagamento são aceitas?",
-  faq3Answer:    "Aceitamos cartão de crédito, boleto bancário e PIX.",
+  // ⚠️ Único default deste bloco corrigido para a realidade da loja: o boleto NÃO
+  // existe (Mercado Pago é o único meio ativo no checkout) e o parcelamento é 3x,
+  // não 12x. Os outros 9 pares continuam sendo copy de template de SaaS ("14 dias
+  // gratuitos", "planos", "integrações") — latentes, não no ar: `faqCount` tem
+  // default 4 e as duas seções de FAQ do site (home e /suporte) sobrescrevem
+  // faq1–faq4. Subir `faqCount` sem adicionar o par correspondente no JSON vaza
+  // esse texto para o cliente. Ver o `_nota` em layouts/suporte.json:64.
+  faq3Answer:    "Aceitamos cartão de crédito em até 3x sem juros e PIX.",
   faq3Category:  "Pagamento",
   faq4Question:  "Posso cancelar a qualquer momento?",
   faq4Answer:    "Sim, sem multas ou taxas. O cancelamento pode ser feito com um clique no painel.",

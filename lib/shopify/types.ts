@@ -107,6 +107,21 @@ export interface Product {
   tags:            string[]
   images:          ProductImage[]
   price:           FormattedPrice
+  /**
+   * Mesmo campo (e mesma origem) do `precoNumerico` do `ProductCard` acima, agora
+   * também no produto completo: `priceRange.minVariantPrice.amount` como número.
+   *
+   * Existe para o PARCELAMENTO da PDP (`lib/parcelamento.ts`), que precisa dividir
+   * o preço e não pode fazê-lo a partir de `price.price` — esse já é texto pt-BR
+   * formatado ("1.799,90"), e desparsear ponto de milhar e vírgula decimal de
+   * volta para número é um bug esperando um produto de quatro dígitos.
+   *
+   * 🔴 NUNCA é o preço EXIBIDO — esse é `price`, via `formatMoney`. E não é valor
+   * cobrado: a regra de aritmética logo abaixo (linha ~124) continua valendo para
+   * tudo que fecha com a fatura. Ver a exceção declarada no topo de
+   * `lib/parcelamento.ts`.
+   */
+  precoNumerico:   number
   specs:           Spec[]
   /**
    * Texto de apresentação do produto (`custom.apresentacao`), CRU — com os `\n`

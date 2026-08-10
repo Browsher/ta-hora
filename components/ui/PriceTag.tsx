@@ -13,7 +13,7 @@ export type PriceTagProps = Omit<MotionProps, "ref"> & {
   currency?:      string   // "R$" (default)
   oldPrice?:      string   // "De R$ 197" — shown strikethrough above price
   discountLabel?: string   // "50% OFF" → rendered as HighlightBadge (solido variant)
-  installments?:  string   // "12x de R$ 9,70 sem juros"
+  installments?:  string   // "3x de R$ 61,67 sem juros" — monte com lib/parcelamento.ts
   cashNote?:      string   // "ou R$ 97 à vista"
   accentColor?:   string
   size?:          "medio" | "grande"

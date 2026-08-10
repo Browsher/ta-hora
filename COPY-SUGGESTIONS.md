@@ -1,3 +1,10 @@
+> **⚠️ Correção posterior — 10/08/2026:** o parcelamento real é **até 3x sem juros**
+> (Mercado Pago, único meio ativo no checkout), não 12x, e **não há desconto no
+> PIX**. O site foi corrigido nesta data. Toda copy sugerida abaixo que menciona
+> "12x" ou "PIX com desconto" está factualmente errada e não deve ser implementada
+> como está — inclusive a headline nº4, *"Proteja o que importa por menos de R$14
+> por mês no cartão"*, cuja âncora é R$158 ÷ 12. Em 3x o mesmo produto dá ~R$53.
+
 # Copy Analysis & Suggestions: https://ta-hora-loja.vercel.app/
 **Date:** 2026-07-30
 **Page Type:** Homepage (e-commerce / D2C store)

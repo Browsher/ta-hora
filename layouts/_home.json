@@ -87,8 +87,8 @@
         "item2Title": "Compra segura",
         "item2Description": "Site protegido e pagamento processado pela Shopify.",
         "item3Icon": "💳",
-        "item3Title": "Parcele em até 12x",
-        "item3Description": "Em até 12x no cartão ou pague no PIX com desconto.",
+        "item3Title": "Parcele em até 3x sem juros",
+        "item3Description": "Em até 3x sem juros no cartão, ou pague no PIX.",
         "item4Icon": "✅",
         "item4Title": "Produtos originais",
         "item4Description": "Só itens originais, lacrados e com nota fiscal.",
@@ -169,7 +169,7 @@
         "testimonial2Text": "Já é minha terceira compra na Ta Hora. Preço justo, entrega rápida e o suporte responde na hora.",
         "testimonial2Name": "Juliana P.",
         "testimonial2Role": "Rio de Janeiro",
-        "testimonial3Text": "Parcelei minha câmera em 12x e recebi certinho. Loja confiável, virei cliente fiel.",
+        "testimonial3Text": "Recebi certinho, no prazo. Loja confiável, virei cliente fiel.",
         "testimonial3Name": "Marcos A.",
         "testimonial3Role": "São Paulo",
         "testimonial4Text": "Tava com receio de comprar online, mas foi tudo tranquilo. Rastreei o pedido o tempo todo e chegou perfeito.",
@@ -198,7 +198,7 @@
         "faq3Question": "Os produtos têm garantia?",
         "faq3Answer": "Sim. Todo produto tem 3 meses de garantia, dada direto pela nossa loja — sem assistência técnica no meio do caminho. Deu problema, você fala com a gente e a gente troca.",
         "faq4Question": "Quais as formas de pagamento?",
-        "faq4Answer": "Cartão de crédito em até 12x, PIX com desconto e boleto bancário."
+        "faq4Answer": "Cartão de crédito em até 3x sem juros e PIX."
       },
       "effects": {
         "preset": "personalizado",

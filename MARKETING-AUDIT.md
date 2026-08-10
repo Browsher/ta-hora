@@ -1,3 +1,9 @@
+> **⚠️ Correção posterior — 10/08/2026:** o parcelamento real é **até 3x sem juros**
+> (Mercado Pago, único meio ativo no checkout), não 12x, e **não há desconto no
+> PIX**. O site foi corrigido nesta data. Toda recomendação abaixo construída
+> sobre "12x" precisa ser relida antes de implementada — inclusive as âncoras de
+> preço derivadas dele.
+
 # Auditoria de Marketing: Ta Hora
 
 **URL:** https://ta-hora-loja.vercel.app/

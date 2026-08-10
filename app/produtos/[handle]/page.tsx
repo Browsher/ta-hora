@@ -12,6 +12,7 @@ import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacion
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
 import { marcaDoProduto } from "@/lib/shopify/tags"
+import { parcelamento } from "@/lib/parcelamento"
 import { buscarRecomendados } from "@/lib/shopify/recomendados"
 import type { Product, ProductCard } from "@/lib/shopify/types"
 
@@ -73,7 +74,21 @@ export async function generateMetadata(
   try {
     const produto = await getProductByHandle(handle)
     if (produto) {
-      const descricao = `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e até 12x sem juros no Ta Hora.`
+      // Parcelamento pela MESMA função que o `<PriceTag>` do corpo da página
+      // chama (ver o render abaixo). É o ponto da existência de
+      // `lib/parcelamento.ts`: a meta description é a fonte que ninguém vê na
+      // tela, e por isso a primeira a apodrecer quando o plano do cartão muda.
+      //
+      // Consequência declarada: a description das 7 PDPs passa a conter o valor
+      // da parcela de cada produto, então mudar o preço na Shopify muda a meta no
+      // próximo ISR. É desejado — e é por isso que não há string fixa aqui.
+      //
+      // Sem parcelamento exibível (produto abaixo do piso do MP), a frase perde a
+      // cláusula inteira em vez de exibir "0x" ou um texto pela metade.
+      const parc = parcelamento(produto.precoNumerico)
+      const descricao = parc
+        ? `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e ${parc.texto} no Ta Hora.`
+        : `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil, no Ta Hora.`
 
       // 🔴 `openGraph` de uma rota SUBSTITUI o do layout raiz INTEIRO — não
       // mescla campo a campo. Enquanto este bloco declarava só `title` e `url`,
@@ -201,7 +216,16 @@ export default async function ProdutoPage(
             <div className="produto-info">
               <Heading as="h1" size="pequeno" text={produto.title} color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
 
-              <PriceTag price={produto.price.price} currency={produto.price.currency} size="grande" />
+              {/* `installments` pela MESMA função da meta description (ver
+                  generateMetadata). `?.texto` → `undefined` quando não há
+                  parcelamento exibível, e o PriceTag simplesmente não renderiza
+                  a linha — prop opcional, sem texto quebrado. */}
+              <PriceTag
+                price={produto.price.price}
+                currency={produto.price.currency}
+                installments={parcelamento(produto.precoNumerico)?.texto}
+                size="grande"
+              />
 
               {/* O handle da rota — nunca um merchandiseId: o servidor resolve a
                   variante (o cliente não escolhe o que vai pro carrinho). Abre o

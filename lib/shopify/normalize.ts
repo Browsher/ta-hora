@@ -168,6 +168,10 @@ export function normalizeProduct(raw: RawProduct): Product {
     tags:            raw.tags ?? [],
     images,
     price:           formatMoney(raw.priceRange.minVariantPrice),
+    // Mesma origem e mesma premissa do `precoNumerico` de `normalizeProductCard`
+    // (string numérica finita vinda da Shopify). Aqui alimenta o parcelamento da
+    // PDP; não é preço exibido nem valor cobrado. Ver `lib/parcelamento.ts`.
+    precoNumerico:   Number(raw.priceRange.minVariantPrice.amount),
     specs,
     // "" / só espaços / ausente → null. Mesma linha do `resumo` em
     // `normalizeProductCard`: é o `|| null` aqui que faz a seção sumir sozinha

@@ -14,7 +14,7 @@ export const revalidate = 300
 export const metadata: Metadata = {
   title: "Catálogo de Câmeras de Segurança Wi-Fi",
   description:
-    "Todas as câmeras de segurança Wi-Fi do Ta Hora: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal e até 12x.",
+    "Todas as câmeras de segurança Wi-Fi do Ta Hora: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal e até 3x sem juros.",
   alternates: { canonical: "/catalogo" },
 }
 
