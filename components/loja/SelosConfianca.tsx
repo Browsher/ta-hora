@@ -36,8 +36,17 @@ import { ShieldCheck, Receipt, RotateCcw, Truck } from "lucide-react"
 // ⚠️ Só entra o que é VERDADE CONFIRMADA. Ficaram DE FORA, e cada ausência é
 // deliberada:
 //   - frete grátis      → não há limiar configurado na loja
-//   - prazo de entrega  → ainda não configurado na Shopify; prazo errado é pior
-//                         que prazo ausente
+//   - prazo de entrega  → 🔄 A PREMISSA MUDOU EM 10/08/2026. O frete FOI configurado
+//                         na Shopify e o prazo existe (o lojista confirmou que ele
+//                         aparece no checkout, calculado pelo CEP). A ausência aqui
+//                         deixou de ser "não temos o dado" e passou a ser "o dado
+//                         não é único": o prazo vai de 1-3 dias úteis em São Paulo
+//                         a 16-20 no Norte. Não existe UM prazo para caber num selo
+//                         estático, e o menor deles ("1-3 dias") seria verdade para
+//                         uma minoria dos compradores e promessa quebrada para o
+//                         resto. Quem afirma prazo é a `CalculadoraFrete`, logo
+//                         abaixo deste bloco desde 10/08/2026 — ela pergunta o CEP
+//                         antes de prometer qualquer coisa.
 //   - estrelas/avaliação→ não existe review no site (as avaliações são do Mercado
 //                         Livre e da Shopee); estrela sem review por trás é o
 //                         mesmo defeito que o "12x" que acabou de sair do ar
@@ -79,9 +88,13 @@ const ITENS = [
     Icone: Truck,
     // Footer.tsx:66 ("entrega para todo o Brasil").
     //
-    // Afirma ALCANCE, nunca PRAZO. O prazo não está configurado na Shopify e
-    // dizer "3 a 10 dias úteis" aqui seria inventar compromisso na página que
-    // fecha a venda.
+    // Afirma ALCANCE, nunca PRAZO — e continua assim, mas por outro motivo desde
+    // 10/08/2026. O prazo agora EXISTE na Shopify (ver a nota no topo); o que não
+    // existe é um prazo único: são de 1-3 dias úteis em São Paulo a 16-20 no
+    // Norte. Um selo estático só poderia mostrar um número, e qualquer número
+    // escolhido mente para a maior parte do país. Quem afirma prazo é a
+    // `CalculadoraFrete`, renderizada logo abaixo deste bloco: ela sabe de onde
+    // o cliente está falando porque pergunta antes de responder.
     texto: "Entrega para todo o Brasil",
   },
 ] as const

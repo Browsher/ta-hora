@@ -37,11 +37,20 @@ const DEFAULT_CONTENT: Required<FAQContent> = {
   faq2Answer:    "Sim, oferecemos 14 dias gratuitos sem necessidade de cartão de crédito.",
   faq2Category:  "Início",
   faq3Question:  "Quais formas de pagamento são aceitas?",
-  // ⚠️ Único default deste bloco corrigido para a realidade da loja: o boleto NÃO
-  // existe (Mercado Pago é o único meio ativo no checkout) e o parcelamento vai
-  // até 12x, dos quais SÓ OS 3 PRIMEIROS são sem juros — os dois números não são
-  // intercambiáveis, ver o bloco no topo de lib/parcelamento.ts antes de editar
-  // esta frase. Os outros 9 pares continuam sendo copy de template de SaaS ("14 dias
+  // ⚠️ Único default deste bloco corrigido para a realidade da loja: o parcelamento
+  // vai até 12x, dos quais SÓ OS 3 PRIMEIROS são sem juros — os dois números não
+  // são intercambiáveis, ver o bloco no topo de lib/parcelamento.ts antes de editar
+  // esta frase.
+  //
+  // O BOLETO EXISTE: o operador confirmou em 10/08/2026 que está habilitado no
+  // Mercado Pago. Este comentário afirmava o contrário até então, por leitura errada
+  // de "Mercado Pago é o único meio ativo no checkout" (lib/parcelamento.ts:26) —
+  // aquilo diz que o MP é o único GATEWAY, não que cartão e PIX sejam os únicos
+  // MEIOS dentro dele. Boleto, cartão e PIX convivem sob o mesmo Mercado Pago.
+  //
+  // Este default continua sem citar o boleto de propósito: é texto genérico de
+  // fallback que nenhuma página usa (ver abaixo), e a resposta real, com boleto,
+  // está em layouts/suporte.json. Os outros 9 pares continuam sendo copy de template de SaaS ("14 dias
   // gratuitos", "planos", "integrações") — latentes, não no ar: `faqCount` tem
   // default 4 e as duas seções de FAQ do site (home e /suporte) sobrescrevem
   // faq1–faq4. Subir `faqCount` sem adicionar o par correspondente no JSON vaza

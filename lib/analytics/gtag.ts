@@ -253,6 +253,40 @@ export function verCarrinho(total: FormattedPrice, itens: ItemGA[]): void {
   evento("view_cart", { currency: MOEDA, value: paraNumero(total), items: itens })
 }
 
+// ─── Eventos fora do funil de e-commerce ─────────────────────────────────────
+
+/**
+ * Consulta de frete na PDP (`CalculadoraFrete`).
+ *
+ * 🔴 NÃO É EVENTO DE E-COMMERCE, e a diferença é deliberada: sem `items`, sem
+ * `value`, sem `currency`. Um `value` aqui entraria na receita do GA4 como se o
+ * frete fosse venda, e `items` faria a consulta aparecer no funil
+ * view_item → add_to_cart → begin_checkout, que é justamente o relatório que a
+ * loja usa para medir conversão. É sinal de INTENÇÃO, e fica ao lado do funil,
+ * não dentro dele.
+ *
+ * Dispara também quando dá errado (`resultado: "cep-desconhecido"`). É de graça
+ * e responde a uma pergunta que ninguém consegue responder de outro jeito:
+ * quantas pessoas digitam um CEP que a gente não reconhece. Se esse número não
+ * for perto de zero, a tabela de faixas tem defeito.
+ *
+ * ⚠️ `uf`, `regiao` e `resultado` são parâmetros CUSTOMIZADOS. Eles chegam ao
+ * GA4 de qualquer jeito, mas só aparecem em relatório depois de registrados como
+ * dimensões personalizadas em Admin → Definições personalizadas. Sem esse passo
+ * o evento é contado e os parâmetros ficam invisíveis — o que parece bug de
+ * código e não é.
+ */
+export function consultarFrete(
+  resultado: "ok" | "cep-desconhecido" | "sem-atendimento",
+  contexto: { uf?: string; regiao?: string } = {},
+): void {
+  evento("consultar_frete", {
+    resultado,
+    ...(contexto.uf     && { uf:     contexto.uf }),
+    ...(contexto.regiao && { regiao: contexto.regiao }),
+  })
+}
+
 export function iniciarCheckout(total: FormattedPrice, itens: ItemGA[], cupons: string[]): void {
   if (itens.length === 0) return
   evento("begin_checkout", {

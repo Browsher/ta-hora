@@ -15,7 +15,8 @@
     "verificar:destaques": "node --env-file=.env.local scripts/verificar-destaques.mjs",
     "verificar:vitrine": "node --env-file=.env.local scripts/verificar-vitrine.mjs",
     "verificar:afiliado": "node --env-file=.env.local scripts/verificar-afiliado.mjs",
-    "verificar:apresentacao": "node --env-file=.env.local scripts/verificar-apresentacao.mjs"
+    "verificar:apresentacao": "node --env-file=.env.local scripts/verificar-apresentacao.mjs",
+    "verificar:frete": "node --env-file=.env.local scripts/verificar-frete.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

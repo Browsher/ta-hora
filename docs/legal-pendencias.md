@@ -60,6 +60,19 @@ teria dado falso verde.
 Depois de editar, o `git diff` dos exports tem que ser **puramente aditivo**. Qualquer linha
 modificada fora do trecho novo é erro do gerador, não do texto.
 
+> **Exceção: a linha do `atualizadoEm`.** Mudar a data é alteração de CONTEÚDO, legítima e
+> esperada — não é sinal de bug no gerador. Ela aparece no diff como linha *modificada* (uma
+> remoção + uma inserção, sempre a linha 2 do `.html` e a 3 do `.md`) porque a data anterior deixa
+> de ser verdade, e é exatamente isso que se quer dizer. A regra "puramente aditivo" existe para
+> pegar o gerador reformatando o documento inteiro em silêncio; ela vale para o CORPO do texto.
+>
+> Como distinguir na prática: um bump de data mexe em **uma linha por arquivo**, e essa linha
+> começa com "Última atualização:". Qualquer outra linha modificada continua sendo suspeita de
+> erro do gerador, mesmo na mesma rodada.
+>
+> Aconteceu em 10/08/2026, no bump da Política (ver "Data de atualização", abaixo): o diff foi
+> `2 files changed, 2 insertions(+), 2 deletions(-)` — nenhuma linha de corpo tocada.
+
 ### Regras do formato (deduzidas dos arquivos de 31/07/2026, validadas 4/4 byte a byte)
 
 | Origem no JSON | HTML | MD |
@@ -108,6 +121,24 @@ Regenerar sempre que o JSON mudar — ver **"🔧 Como regenerar os exports"**, 
 | **Termos de Uso** | — nenhum. Texto limpo e em paridade com a Shopify desde 31/07/2026. |
 | **Política de Privacidade** | ⚖️ Pendência jurídica em aberto (base legal dos cookies `tahora_ref` **e** `_ga`) — ver seção própria. **Não é questão de paridade:** existe igual nos dois lados.<br>🍪 **+ pendência de texto desde 10/08/2026:** o cookie do GA4 não está descrito. Texto pronto na seção própria, **não aplicado**. |
 | **Trocas e Devoluções** | Rascunho de trabalho, **não revisado por advogado**. Dados fornecidos pelo lojista em 30/07/2026. |
+
+---
+
+## Data de atualização dos documentos
+
+**A data acompanha a edição.** Decidido pelo lojista em 10/08/2026: mudou o conteúdo, muda o
+`atualizadoEm`. Manter "30 de julho" num documento editado em agosto **afirma ao leitor que nada
+mudou desde então**, o que é falso — e num documento legal essa afirmação pesa mais que a limpeza
+do `git diff` dos exports (ver a exceção registrada em "Como regenerar os exports").
+
+Bumpar **só o que de fato mudou**. Documento intocado mantém a data antiga: mover a data de um
+texto que não mudou é a mesma afirmação falsa na direção contrária.
+
+| Documento | `atualizadoEm` | Por quê |
+|---|---|---|
+| **Termos de Uso** | 30 de julho de 2026 | Não mudou desde então. Fica. |
+| **Política de Privacidade** | **10 de agosto de 2026** | Parágrafo do cookie do GA4. Export regenerado na mesma rodada. |
+| **Trocas e Devoluções** | **10 de agosto de 2026** | Item de reembolso de boleto. Sem export a regenerar. |
 
 ---
 
@@ -197,9 +228,12 @@ Verificar também se o texto da Shopify já trata dos cookies de checkout, para 
 >
 > | Onde | Estado |
 > |---|---|
-> | `layouts/politica-de-privacidade.json` (site) | ✅ parágrafo inserido em 10/08/2026 |
-> | `docs/legal/politica-shopify.{html,md}` | ✅ regenerados, diff puramente aditivo |
+> | `layouts/politica-de-privacidade.json` (site) | ✅ parágrafo inserido em 10/08/2026 · data bumpada para 10/08/2026 |
+> | `docs/legal/politica-shopify.{html,md}` | ✅ regenerados (2ª vez em 10/08, pelo bump da data) |
 > | **Shopify admin → Políticas → Política de privacidade** | ❌ **NÃO COLADO** |
+>
+> São **duas** mudanças esperando a mesma colagem: o parágrafo do GA4 e a data. Uma colagem só
+> resolve as duas — o export é o documento inteiro, não um patch.
 >
 > **Ação pendente:** colar `docs/legal/politica-shopify.html` na Shopify, modo código-fonte. Só isso
 > fecha o item. Enquanto não for feito, site e Shopify dizem coisas diferentes — a mesma situação que
@@ -334,4 +368,21 @@ Não foi exportado nem colado na rodada de 31/07/2026.
 > `_ecoadoNaPDP` de `layouts/trocas-e-devolucoes.json` — se a revisão mudar qualquer um deles, o
 > componente muda junto.
 
+### 🧾 Reembolso de boleto — acrescentado em 10/08/2026
+
+O boleto bancário foi confirmado como habilitado no Mercado Pago, e passou a ser anunciado no FAQ
+de `/suporte` e no bloco de benefícios da home. A lista de "Prazos de conferência e reembolso"
+cobria só cartão e PIX, então quem pagou boleto não encontrava como o dinheiro voltaria — logo no
+meio de pagamento em que essa dúvida é maior, já que não existe fatura para estornar nem chave
+usada na compra. Acrescentado: reembolso por PIX, na chave informada pelo cliente, em até 5 dias
+úteis após a conferência (dado do lojista, 10/08/2026).
+
+**Não exige regenerar export**: este documento nunca foi exportado nem colado (não há
+`trocas-shopify.html`), então não há paridade a restaurar — só a divergência que já existia. Se um
+dia ele for para a Shopify, o gerador cobre o formato sem mudança: a linha nova é um item de
+`bloco.lista`, que já tem regra (`<li>` no HTML, `— ` no MD).
+
 - [ ] Revisão jurídica do documento inteiro antes de publicar.
+
+**Data de atualização:** bumpada para **10 de agosto de 2026** junto com o reembolso de boleto. Sem
+export a regenerar (este documento nunca foi exportado). Ver "Data de atualização dos documentos".

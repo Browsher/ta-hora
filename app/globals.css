@@ -452,6 +452,185 @@ body {
   color: var(--cor-destaque-texto-forte, var(--cor-destaque));
 }
 
+/* ─── Calculadora de frete da PDP (components/loja/CalculadoraFrete.tsx) ───────
+   Fica ABAIXO dos selos, ainda dentro da `.produto-info`. Mesma escala de 13px
+   dos selos e do `installments`: é informação de apoio ao preço, não um segundo
+   CTA disputando com o "Adicionar".
+
+   ⚠️ ALTURA VARIÁVEL — cresce DEPOIS da interação, não no carregamento.
+   MEDIDO em 10/08/2026 (A31H, viewport 1920×855, CEP do Norte = 2 opções, o caso
+   mais alto): 90px fechado → 254px aberto, levando a coluna de compra de 551px a
+   716px. Ver o cabeçalho de CalculadoraFrete.tsx e o bloco do sticky lá embaixo,
+   cujo limiar de 640px NÃO cobre mais a coluna inteira. */
+.frete-calc {
+  padding-top: 16px;
+  border-top:  1px solid var(--cor-borda);
+  display:     flex;
+  flex-direction: column;
+  gap:         10px;
+}
+
+.frete-calc__titulo {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  font-size:   13px;
+  font-weight: 600;
+  color:       var(--cor-texto);
+}
+
+.frete-calc__icone { flex-shrink: 0; }
+
+.frete-calc__linha {
+  display: flex;
+  gap:     8px;
+}
+
+.frete-calc__campo {
+  /* `min-width: 0` + `flex: 1`: sem o min-width, o tamanho intrínseco do input
+     impede o encolhimento e a linha estoura a coluna de 240px do desktop. */
+  flex:       1;
+  min-width:  0;
+  padding:    10px 12px;
+  border:     1px solid var(--cor-borda);
+  border-radius: 8px;
+  background: var(--cor-fundo);
+  color:      var(--cor-texto);
+  /* 16px, NÃO 13px: abaixo de 16px o Safari do iPhone dá zoom automático ao
+     focar o campo, e a página inteira salta de escala no meio da compra. É o
+     único texto deste bloco fora da escala de 13px, e é por isso. */
+  font-size:  16px;
+  line-height: 1.2;
+}
+
+.frete-calc__campo:focus-visible {
+  outline: 2px solid var(--cor-destaque);
+  outline-offset: 1px;
+}
+
+.frete-calc__botao {
+  flex-shrink: 0;
+  padding:     10px 16px;
+  border:      1px solid var(--cor-destaque);
+  border-radius: 8px;
+  background:  transparent;
+  color:       var(--cor-destaque-texto-forte, var(--cor-destaque));
+  font-size:   14px;
+  font-weight: 600;
+  cursor:      pointer;
+}
+
+.frete-calc__botao:disabled {
+  opacity: 0.45;
+  cursor:  not-allowed;
+}
+
+.frete-calc__resultado:empty { display: none; }
+
+/* Cabeçalho do resultado. Discreto (12px, cor fraca) porque é contexto, não
+   resposta: a resposta são as opções logo abaixo. */
+.frete-calc__estado {
+  margin:      0 0 4px;
+  font-size:   12px;
+  line-height: 1.45;
+  color:       var(--cor-texto-fraco);
+}
+
+.frete-calc__opcoes {
+  list-style: none;
+  margin:     0;
+  padding:    0;
+}
+
+/* Ícone · (nome + prazo) · valor. O `1fr` do meio absorve a sobra, então o valor
+   encosta à direita em qualquer largura e as duas linhas alinham entre si — o
+   que permite comparar as opções de relance, que é a única coisa que o cliente
+   faz aqui.
+
+   O divisor é `border-bottom` no item, não `gap` na lista: com gap, a linha
+   ficaria boiando no meio do vão e o par ícone/valor perderia a leitura de
+   "mesma faixa". `:last-child` sem borda — a última opção fecha no ar. */
+.frete-calc__opcao {
+  display:               grid;
+  grid-template-columns: auto 1fr auto;
+  align-items:           center;
+  gap:                   10px;
+  padding:               10px 0;
+  border-bottom:         1px solid var(--cor-borda);
+}
+
+.frete-calc__opcao:first-child { padding-top: 0; }
+
+.frete-calc__opcao:last-child {
+  padding-bottom: 0;
+  border-bottom:  none;
+}
+
+.frete-calc__opcao-icone { flex-shrink: 0; }
+
+/* 🔴 A COR NÃO É A ÚNICA PORTADORA DA DISTINÇÃO — o desenho do ícone (foguete
+   vs. caminhão) e o nome escrito dizem a mesma coisa. Quem não separa laranja de
+   cinza continua lendo a diferença. Se um dia estas duas regras virarem a única
+   diferença entre as opções, a distinção quebra para parte dos clientes. */
+.frete-calc__opcao-icone--expresso { color: var(--cor-destaque); }
+.frete-calc__opcao-icone--comum    { color: var(--cor-texto-fraco); }
+
+.frete-calc__opcao-texto {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  /* Sem isto, um nome longo empurra o valor para fora da coluna de 240px em vez
+     de quebrar dentro da própria célula. */
+  min-width:      0;
+}
+
+.frete-calc__nome {
+  font-size:   14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color:       var(--cor-texto);
+}
+
+.frete-calc__prazo {
+  font-size:   12px;
+  line-height: 1.3;
+  color:       var(--cor-texto-secundario);
+}
+
+.frete-calc__valor {
+  font-size:   15px;
+  font-weight: 600;
+  color:       var(--cor-texto);
+  white-space: nowrap;
+}
+
+.frete-calc__nota,
+.frete-calc__aviso {
+  margin:      6px 0 0;
+  font-size:   12px;
+  line-height: 1.45;
+  color:       var(--cor-texto-fraco);
+}
+
+.frete-calc__link {
+  color:           var(--cor-texto-fraco);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.frete-calc__link:hover {
+  color: var(--cor-destaque-texto-forte, var(--cor-destaque));
+}
+
+/* Abaixo de 360px (iPhone SE de pé, com padding da coluna) o campo e o botão
+   lado a lado deixam o campo com ~150px — a máscara "00000-000" cabe, mas o
+   placeholder encosta nas bordas e o toque fica apertado. Empilhar é mais
+   honesto que espremer. */
+@media (max-width: 359.98px) {
+  .frete-calc__linha { flex-direction: column; }
+  .frete-calc__botao { width: 100%; }
+}
+
 /* Imagens da descrição: PREENCHEM a largura da coluna direita (width:100%), sem
    sobrar preto ao lado, E no TAMANHO/PROPORÇÃO REAL. `height: auto` sem
    aspect-ratio forçado: nada de esticar/deformar (o aspect-ratio 4/3 anterior
@@ -474,7 +653,23 @@ body {
    ficou ~470px (medido), então o limiar min-height cai para 640px: congela em
    telas normais (viewport ~855px) com o botão sempre visível. Aproximação
    CSS-only, sem JS de medição. align-self:start é OBRIGATÓRIO — sem ele o item de
-   grid estica e o sticky nunca dispara. */
+   grid estica e o sticky nunca dispara.
+
+   🔴 O LIMIAR DE 640px FICOU DEFASADO — remedido em 10/08/2026.
+   A coluna não mede mais ~470px: são 551px com os selos e 716px com o resultado
+   da CalculadoraFrete aberto (A31H, viewport 1920×855, CEP do Norte). Com
+   `top: 24px`, a coluna inteira só cabe a partir de 740px de viewport.
+
+   O que isso quebra, e o que NÃO quebra:
+     ✅ o botão "Adicionar" continua visível a partir de 304px de viewport — ele
+        ocupa 231–280px do topo da coluna, e o que cresceu foi o rodapé dela;
+     ⚠️ entre 640 e 740px de viewport a coluna pina mais alta que a tela, e o
+        rodapé (o resultado do frete) fica inalcançável enquanto pinado.
+
+   Subir o limiar para ~760px restauraria a intenção original ("congela só se
+   couber INTEIRA"), ao custo de desligar o sticky em notebooks de 640–760px.
+   É troca de conversão por completude e está PENDENTE DE DECISÃO do lojista —
+   não mude sozinho. */
 @media (min-width: 768px) and (min-height: 640px) {
   .produto-coluna-esquerda {
     position: sticky;

@@ -61,19 +61,19 @@
       "variation": "",
       "effect": "none",
       "content": {
-        "_nota": "type='grid' NAO e escolha estetica: o grid renderiza as respostas SEMPRE, entao elas ficam no HTML pre-renderizado (SEO). O 'accordion' monta a resposta dentro de AnimatePresence com isOpen e a resposta FECHADA nao existe no DOM. Nao trocar para accordion sem resolver isso. faqCount e editavel ate 10, MAS subir o numero exige adicionar o par faqNQuestion/faqNAnswer aqui — sem o par, vaza o texto de template do DEFAULT_CONTENT do componente (perguntas de software por assinatura, que nao tem nada a ver com a loja). As respostas abaixo sao PLACEHOLDER de proposito: sem prazos, valores ou percentuais, para nao virarem compromisso da loja antes de o dono revisar. Esta chave e inerte: JSON nao aceita comentario, e o componente so le os campos que conhece.",
+        "_nota": "type='grid' NAO e escolha estetica: o grid renderiza as respostas SEMPRE, entao elas ficam no HTML pre-renderizado (SEO). O 'accordion' monta a resposta dentro de AnimatePresence com isOpen e a resposta FECHADA nao existe no DOM. Nao trocar para accordion sem resolver isso. faqCount e editavel ate 10, MAS subir o numero exige adicionar o par faqNQuestion/faqNAnswer aqui — sem o par, vaza o texto de template do DEFAULT_CONTENT do componente (perguntas de software por assinatura, que nao tem nada a ver com a loja). As respostas abaixo DEIXARAM DE SER PLACEHOLDER em 10/08/2026: o dono revisou e cada uma agora e compromisso da loja. Os numeros nao sao livres — o parcelamento (12x, dos quais 3x sem juros) vem de lib/parcelamento.ts, e a garantia de 3 meses, os 7 dias de arrependimento e o frete de devolucao por nossa conta sao a politica publicada em layouts/trocas-e-devolucoes.json, tambem ecoada em components/loja/SelosConfianca.tsx. Mudou um desses fatos? Mude nos tres lugares. Esta chave e inerte: JSON nao aceita comentario, e o componente so le os campos que conhece.",
         "faqCount": 4,
         "gridMinWidth": 420,
         "sectionLabel": "DÚVIDAS FREQUENTES",
         "headline": "As perguntas que a gente %%mais recebe%%",
-        "faq1Question": "Qual é o prazo de entrega?",
-        "faq1Answer": "O prazo varia conforme a sua região e a forma de envio escolhida no checkout. Assim que o pedido é despachado, você recebe a confirmação com os dados de acompanhamento.",
-        "faq2Question": "Os produtos têm garantia?",
-        "faq2Answer": "Sim, 3 meses de garantia contados do recebimento, dada pela nossa loja. Se algo chegar com defeito, chame no WhatsApp que a gente troca direto, sem laudo e sem assistência.",
-        "faq3Question": "Quais são as formas de pagamento?",
-        "faq3Answer": "As formas de pagamento disponíveis aparecem na hora de finalizar a compra, no checkout.",
-        "faq4Question": "Como acompanho meu pedido?",
-        "faq4Answer": "Assim que o pedido é enviado, você recebe os dados de acompanhamento no e-mail cadastrado. Qualquer dúvida, fale com a gente pelo WhatsApp."
+        "faq1Question": "Quanto tempo demora a entrega?",
+        "faq1Answer": "O prazo aparece no checkout, calculado pelo seu CEP. Enviamos para todo o Brasil.",
+        "faq2Question": "Quais as formas de pagamento?",
+        "faq2Answer": "Cartão de crédito em até 12x, sendo 3x sem juros, PIX e boleto bancário. O pagamento é processado pelo Mercado Pago.",
+        "faq3Question": "Como funciona a garantia?",
+        "faq3Answer": "São 3 meses a partir do recebimento, dados pela nossa loja. Se der qualquer problema na câmera, você fala com a gente e trocamos direto — sem assistência técnica no meio do caminho.",
+        "faq4Question": "Posso devolver se não gostar?",
+        "faq4Answer": "Sim. Você tem 7 dias corridos a partir do recebimento para desistir, sem precisar justificar. O frete da devolução é por nossa conta. É o direito de arrependimento do CDC."
       }
     },
     {

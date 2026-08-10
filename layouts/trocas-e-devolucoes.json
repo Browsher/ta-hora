@@ -56,7 +56,7 @@
         "_ecoadoNaPDP": "ATENCAO AO EDITAR OS NUMEROS. Tres fatos deste documento sao ECOADOS, em forma resumida, no bloco de confianca da pagina de produto (components/loja/SelosConfianca.tsx), logo abaixo do botao de comprar: os 3 MESES de garantia direto com a loja (bloco 'Se o produto apresentar defeito'), os 7 DIAS de arrependimento e o FRETE DE DEVOLUCAO por nossa conta (blocos 'Se voce mudou de ideia' e 'Quem paga o frete da devolucao'). Mudou prazo, cobertura ou quem paga o frete aqui? Atualize la tambem — senao a pagina que VENDE passa a prometer o que a politica nao cumpre. A PDP tambem linka para esta pagina na linha da devolucao. Esta chave e inerte: JSON nao aceita comentario, o componente so le os campos que conhece, e o semNotasInternas remove as chaves _ antes de o layout chegar ao cliente.",
         "rotulo": "POLÍTICA",
         "titulo": "Trocas e Devoluções",
-        "atualizadoEm": "Última atualização: 30 de julho de 2026",
+        "atualizadoEm": "Última atualização: 10 de agosto de 2026",
         "introducao": "Comprar câmera pela internet tem que ser tranquilo. Se algo não sair como você esperava, resolvemos direto com você — sem assistência técnica, sem laudo e sem enrolação. Abaixo estão as regras, os prazos e o passo a passo.",
         "blocos": [
           {
@@ -132,7 +132,8 @@
             ],
             "lista": [
               "Pagamento no cartão de crédito: o estorno aparece na sua fatura conforme o prazo da operadora do cartão, que varia de acordo com a data de fechamento.",
-              "Pagamento no PIX: devolvemos na mesma chave usada na compra, em até 5 dias úteis."
+              "Pagamento no PIX: devolvemos na mesma chave usada na compra, em até 5 dias úteis.",
+              "Pagamento no boleto bancário: o reembolso é feito por PIX, na chave que você nos informar, em até 5 dias úteis após a conferência."
             ]
           },
           {

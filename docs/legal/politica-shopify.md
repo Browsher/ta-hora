@@ -1,6 +1,6 @@
 Política de Privacidade
 
-Última atualização: 30 de julho de 2026
+Última atualização: 10 de agosto de 2026
 
 A Ta Hora é responsável por esta loja e site, incluindo todas as informações, conteúdos, funcionalidades, ferramentas, produtos e serviços relacionados, com o objetivo de oferecer a você, cliente, uma experiência de compra personalizada (os “Serviços”). A Ta Hora é desenvolvida com tecnologia da Shopify, que nos permite disponibilizar os Serviços para você. Esta Política de privacidade descreve como coletamos, usamos e compartilhamos suas informações pessoais quando você visita, utiliza ou realiza uma compra ou outra transação por meio dos Serviços, ou ainda quando se comunica conosco de qualquer outra forma. Em caso de conflito entre nossos Termos de Serviço e esta Política de privacidade, prevalecerá o disposto nesta Política de privacidade no que diz respeito à coleta, ao processamento e ao compartilhamento das suas informações pessoais.
 

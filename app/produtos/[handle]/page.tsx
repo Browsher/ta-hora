@@ -12,6 +12,7 @@ import { BarraCompraMobile } from "@/components/loja/BarraCompraMobile"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
 import { SelosConfianca } from "@/components/loja/SelosConfianca"
+import { CalculadoraFrete } from "@/components/loja/CalculadoraFrete"
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
 import { marcaDoProduto } from "@/lib/shopify/tags"
@@ -273,6 +274,12 @@ export default async function ProdutoPage(
                   existiam só dentro de <meta> e og:. Só o que é verdade
                   confirmada; o que ficou de fora está justificado no arquivo. */}
               <SelosConfianca />
+
+              {/* Calculadora de frete — DEPOIS dos selos de propósito: frete é
+                  a objeção "quanto sai no total", que só aparece depois de
+                  "eu quero e confio". Client component (tem input e estado),
+                  mas sem rede: calcula de tabela local, ver lib/frete/. */}
+              <CalculadoraFrete />
             </div>
           </div>
         </div>
