@@ -20,6 +20,16 @@ export type CtaButtonProps = Omit<MotionProps, "ref"> & {
   textColor?:   string
   paddingX?:    number
   className?:   string
+  /**
+   * Aditivo. Existe porque o "Finalizar compra" do `CarrinhoDrawer` precisa
+   * disparar `begin_checkout` antes de sair para a Shopify.
+   *
+   * Declarado EXPLICITAMENTE em vez de contar com o `...rest`: `MotionProps` do
+   * framer-motion não inclui handlers de DOM, então um `onClick` passado por
+   * quem usa o componente seria rejeitado pelo `tsc`. Vale para as duas
+   * variantes (âncora e botão) — cai no mesmo spread.
+   */
+  onClick?:     React.MouseEventHandler<HTMLElement>
 }
 
 function buildStyle(

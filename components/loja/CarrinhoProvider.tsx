@@ -19,6 +19,8 @@ import {
   buscarAcessorios,
 } from "@/lib/carrinho/acoes"
 import { TAG_CAMERA } from "@/lib/shopify/tags"
+import { diffCarrinho } from "@/lib/analytics/diffCarrinho"
+import { adicionarAoCarrinho, removerDoCarrinho, verCarrinho, itemDaLinha } from "@/lib/analytics/gtag"
 import type { Carrinho, ResultadoCarrinho, ProductCard } from "@/lib/shopify/types"
 
 // Estado único do carrinho. É a ÚNICA porta do cliente para as Server Actions.
@@ -35,13 +37,33 @@ import type { Carrinho, ResultadoCarrinho, ProductCard } from "@/lib/shopify/typ
 // Component, a Home vira `ƒ` (dynamic) e o Req 9.2 cai SEM ERRO VISÍVEL: só some
 // o `○` da saída do build.
 
+/**
+ * De onde partiu a abertura do drawer. Existe por causa de UM evento de
+ * analytics, e o parâmetro é OBRIGATÓRIO de propósito — ver `abrir`.
+ */
+export type OrigemAbertura = "icone" | "adicao"
+
 interface ContextoDoCarrinho {
   carrinho:   Carrinho | null
   aviso:      string | null
   erro:       string | null
   carregando: boolean
   aberto:     boolean
-  abrir:      () => void
+  /**
+   * ⚠️ O ARGUMENTO NÃO TEM DEFAULT, E ISSO É INTENCIONAL.
+   *
+   * `view_cart` só faz sentido quando a pessoa foi VER o carrinho. Mas o
+   * `BotaoAdicionar` chama `abrir()` em toda adição (é a NFR de <100ms: o drawer
+   * abre antes do `await`). Disparando em toda abertura, `view_cart` teria
+   * exatamente a contagem de `add_to_cart` e não mediria nada.
+   *
+   * Sem default, o `tsc` obriga cada chamador a dizer de onde veio. Com default,
+   * o modo de falha silencioso é o `onClick={ctx.abrir}` do `IconeCarrinho`:
+   * o React passaria o `MouseEvent` como primeiro argumento, a comparação
+   * `origem === "icone"` daria falso, e o `view_cart` simplesmente nunca sairia —
+   * sem erro de tipo, sem erro em runtime, sem nada no console.
+   */
+  abrir:      (origem: OrigemAbertura) => void
   fechar:     () => void
   adicionar:         (handle: string) => Promise<void>
   alterarQuantidade: (lineId: string, quantidade: number) => Promise<void>
@@ -93,6 +115,43 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const carrinhoRef = useRef<Carrinho | null>(null)
   carrinhoRef.current = carrinho
 
+  // ─── Analytics do carrinho ──────────────────────────────────────────────────
+  //
+  // Os eventos `add_to_cart` / `remove_from_cart` nascem AQUI, no provider, e não
+  // no `BotaoAdicionar`. O porquê completo está no topo de
+  // `lib/analytics/diffCarrinho.ts`; o resumo é que o botão só conhece o `handle`
+  // (decisão de segurança dele) e não sabe se a adição deu certo.
+
+  /**
+   * ÚLTIMO CARRINHO BOM CONHECIDO — não é espelho do estado.
+   *
+   * A diferença importa. Toda falha das actions devolve `{ carrinho: null }`, e o
+   * `setCarrinho(null)` que vem depois zera a tela. Se este ref acompanhasse
+   * isso, a sequência "falha de rede → cliente tenta de novo → sucesso" faria o
+   * diff comparar `null` com o carrinho inteiro e reportar um `add_to_cart` de
+   * TODOS os itens, dos quais o cliente adicionou um.
+   *
+   * Mantendo o último estado bom, a recuperação diffa `[3] → [4]` = 1 item. Certo.
+   *
+   * ⚠️ Não use o `carrinhoRef` acima para isto: ele é atribuído durante o RENDER,
+   * e duas operações seguidas na `fila` não têm garantia de render entre elas —
+   * a segunda leria o valor da primeira desatualizado.
+   */
+  const ultimoBom = useRef<Carrinho | null>(null)
+
+  const reportarDiff = useCallback((r: ResultadoCarrinho) => {
+    const { adicionados, removidos } = diffCarrinho(
+      ultimoBom.current?.linhas ?? null,
+      r.carrinho?.linhas ?? null,
+    )
+
+    if (adicionados.length > 0) adicionarAoCarrinho(adicionados)
+    if (removidos.length   > 0) removerDoCarrinho(removidos)
+
+    // Só avança a referência em resultado BOM. Ver o bloco acima.
+    if (r.carrinho) ultimoBom.current = r.carrinho
+  }, [])
+
   /**
    * Aplica um resultado ao estado.
    *
@@ -102,9 +161,18 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
    * primeira resposta, e não o `null` da segunda.
    */
   const aplicar = useCallback((r: ResultadoCarrinho) => {
+    // Analytics ANTES do setState: o diff precisa do estado anterior, e depois
+    // deste ponto ele já foi substituído. Não bloqueia nada (o gtag é `push` num
+    // array) e não pode lançar — `evento()` é silencioso sem `window.gtag`.
+    reportarDiff(r)
+
     setCarrinho(r.carrinho)
     setAviso(r.aviso)
     setErro(r.erro)
+    // `reportarDiff` é `useCallback([])` logo acima — estável, não precisa entrar
+    // nas deps. (E este arquivo não tem lint: ver o aviso sobre `exhaustive-deps`
+    // mais abaixo. É revisão humana.)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   /** Enfileira uma operação do usuário, serializando estado e carregamento. */
@@ -138,7 +206,25 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const sincronizar = useCallback(() => {
     fila.current = fila.current
       .then(() => lerCarrinho())
-      .then((r) => { setCarrinho(r.carrinho) })
+      .then((r) => {
+        setCarrinho(r.carrinho)
+        /*
+          🔴 ALIMENTA A LINHA DE BASE DO DIFF — e é obrigatório.
+
+          Cenário sem esta linha: a pessoa volta ao site com 2 itens no carrinho
+          (cookie vivo). O `sincronizar` do mount traz os 2, mas o `ultimoBom`
+          segue `null`. No primeiro `+` que ela der, o diff compara `null` com
+          `[3 itens]` e reporta `add_to_cart` de TRÊS produtos.
+
+          O efeito no relatório é traiçoeiro: infla `add_to_cart` exatamente para
+          os clientes que RETORNAM — o segmento cuja taxa de conversão você mais
+          quer acreditar.
+
+          Sem `reportarDiff` aqui, note: isto é leitura de fundo, não ação do
+          cliente. Ninguém adicionou nada; só estabelecemos o ponto de partida.
+        */
+        if (r.carrinho) ultimoBom.current = r.carrinho
+      })
       .catch(() => { /* silêncio: navbar sem contador, sem erro */ })
   }, [])
 
@@ -246,7 +332,24 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     erro,
     carregando,
     aberto,
-    abrir:  useCallback(() => setAberto(true), []),
+    /*
+      `view_cart` SÓ na abertura pelo ícone. Ver a justificativa no tipo, acima.
+
+      Lê `carrinhoRef.current` e não `carrinho`: este `useCallback` tem deps `[]`
+      (precisa ser estável — ele é `onClick` do ícone da navbar, que vive dentro
+      de seções memoizadas), então o `carrinho` do closure congelaria no valor do
+      primeiro render, que é sempre `null`. O `view_cart` nunca sairia.
+
+      Sem itens → sem evento. Abrir um carrinho vazio não é ver um carrinho.
+    */
+    abrir: useCallback((origem: OrigemAbertura) => {
+      setAberto(true)
+      if (origem !== "icone") return
+      const c = carrinhoRef.current
+      if (c && c.linhas.length > 0) {
+        verCarrinho(c.total, c.linhas.map((l) => itemDaLinha(l)))
+      }
+    }, []),
     fechar: useCallback(() => setAberto(false), []),
     adicionar:         useCallback((handle: string) => enfileirar(() => adicionarItem(handle)), [enfileirar]),
     alterarQuantidade: useCallback((lineId: string, q: number) => enfileirar(() => atualizarQuantidade(lineId, q)), [enfileirar]),

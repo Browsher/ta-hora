@@ -57,7 +57,13 @@ export function BotaoAdicionar({
     //
     // E é `abrir()` do PROVIDER, não estado local: o drawer é montado no root
     // layout, então só o contexto o alcança.
-    abrir()
+    // `"adicao"` → o provider NÃO manda `view_cart` aqui. Esta abertura é efeito
+    // colateral do clique em "adicionar", não alguém indo ver o carrinho; contar
+    // as duas faria `view_cart` empatar com `add_to_cart` e não medir nada.
+    abrir("adicao")
+    // O `add_to_cart` sai daqui de dentro, no provider, por diff da resposta da
+    // Shopify — este componente não conhece preço nem título (só o `handle`) e
+    // não saberia se a adição deu certo. Ver lib/analytics/diffCarrinho.ts.
     await adicionar(handle)
   }
 

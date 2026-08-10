@@ -8,6 +8,8 @@ import { SectionLabel } from "@/components/ui/SectionLabel"
 import { Heading } from "@/components/ui/Heading"
 import { ProductCardLink } from "@/components/loja/ProductCardLink"
 import { CarrosselMobile } from "@/components/ui/CarrosselMobile"
+import { EventoVerLista } from "@/components/analytics/EventoVerLista"
+import { itemDoCard } from "@/lib/analytics/gtag"
 // import type: só o TIPO (apagado na compilação) — a fronteira cliente/servidor
 // fica intacta. Esta seção NUNCA busca nada: recebe a lista pronta do servidor.
 import type { ProductCard } from "@/lib/shopify/types"
@@ -78,6 +80,21 @@ export function VitrineHome({
         paddingBottom: "clamp(40px, 5vw, 64px)",
       }}
     >
+      {/*
+        `view_item_list` da vitrine da Home. Montado AQUI dentro, e não na
+        `app/page.tsx`, porque a árvore de seções da Home é dirigida por
+        `layouts/_home.json` via o `componentMap` do `PreviewContent` — a página
+        não alcança um irmão desta seção sem inventar uma entrada de JSON para um
+        componente que não renderiza nada. Ver EventoVerLista.tsx.
+
+        Depois do `if (produtos.length === 0) return null` acima, então nunca
+        dispara com lista vazia.
+      */}
+      <EventoVerLista
+        nomeDaLista="Vitrine da Home"
+        itens={produtos.map((p, i) => itemDoCard(p, i + 1))}
+      />
+
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(20px, 5vw, 64px)" }}>
         <motion.div {...containerProps} style={{ display: "flex", flexDirection: "column", gap: 32 }}>
           {/* Cabeçalho no padrão do `GridHeader`: rótulo + headline centralizados.

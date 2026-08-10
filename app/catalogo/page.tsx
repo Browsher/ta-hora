@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { getProducts } from "@/lib/shopify/products"
 import { CatalogoConsultivo } from "@/components/loja/CatalogoConsultivo"
+import { EventoVerLista } from "@/components/analytics/EventoVerLista"
+import { itemDoCard } from "@/lib/analytics/gtag"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { Heading } from "@/components/ui/Heading"
 import { SectionLabel } from "@/components/ui/SectionLabel"
@@ -26,7 +28,24 @@ export default async function CatalogoPage() {
   let corpo: React.ReactNode
   try {
     const produtos = await getProducts()
-    corpo = <CatalogoConsultivo produtos={produtos} />
+    corpo = (
+      <>
+        {/*
+          `view_item_list` da lista COMPLETA que o servidor entregou — não o
+          recorte do filtro. O porquê está no topo de EventoVerLista.tsx.
+
+          Dentro do `try`: se a Shopify cair, não há lista e não há evento. Um
+          `view_item_list` vazio seria pior que ausente — apareceria no relatório
+          como "lista vista com 0 produtos", indistinguível de um catálogo
+          realmente vazio.
+        */}
+        <EventoVerLista
+          nomeDaLista="Catálogo"
+          itens={produtos.map((p, i) => itemDoCard(p, i + 1))}
+        />
+        <CatalogoConsultivo produtos={produtos} />
+      </>
+    )
   } catch {
     // Shopify offline / erro → estado amigável (Req 4.4). O resto do site
     // (home, Sobre Nós) não depende da Shopify e segue funcionando.

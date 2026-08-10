@@ -7,6 +7,7 @@ import { ProductGallery } from "@/components/loja/ProductGallery"
 import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
 import { ApresentacaoProduto } from "@/components/loja/ApresentacaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
+import { EventoVerProduto } from "@/components/analytics/EventoVerProduto"
 import { BarraCompraMobile } from "@/components/loja/BarraCompraMobile"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
@@ -201,11 +202,31 @@ export default async function ProdutoPage(
   // segunda seria uma oportunidade de as duas divergirem no futuro.
   const parc = parcelamento(produto.precoNumerico)
 
+  // Item do `view_item`, montado AQUI (servidor) e passado pronto — ver o topo de
+  // EventoVerProduto.tsx.
+  //
+  // `item_id` é o HANDLE, não `produto.id`. Não é escolha de estilo: a linha do
+  // carrinho não carrega o gid do produto (`LinhaCarrinho.id` é o `CartLine`), e
+  // o handle é o único identificador idêntico na PDP, no card e no carrinho. Sem
+  // isso o funil view_item → add_to_cart → begin_checkout do GA4 vê três
+  // produtos diferentes e nunca fecha.
+  const itemGA = {
+    item_id:    handle,
+    item_name:  produto.title,
+    item_brand: marcaDoProduto(produto.tags) ?? undefined,
+    price:      produto.precoNumerico,
+    quantity:   1,
+  }
+
   return (
     // `compensarBarraFixa`: o padding que impede a barra de tapar o rodapé mora
     // no div raiz do StoreShell, não aqui — o rodapé é irmão do <main> e um
     // wrapper nesta página não o alcança. Ver o comentário na prop.
     <StoreShell compensarBarraFixa>
+      {/* Não renderiza nada — dispara `view_item` na montagem, no browser de
+          cada visitante (o HTML desta rota é ISR, cacheado por 5 min). */}
+      <EventoVerProduto item={itemGA} />
+
       <article
         // Layout em globals.css (classes explícitas — o mx-auto do Tailwind não
         // é gerado neste projeto): `produto-grid` = 60/40 centrado com esquerda

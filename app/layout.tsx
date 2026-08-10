@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { CarrinhoProvider } from "@/components/loja/CarrinhoProvider"
 import { CarrinhoDrawer } from "@/components/loja/CarrinhoDrawer"
+import { Analytics } from "@/components/analytics/Analytics"
 import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
 import homeData from "@/layouts/_home.json"
@@ -115,6 +116,18 @@ export default function RootLayout({
           tag vai mover a Home para ISR de propósito — decisão daquela spec, não
           violação desta. Ver tech.md → "Home estática: o que é regra e o que NÃO é".
         */}
+        {/*
+          GA4. Componente CLIENTE, e isso é parte da regra acima: quando o banner
+          de consentimento entrar, a decisão vem do `localStorage` pós-montagem.
+          Ler consentimento por cookie AQUI tornaria toda rota do site dinâmica
+          com o mesmo silêncio descrito no bloco anterior. Ver o topo de
+          components/analytics/Analytics.tsx.
+
+          Fora do `CarrinhoProvider` de propósito: não depende do carrinho, e o
+          `page_view` não deve esperar a hidratação do provider.
+        */}
+        <Analytics />
+
         <CarrinhoProvider>
           {children}
           {/* Montado UMA vez, acima de tudo — o drawer é global. */}

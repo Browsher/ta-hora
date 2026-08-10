@@ -19,7 +19,11 @@ export function IconeCarrinho({ accentColor = "var(--cor-destaque)" }: { accentC
   return (
     <button
       type="button"
-      onClick={ctx.abrir}
+      /* ⚠️ NÃO volte para `onClick={ctx.abrir}`. O React passaria o `MouseEvent`
+         como primeiro argumento e a origem chegaria como um evento em vez de
+         `"icone"` — o `view_cart` pararia de sair, calado. O tipo de `abrir` não
+         tem default justamente para o `tsc` pegar isso. */
+      onClick={() => ctx.abrir("icone")}
       aria-label={total > 0 ? `Abrir carrinho (${total} ${total === 1 ? "item" : "itens"})` : "Abrir carrinho"}
       style={{
         position:     "relative",

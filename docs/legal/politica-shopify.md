@@ -80,6 +80,20 @@ Base legal (LGPD): legítimo interesse do controlador, nos termos do art. 7º, i
 
 Como recusar ou remover: você pode bloquear ou apagar esse cookie a qualquer momento nas configurações do seu navegador, sem qualquer prejuízo à sua navegação, à sua compra ou às condições comerciais oferecidas. A remoção afeta apenas a atribuição da comissão ao afiliado.
 
+Cookies de medição de audiência (Google Analytics)
+
+Utilizamos o Google Analytics 4, serviço de medição de audiência fornecido pelo Google, para entender como nosso site é utilizado. Para isso são gravados em seu navegador cookies próprios chamados “_ga” e “_ga_” seguido de um identificador, com validade de até 2 anos.
+
+Esses cookies armazenam um identificador aleatório atribuído ao seu navegador, sem qualquer relação com sua identidade. Registramos as páginas visitadas, a origem da visita, o produto visualizado e as interações com o carrinho de compras. Não armazenamos seu nome, e-mail, CPF ou endereço nesses cookies, e não utilizamos esse serviço para publicidade, remarketing ou acompanhamento da sua atividade em outros sites — os recursos de publicidade e de identificação entre dispositivos do Google Analytics estão desativados em nossa configuração.
+
+Finalidade: medir de forma agregada o desempenho das páginas e do processo de compra, para corrigir problemas de navegação e melhorar a loja. As informações são analisadas em conjunto, na forma de estatísticas, e não individualmente.
+
+Compartilhamento e transferência internacional: os dados são processados pelo Google LLC e por suas afiliadas, podendo ser transferidos e armazenados em servidores localizados fora do Brasil. A transferência ocorre nos termos do art. 33 da Lei nº 13.709/2018 e das cláusulas contratuais firmadas com o fornecedor do serviço.
+
+Base legal (LGPD): legítimo interesse do controlador, nos termos do art. 7º, inciso IX, da Lei nº 13.709/2018, para aferir e melhorar a qualidade dos nossos serviços. O tratamento se limita a dados de navegação agregados, sem identificação pessoal e sem uso publicitário.
+
+Como recusar ou remover: você pode bloquear ou apagar esses cookies a qualquer momento nas configurações do seu navegador, sem qualquer prejuízo à sua navegação, à sua compra ou às condições comerciais oferecidas. O Google também disponibiliza um complemento de navegador para desativar o Google Analytics, em tools.google.com/dlpage/gaoptout (https://tools.google.com/dlpage/gaoptout).
+
 Relacionamento com a Shopify
 
 Os Serviços são hospedados pela Shopify, que coleta e processa informações pessoais sobre seu acesso e uso dos Serviços para oferecer e aprimorar os Serviços para você. As informações que você enviar aos Serviços serão transmitidas e compartilhadas com a Shopify, assim como com terceiros que podem estar localizados em países diferentes do seu local de residência, para oferecer e aprimorar os Serviços para você. Além disso, para ajudar a proteger, expandir e melhorar nosso negócio, utilizamos alguns recursos avançados da Shopify que incorporam dados e informações obtidas a partir das suas interações com nossa loja, com outros lojistas e com a própria Shopify. Para fornecer esses recursos aprimorados, a Shopify pode utilizar informações pessoais coletadas sobre suas interações com nossa loja, com outros lojistas e com a Shopify. Nesses casos, a Shopify é responsável pelo processamento dessas informações pessoais, inclusive para responder às suas solicitações relacionadas ao exercício dos seus direitos sobre o uso dessas informações para essas finalidades. Para saber mais sobre como a Shopify usa suas informações pessoais e quais direitos você pode ter, acesse a Política de privacidade do consumidor da Shopify. Dependendo da sua localização, você pode exercer determinados direitos em relação às suas informações pessoais na Política de privacidade da Shopify (https://privacy.shopify.com/en).

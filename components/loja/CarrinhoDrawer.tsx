@@ -11,6 +11,7 @@ import { CarrinhoLinha } from "./CarrinhoLinha"
 import { CupomForm } from "./CupomForm"
 import { SeloPagamento } from "./SeloPagamento"
 import { AcessoriosSugeridos } from "./AcessoriosSugeridos"
+import { iniciarCheckout, itemDaLinha } from "@/lib/analytics/gtag"
 
 // Painel lateral do carrinho. Montado UMA vez, no `app/layout.tsx`.
 //
@@ -268,6 +269,28 @@ export function CarrinhoDrawer({ paleta }: { paleta: Paleta | null }) {
                   {carrinho.checkoutUrl ? (
                     <CtaButton
                       href={carrinho.checkoutUrl}
+                      /*
+                        `begin_checkout` — o ÚLTIMO evento que este site consegue
+                        medir. O que vem depois (pagamento, compra) acontece em
+                        checkout.tahora.com.br, que é a Shopify, e exige o trabalho
+                        de atribuição que ficou para depois.
+
+                        Sobrevive à navegação: o GA4 envia por
+                        `navigator.sendBeacon`, que o browser conclui mesmo com a
+                        página já saindo. Não é preciso `preventDefault` nem atrasar
+                        o clique — e atrasar seria regressão no botão mais sensível
+                        do funil.
+
+                        Total e itens são os da Shopify (`cart.cost.totalAmount`),
+                        não uma soma nossa.
+                      */
+                      onClick={() =>
+                        iniciarCheckout(
+                          carrinho.total,
+                          carrinho.linhas.map((l) => itemDaLinha(l)),
+                          carrinho.cupons.map((c) => c.codigo),
+                        )
+                      }
                       label="Finalizar compra"
                       shape="quadrado"
                       fill="solido"
