@@ -1,40 +1,58 @@
 # Dependência externa: o link gerado pelo dashboard de afiliados
 
-**Status:** ABERTA — fora do escopo desta spec, precisa ser feita no **projeto
-Afiliados** (repositório separado).
+**Status:** ✅ **RESOLVIDA em 2026-08-04**, no **projeto Afiliados**
+(repositório separado).
 
-## O problema
+## O que era o problema
 
 Esta spec construiu, na loja headless, tudo o que é preciso para creditar um
 afiliado: a captura do `?ref=`, o cookie de 30 dias e o carimbo `afiliado_ref`
 no carrinho, que vira `note_attributes` no pedido.
 
-**Mas a loja só é acionada se o cliente chegar por um link dela.** Hoje o
-dashboard de afiliados gera links apontando para o **domínio da Shopify**. Um
-cliente que clique num desses links não passa pelo `proxy.ts` da loja headless,
-não recebe o cookie `tahora_ref` e **a venda não é atribuída** — por mais
-correto que esteja o código deste repositório.
+**Mas a loja só é acionada se o cliente chegar por um link dela.** O dashboard
+de afiliados gerava links apontando para o **domínio da Shopify**. Um cliente
+que clicasse num desses links não passava pelo `proxy.ts` da loja headless, não
+recebia o cookie `tahora_ref` e **a venda não era atribuída** — por mais correto
+que estivesse o código deste repositório.
 
-Ou seja: enquanto esta dependência estiver aberta, a feature funciona e não
-credita ninguém, porque ninguém chega por ela.
+Enquanto esta dependência esteve aberta, a feature funcionava e não creditava
+ninguém, porque ninguém chegava por ela.
 
-## O que precisa mudar
+## Como foi resolvido
 
-O dashboard deve gerar o link apontando para a loja headless:
-
-```
-https://ta-hora-loja.vercel.app/?ref=<CODIGO>
-```
-
-E, quando o domínio próprio entrar no ar:
+O dashboard passou a montar o link a partir de uma variável de ambiente
+`STOREFRONT_URL`, apontando para a loja headless. O link gerado hoje é:
 
 ```
 https://tahora.com.br/?ref=<CODIGO>
 ```
 
-Qualquer rota funciona como ponto de entrada — `/`, `/catalogo`,
-`/produtos/<handle>` —, então o dashboard pode gerar links de campanha para
-páginas específicas. O que não pode faltar é o `?ref=`.
+Deployado e validado ponta a ponta: link copiado do dashboard, aberto em aba
+anônima → a URL limpou (o `proxy.ts` capturou) e o cookie `tahora_ref` apareceu.
+
+Ter a URL em `STOREFRONT_URL` em vez de hardcoded é o que evita a repetição
+desta dependência: uma troca futura de domínio é mudança de env var no projeto
+Afiliados, sem redeploy de lógica.
+
+## Qualquer rota serve como ponto de entrada — e isso tem valor comercial
+
+O `matcher` do `proxy.ts` é amplo (todo o site, exceto API, estáticos e
+caminhos com extensão) e o cookie é gravado com `path: "/"`. A consequência
+prática: **o afiliado pode divulgar qualquer URL do site** — `/`, `/catalogo`,
+`/produtos/<handle>` — e a captura funciona igual. Basta o `?ref=`.
+
+Isso não é só conveniência. O modelo de recompensa exige **3 compras do MESMO
+produto**. Divulgar o link de um **produto específico** concentra as compras
+indicadas num único produto, enquanto divulgar a home espalha os visitantes pelo
+catálogo e pode nunca fechar o trio. Ou seja: para o afiliado, o link de produto
+fecha ciclo mais rápido.
+
+```
+https://tahora.com.br/produtos/<handle>?ref=<CODIGO>
+```
+
+Vale considerar, no dashboard, oferecer o link por produto além do link da home
+— a mecânica da loja já suporta, sem nenhuma mudança deste lado.
 
 ## O contrato do código (o que a loja aceita)
 

@@ -140,7 +140,8 @@
         "step4Description": "Ganhe a cada 3 indicações que viram compra.",
         "step5Title": "Saque",
         "step5Description": "Saque no PIX ou use como crédito na loja.",
-        "ctaLabel": "Quero ser afiliado"
+        "ctaLabel": "Quero ser afiliado",
+        "ctaHref": "https://afiliados.tahora.com.br"
       },
       "effects": {
         "preset": "personalizado",

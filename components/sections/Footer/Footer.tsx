@@ -75,10 +75,13 @@ const DEFAULT_CONTENT: Required<FooterContent> = {
   // "Política de privacidade", "Termos de uso"); os HREFS não — vivem só aqui.
   // Era daqui que saíam os #blog / #carreiras que apontavam para lugar nenhum.
   column2Title:      "Empresa",
-  // ⚠️ Link1: os layouts rotulam este item como "Seja um Afiliado" e a página de
-  // afiliados não existe — o href segue morto DE PROPÓSITO, para não fingir que
-  // leva a algum lugar. Corrigir junto com a criação de /afiliados.
-  column2Link1Label: "Sobre nós",        column2Link1Href: "#sobre",
+  // Link1: os layouts rotulam este item como "Seja um Afiliado". O destino é
+  // EXTERNO de propósito — a landing do programa vive em domínio próprio
+  // (afiliados.tahora.com.br), não em uma rota deste site. Não trocar por path
+  // relativo tipo "/afiliados": essa rota não existe e não está planejada.
+  // Mesma aba (sem target="_blank"): é jornada de mão única, quem vai se
+  // cadastrar não volta para continuar comprando.
+  column2Link1Label: "Seja um Afiliado", column2Link1Href: "https://afiliados.tahora.com.br",
   column2Link2Label: "Política de privacidade", column2Link2Href: "/politica-de-privacidade",
   column2Link3Label: "Termos de uso",    column2Link3Href: "/termos-de-uso",
   column2Link4Label: "Trocas e devoluções",     column2Link4Href: "/trocas-e-devolucoes",

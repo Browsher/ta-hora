@@ -495,9 +495,11 @@ snippet original deixou de ser argumento e virou medição.
 `components/`, `app/` e `layouts/` — o `CarrinhoProvider` e toda a UI ficaram
 intocados.
 
-## Pendência conhecida (fora desta spec)
+## Dependência externa — RESOLVIDA em 2026-08-04
 
-O dashboard do **projeto Afiliados** ainda gera links para o domínio Shopify.
-Enquanto isso não mudar, os links distribuídos não passam pelo `proxy.ts` e
-nenhuma venda é atribuída — por mais correta que esteja a loja. Ver
-[`DEPENDENCIA-DASHBOARD.md`](./DEPENDENCIA-DASHBOARD.md).
+O dashboard do **projeto Afiliados** gerava links para o domínio Shopify, que
+não passam pelo `proxy.ts`. Resolvido no projeto Afiliados via `STOREFRONT_URL`:
+o link agora sai como `https://tahora.com.br/?ref=<CODIGO>`, deployado e
+validado em aba anônima (URL limpa + cookie `tahora_ref`). Com isso o caminho
+está fechado ponta a ponta, do link distribuído ao `note_attributes` do pedido.
+Ver [`DEPENDENCIA-DASHBOARD.md`](./DEPENDENCIA-DASHBOARD.md).
