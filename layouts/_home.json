@@ -87,8 +87,8 @@
         "item2Title": "Compra segura",
         "item2Description": "Site protegido e pagamento processado pela Shopify.",
         "item3Icon": "💳",
-        "item3Title": "Parcele em até 3x sem juros",
-        "item3Description": "Em até 3x sem juros no cartão, ou pague no PIX.",
+        "item3Title": "Parcele em até 12x",
+        "item3Description": "3x sem juros no cartão, em até 12x com juros, ou pague no PIX.",
         "item4Icon": "✅",
         "item4Title": "Produtos originais",
         "item4Description": "Só itens originais, lacrados e com nota fiscal.",
@@ -229,7 +229,7 @@
         "faq3Question": "Os produtos têm garantia?",
         "faq3Answer": "Sim. Todo produto tem 3 meses de garantia, dada direto pela nossa loja — sem assistência técnica no meio do caminho. Deu problema, você fala com a gente e a gente troca.",
         "faq4Question": "Quais as formas de pagamento?",
-        "faq4Answer": "Cartão de crédito em até 3x sem juros e PIX."
+        "faq4Answer": "Cartão de crédito em até 12x, sendo 3x sem juros, e PIX."
       },
       "effects": {
         "preset": "personalizado",

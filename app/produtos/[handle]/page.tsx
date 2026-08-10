@@ -89,7 +89,9 @@ export async function generateMetadata(
       // cláusula inteira em vez de exibir "0x" ou um texto pela metade.
       const parc = parcelamento(produto.precoNumerico)
       const descricao = parc
-        ? `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e ${parc.texto} no Ta Hora.`
+        // `textoProsa`, não `textoUI`: a variante de UI traz um `·` de lista, que
+        // no meio desta oração lê como frase quebrada. Ver lib/parcelamento.ts.
+        ? `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil e ${parc.textoProsa} no Ta Hora.`
         : `${produto.title} — original, com nota fiscal e garantia. Entrega para todo o Brasil, no Ta Hora.`
 
       // 🔴 `openGraph` de uma rota SUBSTITUI o do layout raiz INTEIRO — não
@@ -236,7 +238,7 @@ export default async function ProdutoPage(
               <PriceTag
                 price={produto.price.price}
                 currency={produto.price.currency}
-                installments={parc?.texto}
+                installments={parc?.textoUI}
                 size="grande"
               />
 
@@ -281,6 +283,10 @@ export default async function ProdutoPage(
         handle={handle}
         preco={produto.price.price}
         moeda={produto.price.currency}
+        // `texto` CURTO de propósito (sem os 12x): a barra já prefixa com "ou", e
+        // o texto completo daria "ou … sem juros · ou em até 12x" — dois "ou" na
+        // mesma linha, e trunca em 320px. A condição completa está no PriceTag,
+        // a um scroll. Ver a doc do campo em lib/parcelamento.ts.
         parcela={parc?.texto}
         disponivel={produto.disponivel}
         alvoId="produto-compra"

@@ -14,7 +14,11 @@ export const revalidate = 300
 export const metadata: Metadata = {
   title: "Catálogo de Câmeras de Segurança Wi-Fi",
   description:
-    "Todas as câmeras de segurança Wi-Fi do Ta Hora: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal e até 3x sem juros.",
+    // "3x sem juros e em até 12x" — os DOIS tetos, porque são diferentes: 3 é o
+    // limite sem acréscimo, 12 é o limite total (com juros do cliente). String
+    // fixa e não `parcelamento()` porque aqui não há produto: é a página da
+    // coleção. Ao mexer, ler o bloco no topo de lib/parcelamento.ts.
+    "Todas as câmeras de segurança Wi-Fi do Ta Hora: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal, 3x sem juros e em até 12x.",
   alternates: { canonical: "/catalogo" },
 }
 
