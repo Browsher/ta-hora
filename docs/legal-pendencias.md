@@ -142,4 +142,17 @@ Existiam **só na Shopify** — o site já estava correto.
 **Rascunho de trabalho — não revisado por advogado.** Dados fornecidos pelo lojista em 30/07/2026.
 Não foi exportado nem colado na rodada de 31/07/2026.
 
+> 📈 **Prioridade AUMENTOU em 10/08/2026 — o volume de tráfego para esta página subiu.**
+> O bloco de confiança da página de produto (`components/loja/SelosConfianca.tsx`) passou a
+> afirmar "7 dias para devolver, frete por nossa conta" **com link para cá**, nas 7 PDPs — que são
+> as páginas que vendem. Antes, o único caminho para este documento era o rodapé.
+>
+> A exposição não mudou de natureza (a página já era linkada do rodapé das 9 rotas), mas mudou de
+> volume, e agora ela é lida por quem está com o dedo no botão de comprar. **Ao levar a revisão
+> jurídica ao advogado, este documento subiu de prioridade em relação aos outros dois.**
+>
+> Os números ecoados na PDP (3 meses / 7 dias / frete de devolução) estão anotados no
+> `_ecoadoNaPDP` de `layouts/trocas-e-devolucoes.json` — se a revisão mudar qualquer um deles, o
+> componente muda junto.
+
 - [ ] Revisão jurídica do documento inteiro antes de publicar.

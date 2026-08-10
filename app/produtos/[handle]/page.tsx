@@ -9,6 +9,7 @@ import { ApresentacaoProduto } from "@/components/loja/ApresentacaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
+import { SelosConfianca } from "@/components/loja/SelosConfianca"
 import { Heading } from "@/components/ui/Heading"
 import { PriceTag } from "@/components/ui/PriceTag"
 import { marcaDoProduto } from "@/lib/shopify/tags"
@@ -231,6 +232,12 @@ export default async function ProdutoPage(
                   variante (o cliente não escolhe o que vai pro carrinho). Abre o
                   drawer e dispara os acessórios sugeridos — intocado. */}
               <BotaoAdicionar handle={handle} />
+
+              {/* Garantia / NF / devolução / alcance de entrega. Server
+                  component: sai no HTML do ISR, que é o ponto — esses fatos
+                  existiam só dentro de <meta> e og:. Só o que é verdade
+                  confirmada; o que ficou de fora está justificado no arquivo. */}
+              <SelosConfianca />
             </div>
           </div>
         </div>

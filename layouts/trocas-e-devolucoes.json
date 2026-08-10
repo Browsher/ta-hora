@@ -53,6 +53,7 @@
       "effect": "none",
       "content": {
         "_naoPublicarAssim": "NAO PUBLICAR ASSIM. Rascunho de trabalho, nao revisado por advogado. Pendencias e roteiro de correcao na Shopify: docs/legal-pendencias.md",
+        "_ecoadoNaPDP": "ATENCAO AO EDITAR OS NUMEROS. Tres fatos deste documento sao ECOADOS, em forma resumida, no bloco de confianca da pagina de produto (components/loja/SelosConfianca.tsx), logo abaixo do botao de comprar: os 3 MESES de garantia direto com a loja (bloco 'Se o produto apresentar defeito'), os 7 DIAS de arrependimento e o FRETE DE DEVOLUCAO por nossa conta (blocos 'Se voce mudou de ideia' e 'Quem paga o frete da devolucao'). Mudou prazo, cobertura ou quem paga o frete aqui? Atualize la tambem — senao a pagina que VENDE passa a prometer o que a politica nao cumpre. A PDP tambem linka para esta pagina na linha da devolucao. Esta chave e inerte: JSON nao aceita comentario, o componente so le os campos que conhece, e o semNotasInternas remove as chaves _ antes de o layout chegar ao cliente.",
         "rotulo": "POLÍTICA",
         "titulo": "Trocas e Devoluções",
         "atualizadoEm": "Última atualização: 30 de julho de 2026",

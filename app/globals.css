@@ -396,12 +396,60 @@ body {
   }
 }
 
-/* Info (título + preço + botão) empilhada. Cresce para baixo — há espaço para
-   specs/etc. depois do botão numa spec futura. */
+/* Info (título + preço + botão + selos) empilhada. Cresce para baixo. */
 .produto-info {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* ─── Selos de confiança da PDP (components/loja/SelosConfianca.tsx) ───────────
+   Lista de 4 linhas logo abaixo do botão. Escala tipográfica IGUAL à do
+   `installments` do PriceTag (13px, --cor-texto-fraco): o bloco lê como
+   continuação do preço, não como um segundo CTA competindo com o botão.
+
+   ⚠️ Este bloco acrescenta altura à coluna esquerda, que é o alvo do sticky
+   condicional lá embaixo (@media min-height: 640px). O limiar de 640px foi
+   calibrado sobre uma coluna de ~470px MEDIDA. Ao mexer na altura daqui, remedir
+   — se a info passar a galeria, a coluna cresce e o sticky pode parar de
+   disparar, trocando confiança por conversão. */
+.selos-confianca {
+  list-style:  none;
+  margin:      0;
+  padding:     16px 0 0;
+  border-top:  1px solid var(--cor-borda);
+  display:     flex;
+  flex-direction: column;
+  gap:         10px;
+}
+
+.selos-confianca-item {
+  display:     flex;
+  /* flex-start, NÃO center: as linhas quebram em 2 na coluna estreita do desktop
+     (minmax(240px, 1fr)) e um ícone centralizado flutuaria no meio do texto. */
+  align-items: flex-start;
+  gap:         8px;
+  font-size:   13px;
+  line-height: 1.45;
+  color:       var(--cor-texto-fraco);
+}
+
+.selos-confianca-icone {
+  flex-shrink: 0;
+  /* Alinha o ícone à primeira linha do texto (13px × 1.45 ≈ 19px de altura de
+     linha; ícone de 16px → ~1.5px de sobra em cima). */
+  margin-top:  1.5px;
+}
+
+.selos-confianca-link {
+  color:           var(--cor-texto-fraco);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space:     nowrap;
+}
+
+.selos-confianca-link:hover {
+  color: var(--cor-destaque-texto-forte, var(--cor-destaque));
 }
 
 /* Imagens da descrição: PREENCHEM a largura da coluna direita (width:100%), sem
