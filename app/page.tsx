@@ -1,4 +1,6 @@
 import { PreviewContent } from "@/components/preview/PreviewContent"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { organizacaoSchema } from "@/lib/seo/organizacaoSchema"
 import { getPaleta } from "@/lib/estilos"
 import { getVitrineHome } from "@/lib/shopify/products"
 import type { Layout } from "@/lib/types"
@@ -40,6 +42,15 @@ export default async function Page() {
 
   return (
     <main style={{ background: fundo, minHeight: "100vh" }} className="w-full">
+      {/* JSON-LD da organização — SÓ AQUI, e não no app/layout.tsx.
+          A orientação do Google é declarar a entidade na home; no layout raiz
+          ela sairia 14 vezes, uma por rota, sem acrescentar sinal nenhum.
+
+          🔴 NÃO é rich result: alimenta knowledge panel e desambiguação de
+          entidade. Ver o bloco no topo de lib/seo/organizacaoSchema.ts antes de
+          esperar enfeite no resultado de busca. */}
+      <JsonLd data={organizacaoSchema()} />
+
       <PreviewContent layout={layout} produtosVitrine={produtosVitrine} />
     </main>
   )

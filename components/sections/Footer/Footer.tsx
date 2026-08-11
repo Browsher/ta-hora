@@ -108,7 +108,22 @@ const DEFAULT_CONTENT: Required<FooterContent> = {
   social3Icon: "",          social3Href: "",
   social4Icon: "",          social4Href: "",
 
-  copyright: "© 2026 Ta Hora — CH CFTV & Eletrônicos — CNPJ 46.340.461/0001-04 — Rua André de Leão, 78, Brás, São Paulo/SP, CEP 03101-010",
+  // 🔴 NAP (Name-Address-Phone) — OS TRÊS, e o telefone é o mais fácil de perder.
+  //
+  // O "P" entrou em 11/08/2026: até então o rodapé trazia razão social, CNPJ e
+  // endereço, sem telefone nenhum — ele só existia dentro do `CanaisSuporte`, na
+  // página /suporte. NAP sem o P não é NAP: a consistência dos TRÊS entre site,
+  // marketplaces e diretórios é o sinal que o Google usa para casar a entidade.
+  //
+  // ⚠️ ESTES DADOS TÊM UMA SEGUNDA FONTE: `lib/seo/organizacaoSchema.ts` afirma
+  // os mesmos fatos em JSON-LD (`legalName`, `taxID`, `address`, `telephone`).
+  // Mudou um deles? Mude nos DOIS lugares — schema que diverge do que a página
+  // mostra é sinal de baixa confiança, não de nenhuma.
+  //
+  // O telefone aqui é o MESMO número do WhatsApp (`whatsappNumero` em
+  // CanaisSuporte.tsx e em layouts/suporte.json), só que em formato humano. Lá
+  // ele é "5511984188541" porque o wa.me não aceita máscara.
+  copyright: "© 2026 Ta Hora — CH CFTV & Eletrônicos — CNPJ 46.340.461/0001-04 — Rua André de Leão, 78, Brás, São Paulo/SP, CEP 03101-010 — (11) 98418-8541",
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

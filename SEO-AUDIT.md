@@ -245,7 +245,7 @@ Ponto forte a registrar: o **canonical relativo resolvido contra `metadataBase`*
 **As três correções de maior alavancagem:**
 
 1. **Fotos e vídeo reais de instalação.** O argumento de venda é "você mesmo instala em minutos". Hoje isso é uma afirmação. Um vídeo de 60s instalando a A31H de verdade (celular na mão, parafuso, app configurando) converte *e* é o sinal de Experience mais forte que existe. Baixo custo, altíssimo retorno.
-2. **NAP completo e visível.** CNPJ por extenso, endereço e telefone no rodapé. Vira `Organization` schema (seção 8) e é sinal de confiança clássico. **Verificar antes se há restrição de privacidade quanto ao endereço** — se for endereço residencial, usar só CNPJ + cidade/UF.
+2. ✅ **~~NAP completo e visível~~ — FEITO em 11/08/2026.** O rodapé já trazia razão social, CNPJ e endereço nas 14 páginas; faltava o **telefone**, que só existia dentro do `/suporte`. NAP é Name-Address-**Phone**, e a consistência dos três entre site, marketplaces e diretórios é o sinal que casa a entidade. Sem questão de privacidade: é endereço comercial de registro, já público no rodapé desde antes — e é justamente por não haver atendimento presencial que o schema usa `OnlineStore` e não `LocalBusiness` (seção 8).
 3. **Assinar o conteúdo.** Quando o blog existir, cada artigo com autor real ("Alexandre, 4 anos vendendo câmeras") + bio. É o que separa artigo de loja de artigo de conteúdo genérico.
 
 ---
@@ -311,7 +311,9 @@ Correto. Não bloqueia CSS/JS. Bloqueia o carrinho (certo — página sem valor 
 ### 4.2 sitemap.xml — **Pass**
 14 URLs, todas 200, `lastmod` com data real, `changefreq` e `priority` coerentes com a hierarquia (home 1.0 → PDPs 0.8 → legais 0.3). Gerado programaticamente em `app/sitemap.ts`, o que significa que **produto novo na coleção `cameras` entra no sitemap sozinho.**
 
-**Verificar:** o sitemap está submetido no Google Search Console? Não é possível confirmar de fora. Se ainda não estiver, é a primeira coisa a fazer — 5 minutos, e sem isso nada nesta auditoria vira dado observável.
+✅ **Submetido no Google Search Console em 10/08/2026** — painel retornou "Sucesso", com **14 páginas descobertas**, exatamente as 14 `<loc>` do arquivo. Nenhuma URL sobrando nem faltando.
+
+A partir daqui o Search Console passa a ser a fonte de verdade sobre o que este documento previu: impressões, CTR e posição média por página, o relatório de itens de comércio (`Product`) e a cobertura de indexação. **A janela útil de leitura começa em ~2 semanas** — antes disso os dados são ruído, e as mudanças de title de 11/08/2026 (seção 1.1) só aparecem depois de o Google reprocessar as PDPs.
 
 ### 4.3 Canonical — **Pass, com destaque**
 Presente e auto-referencial em 14/14 URLs. A implementação relativa contra `metadataBase` (ver 1.7) é a decisão técnica mais bem resolvida do site.
@@ -411,7 +413,7 @@ Para um e-commerce, isso é a maior perda de CTR disponível. `Product` schema �
 | Tipo | Aplicável a | Status | Prioridade |
 |---|---|---|---|
 | **Product + Offer** | 7 PDPs | ✅ **Implementado (11/08/2026)** | ~~1~~ feito |
-| **Organization** | Home | **Ausente** | **1** |
+| **OnlineStore** (Organization) | Home | ✅ **Implementado (11/08/2026)** | ~~1~~ feito |
 | ~~**FAQPage**~~ | ~~Home + `/suporte`~~ | **Removido da lista** | ❌ ver abaixo |
 | **BreadcrumbList** | Catálogo + PDPs | **Ausente** | 2 |
 | **ItemList** | `/catalogo` | **Ausente** | 2 |
@@ -443,7 +445,17 @@ O `AccordionItem` renderizava a resposta dentro de `{isOpen && …}` com `defaul
 
 **Ganho:** conteúdo indexável que sobrevive à morte do FAQPage e serve Bing e LLMs sem schema nenhum. **Custo:** ~15 linhas, zero mudança visual.
 
-**Organization:** nome, logo, URL, `sameAs` (Instagram, WhatsApp, lojas de marketplace) e — se houver decisão de expor — CNPJ em `identifier` e telefone em `contactPoint`.
+### ✅ OnlineStore / Organization — implementado em 11/08/2026
+
+`lib/seo/organizacaoSchema.ts`, emitido **só na home** (`app/page.tsx`). A orientação do Google é declarar a entidade na home — *"You don't need to include it on every page of your site"*; no layout raiz ela sairia 14 vezes sem acrescentar sinal.
+
+**Tipo: `OnlineStore`, não `LocalBusiness` — decisão registrada.** O endereço do Brás é onde a empresa está registrada, **não há atendimento presencial**. `LocalBusiness` habilita Maps e pacote local, ou seja, faria cliente aparecer na porta esperando ser atendido. `OnlineStore` é subtipo de `Organization` para varejo online: descreve o que a empresa é sem prometer o que ela não faz.
+
+Campos: `name` (fantasia) + `legalName` (razão social) como campos distintos; **CNPJ em `taxID`** — o campo do schema.org para identificação fiscal, não `identifier` genérico, que perderia o significado do número; `address` completo (o bairro vive dentro do `streetAddress`, porque `PostalAddress` não tem campo de bairro); `telephone`; `email`; `logo` (`logo-tahora.png`, **512×512**, bem acima do mínimo de 112×112); e `sameAs` com Mercado Livre, Shopee e Instagram.
+
+> ⚠️ **Não é rich result, e a diferença com o FAQPage importa.** A documentação do Google diz que o Organization *"ajuda a entender os detalhes administrativos da organização e a desambiguá-la nos resultados"* — alimenta knowledge panel, perfil de comerciante e desambiguação de entidade, **não decora o resultado de busca**. Mas isto **não** é o caso do FAQPage: aquele é um recurso extinto, com suporte removido das ferramentas; este é ativo, documentado e mantido. É investimento de identidade de marca, não de CTR.
+
+**Duas fontes para os mesmos fatos, de propósito e com aviso:** o rodapé exibe razão social, CNPJ, endereço e telefone nas 14 páginas; o schema os afirma em JSON-LD. Mudou um deles, muda nos dois — divergência entre o que o schema declara e o que a página mostra é sinal de baixa confiança. O aviso está nos dois arquivos.
 
 > ⚠️ **Aviso sobre AggregateRating.** Os 5 depoimentos da home vêm do **Mercado Livre e da Shopee**, com nota 4,7. É tentador marcar isso como `AggregateRating` no Product. **Não faça.** A política de rich results do Google exige que a avaliação seja coletada pelo próprio site ou por parceiro autorizado; marcar avaliação de marketplace de terceiro como se fosse do site é motivo de ação manual, e ação manual derruba **todos** os rich results do domínio, não só o de review. O caminho correto é coletar avaliação de primeira parte (e-mail pós-compra com link de review na PDP) e marcar essas. Enquanto isso, os depoimentos continuam valiosos como social proof visual — só não vão para o schema.
 
@@ -620,7 +632,7 @@ Ou seja: a provável imagem de LCP da PDP em desktop está marcada `loading="laz
 
 2. **Reescrever os 7 titles de PDP**, trocando o código de SKU por descritor com demanda real de busca (seção 1.1). Hoje as páginas que vendem competem por termos que ninguém digita, usando metade dos caracteres disponíveis. Esforço: ~1h + decisão de onde guardar o descritor.
 
-3. **Confirmar que o sitemap está submetido no Google Search Console.** 5 min. Sem isso não há como medir nada do que está neste documento.
+3. ✅ **~~Confirmar que o sitemap está submetido no Google Search Console~~ — FEITO em 10/08/2026.** Painel retornou "Sucesso", **14 páginas descobertas** — bate exatamente com as 14 `<loc>` do `sitemap.xml`. É o que torna observável tudo o mais deste documento.
 
 4. ✅ **~~`FAQPage` schema na home e no `/suporte`~~ — RETIRADO, e substituído por outra correção.** O FAQ rich result não existe mais desde 2023/2026 (ver seção 8): o schema renderia zero. A investigação revelou o problema real — **as respostas do FAQ da home não estavam no HTML** — e foi isso que se corrigiu em 11/08/2026. Ganho de conteúdo indexável, sem markup.
 
@@ -629,7 +641,7 @@ Ou seja: a provável imagem de LCP da PDP em desktop está marcada `loading="laz
 5. ✅ **~~Redimensionar as imagens do CDN da Shopify~~ — FEITO em 11/08/2026.** `width=800` (galeria), `400` (cards), `128` (thumbnails), `1200` (`og:image`), com `width`/`height` recalculados junto. Medido: home −88%, catálogo −81%, PDP −61%.
 6. ✅ **~~`width`/`height` em toda `<img>`~~ — FEITO em 11/08/2026, por outro caminho.** O diagnóstico estava errado: `aspect-ratio` no CSS já cobria hero, galeria, cards e thumbs, e os atributos seriam neutralizados pelo `style` inline do `ImageSlot`. A única fonte real de CLS eram as imagens de descrição, corrigidas com `aspect-ratio: 1/1` + `object-fit: contain` e guarda no `verificar:descricao`. Ver seção 10. (O `loading="lazy"` das imagens de descrição já existia.)
 7. ✅ **~~Limitar o `preload` de imagem a uma por página~~ — FEITO na home e no catálogo em 11/08/2026.** 4→1 e 7→1, com `fetchPriority="high"` no hero. LCP de ambas medido no Chrome (é a imagem nas duas, não o texto). PDP mantida em 8 por decisão: os 5 thumbnails são de 2,8-5,1 KB e estão acima da dobra. Ganho **modelado** em ~48 ms (home) e ~75 ms (catálogo) — não medido, porque localhost não tem latência. Ver seção 10.
-8. `Organization` schema na home + NAP completo no rodapé.
+8. ✅ **~~`Organization` schema na home + NAP completo no rodapé~~ — FEITO em 11/08/2026.** `OnlineStore` na home (ver seção 8) e o **telefone acrescentado ao rodapé** — até então o NAP tinha nome e endereço, sem o "P", que só existia dentro do `/suporte`. Ver seção 2.
 9. Breadcrumbs visuais + `BreadcrumbList` schema no catálogo e nas PDPs.
 10. Corrigir a meta description do `/catalogo` (175 → ~158 chars) e expandir a da home (123 → ~157).
 11. **Gravar o vídeo de instalação real.** É simultaneamente conteúdo, prova de Experience e material de conversão.
