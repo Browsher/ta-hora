@@ -352,6 +352,17 @@ function HeroSplit(p: SubProps) {
                 alt={p.c.imageAlt}
                 entry={p.se?.image?.entry}
                 hover={p.se?.image?.hover}
+                // 🔴 ESTA É A IMAGEM DE LCP DA HOME — medido em 11/08/2026 no
+                // build local: `Promocao_placa.webp`, 556 ms, elemento `IMG`.
+                //
+                // `fetchPriority="high"` a coloca à frente das demais imagens na
+                // fila do navegador. É a metade que ADIANTA o LCP; a outra metade
+                // é o `foraDaDobra` da VitrineHome, que TIRA os 3 cards de baixo
+                // da disputa (47,8 KB que competiam em preload).
+                //
+                // NUNCA marque esta imagem como `lazy`: além de perder o preload,
+                // o navegador passaria a esperar o layout para buscá-la.
+                fetchPriority="high"
                 style={{ height: "100%", width: "100%" }}
               />
             )}

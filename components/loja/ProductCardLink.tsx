@@ -15,12 +15,26 @@ import type { ProductCard } from "@/lib/shopify/types"
 // da Home pede a chamada "Ver detalhes"; os recomendados ("Você também pode
 // gostar") NÃO. 🔴 O default `false` é o que mantém os recomendados renderizando
 // EXATAMENTE como hoje — nenhum outro consumidor precisou mudar.
+//
+// `foraDaDobra` é ADITIVO e OPT-IN, pelo mesmo molde do `verDetalhes`: marca a
+// imagem como `loading="lazy"`, o que a tira da lista de preload automático do
+// React 19 (ver o comentário da prop `loading` em ImageSlot).
+//
+// 🔴 QUEM SABE SE O CARD ESTÁ ABAIXO DA DOBRA É QUEM ITERA A LISTA, não o card.
+// Por isso é prop e não decisão interna: na vitrine da Home os 3 cards estão
+// sempre abaixo da dobra; nos recomendados da PDP, também; num grid futuro em
+// que o primeiro card seja o LCP, o índice 0 não deve recebê-la.
+//
+// Default `false` = comportamento de sempre (eager + preload). Nenhum consumidor
+// existente muda sem pedir.
 export function ProductCardLink({
   product,
   verDetalhes = false,
+  foraDaDobra = false,
 }: {
   product:      ProductCard
   verDetalhes?: boolean
+  foraDaDobra?: boolean
 }) {
   return (
     <Link
@@ -42,6 +56,7 @@ export function ProductCardLink({
         alt={product.image?.altText ?? product.title}
         borderRadius={0}
         objectFit="contain"
+        loading={foraDaDobra ? "lazy" : undefined}
         style={{ aspectRatio: "1 / 1", width: "100%" }}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "12px 16px 18px" }}>

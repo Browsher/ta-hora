@@ -137,7 +137,13 @@ export function VitrineHome({
               {produtos.map((produto) => (
                 // `verDetalhes`: a chamada do card, opt-in — os recomendados não
                 // a passam e seguem idênticos.
-                <ProductCardLink key={produto.id} product={produto} verDetalhes />
+                //
+                // `foraDaDobra` em TODOS, sem exceção de índice: a vitrine fica
+                // depois do Hero e da faixa de Features, então nenhum destes
+                // cards aparece na abertura. Medido em 11/08/2026 — o LCP da Home
+                // é a imagem do Hero (`Promocao_placa.webp`, 556 ms), e estes 3
+                // cards somavam 47,8 KB disputando banda com ela em preload.
+                <ProductCardLink key={produto.id} product={produto} verDetalhes foraDaDobra />
               ))}
             </CarrosselMobile>
           </motion.div>

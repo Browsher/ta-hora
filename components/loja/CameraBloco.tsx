@@ -21,7 +21,17 @@ import type { ProductCard } from "@/lib/shopify/types"
 // Tarja e destaques chegam DECIDIDOS do servidor: `produto.selo` já é `null` se
 // vazio, `produto.lentes` já é `null` se "Lente única", `produto.alarmeSonoro` já
 // é o veredito. Este componente só pergunta "tem?", nunca "qual é o valor?".
-export function CameraBloco({ produto }: { produto: ProductCard }) {
+// `foraDaDobra`: marca a imagem como `loading="lazy"`, tirando-a do preload
+// automático do React 19. Quem decide é `CatalogoConsultivo`, que conhece a
+// ordem da lista filtrada — este componente é apresentacional e não sabe onde
+// está na página. Default `false` = comportamento de sempre.
+export function CameraBloco({
+  produto,
+  foraDaDobra = false,
+}: {
+  produto:      ProductCard
+  foraDaDobra?: boolean
+}) {
   const href = `/produtos/${produto.handle}`
 
   return (
@@ -34,6 +44,7 @@ export function CameraBloco({ produto }: { produto: ProductCard }) {
           alt={produto.image?.altText ?? produto.title}
           borderRadius={0}
           objectFit="contain"
+          loading={foraDaDobra ? "lazy" : undefined}
           style={{ aspectRatio: "1 / 1", width: "100%" }}
         />
       </div>

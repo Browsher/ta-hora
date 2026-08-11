@@ -77,8 +77,21 @@ export function CatalogoConsultivo({ produtos }: { produtos: ProductCard[] }) {
       <div className="catalogo-lista">
         {/* key={p.id}: React REORDENA os nós existentes em vez de recriá-los —
             imagens não recarregam ao trocar de filtro (Req 3.9). */}
-        {ordenados.map((p) => (
-          <CameraBloco key={p.id} produto={p} />
+        {ordenados.map((p, i) => (
+          // Só o PRIMEIRO bloco carrega eager; os demais viram `lazy` e saem do
+          // preload automático do React 19 (ver a prop `loading` do ImageSlot).
+          //
+          // Medido em 11/08/2026, viewport 1920×855: o LCP desta página é a
+          // imagem do 1º card (`A31H3_4.png`, 216 ms), e das 7 imagens só as
+          // duas primeiras ficam acima da dobra (`top` 321 e 797; a terceira já
+          // em 1.274). As 5 de baixo somavam 74,4 KB em prioridade máxima.
+          //
+          // O índice é o da lista JÁ FILTRADA E ORDENADA, e é o certo: quem está
+          // em primeiro depois do filtro é quem o usuário vê primeiro. O 2º card,
+          // que também está acima da dobra em desktop, fica `lazy` de propósito —
+          // imagem lazy DENTRO do viewport é buscada pelo navegador assim que o
+          // layout resolve, sem esperar scroll, então não há pop-in.
+          <CameraBloco key={p.id} produto={p} foraDaDobra={i > 0} />
         ))}
       </div>
     </>

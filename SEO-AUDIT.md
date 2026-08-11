@@ -165,7 +165,12 @@ O `A31H3_4.png` de 10,4 MB chega ao usuário como **153 KB de WebP**. O CDN da S
 **O que continua sendo problema de verdade:**
 
 1. **As imagens são servidas em tamanho ORIGINAL.** `A31H3_4` é 3543×3543 px, exibida numa galeria de ~600 px e em thumbnails de 64 px. A Shopify aceita `&width=` na própria URL e devolve a versão redimensionada de graça — verificado: `&width=800` → 27,9 KB; `&width=400` → 12,6 KB, contra 153 KB da original. **O código passa `foto.url` cru** (`lib/shopify/normalize.ts:106`).
-2. **`preload` em todas as imagens acima da dobra** (4 na home, 7 no catálogo e na PDP), incluindo as que não são o LCP. Sete preloads disputando banda não aceleram o LCP — atrasam.
+2. ✅ ~~**`preload` em todas as imagens acima da dobra** (4 na home, 7 no catálogo e na PDP)~~ — **CORRIGIDO na home e no catálogo em 11/08/2026; a contagem original estava errada.** Ver a seção 10.
+
+   Três acertos de fato sobre este item:
+   - **A PDP tem 8 preloads, não 7.**
+   - **`/sobre-nos` tem 2**, e este documento nem a mencionava. (`/suporte` tem 0.)
+   - **"Saturam a banda" era verdade em 15,3 MB; hoje não.** Depois do redimensionamento, o total em prioridade máxima é 32-128 KB por página. O custo da disputa caiu para a ordem de **~50-75 ms em 4G** — real, mas modesto.
 3. ~~**Nenhuma `<img>` tem `width`/`height`** → cada imagem é fonte de CLS.~~ **✅ CORRIGIDO NO DIAGNÓSTICO em 11/08/2026 — a premissa era falsa.** A primeira metade é verdadeira (não há atributos), a segunda não decorre dela: atributo é *um* jeito de reservar espaço, `aspect-ratio` no CSS é outro — e melhor, porque é responsivo. Ver o levantamento na seção 10.
 4. **`images: { unoptimized: true }`** (`next.config.ts:8`) desliga o otimizador do Next — sem `srcset`, sem AVIF. Menos grave do que parecia, já que o CDN cobre a conversão de formato, mas ainda custa o `srcset` responsivo.
 
@@ -524,7 +529,53 @@ A versão anterior afirmava *"CLS provável Poor; galeria e cards renderizam sem
 
 > **O efeito está provado por MECANISMO, não por NÚMERO.** Confirmei lendo o DOM, o CSS compilado e as dimensões reais dos arquivos; **não medi o valor de CLS antes e depois**. O PageSpeed Insights recusa sem chave de API (429), e não há chave. Enquanto isso, "CLS corrigido" significa "a causa foi removida e verificada", não "o score foi medido em 0". Medir exige criar uma chave do PSI.
 
-**Os outros itens de CWV seguem abertos:** os 4-7 `preload` por página disputando banda (item 7 das prioridades) e o `srcset` responsivo (item 22).
+### ✅ Preloads de imagem — corrigido na home e no catálogo (11/08/2026)
+
+**Origem:** nenhum `preload` deste site é escrito à mão. O **React 19 emite um `<link rel="preload" as="image">` para cada `<img>` renderizada no SSR que não tenha `loading="lazy"`**. Verificado na PDP: 12 imagens, 4 com `lazy` (as da descrição), exatamente 8 preloads. Consequência prática: `loading="lazy"` é o único jeito de tirar uma imagem do preload — não existe desligar um sem o outro.
+
+**Contagem medida** (o documento dizia "4 na home, 7 no catálogo e na PDP"):
+
+| Página | Preloads | KB em prioridade máxima | Depois |
+|---|---|---|---|
+| home | 4 | 127,6 KB | **1** |
+| catálogo | 7 | 103,0 KB | **1** |
+| PDP | **8** (não 7) | 77,9 KB | 8 — intocada, por decisão |
+| **`/sobre-nos`** | **2** — ausente do documento | 32,0 KB | 2 |
+| `/suporte` | 0 | — | 0 |
+
+**LCP medido no Chrome, build local, viewport 1920×855:**
+
+| Página | Elemento LCP | Tempo |
+|---|---|---|
+| home | `<img>` `Promocao_placa.webp` (hero) | 556 ms |
+| catálogo | `<img>` `A31H3_4.png` (1º card) — **não o H1** | 216 ms |
+
+A dúvida "e se o LCP do catálogo for o texto?" foi respondida por medição: é a imagem. E das 7 do catálogo só duas ficam acima da dobra (`top` 321 e 797; a terceira em 1.274).
+
+**O que foi feito:** `loading="lazy"` nos 3 cards da vitrine da home e nos cards 2-7 do catálogo (prop `foraDaDobra`, decidida por quem itera a lista, não pelo card); `fetchPriority="high"` no hero. Thumbnails da PDP deixados eager de propósito — 2,8-5,1 KB cada, acima da dobra, e `lazy` neles atrasaria mais do que economizaria.
+
+> ⚠️ **O ganho é MODELADO, não medido.** As medições foram feitas em `localhost`, que não tem latência nem limite de banda — exatamente a variável que este item ataca. Lá o LCP é custo de parse e render (216-556 ms), e a disputa por banda é invisível. Os **~48 ms (home)** e **~75 ms (catálogo)** vêm de um modelo de HTTP/2 sobre os bytes reais medidos a ~1 MB/s (4G brasileiro), não de um antes/depois observado. Medir de verdade exigiria throttling do DevTools ou uma chave do PSI — nenhum dos dois disponível aqui. O que ESTÁ medido: o LCP de cada página, a posição de cada imagem e a queda de 4→1 e 7→1 preloads.
+
+### ⚠️ Item aberto — imagem de descrição com `lazy` acima da dobra (PDP)
+
+Achado durante a medição acima, **não corrigido**, e deliberadamente separado deste item.
+
+Na PDP em **desktop**, o layout é grid de 2 colunas: galeria à esquerda, descrição à direita. Isso põe a primeira imagem de descrição **no topo da página, ao lado da galeria** — e ela é **a maior imagem acima da dobra**:
+
+```
+i=0  galeria principal   área 207.936  top 130  eager
+i=6  IC-A31H_01.png      área 230.400  top 130  LAZY   ← maior
+```
+
+Ou seja: a provável imagem de LCP da PDP em desktop está marcada `loading="lazy"`, que além de tirá-la do preload faz o navegador esperar o layout para buscá-la. É o anti-padrão clássico de LCP.
+
+**Não foi introduzido agora** — `sanitizarDescricao` marca todas as imagens de descrição como `lazy` desde antes deste trabalho, e para o mobile isso está **certo**: lá o layout empilha, a descrição vai para baixo da galeria e fica de fato fora da dobra.
+
+**Por que não tem correção óbvia:** a resposta certa depende do viewport, e `loading` é atributo de HTML — **CSS não o controla**. Tirar o `lazy` conserta o desktop e piora o mobile, onde passaria a precarregar 4 imagens de 800 px que ninguém vê na abertura. As saídas plausíveis (marcar só a primeira como eager, decidir no cliente por `matchMedia`, ou usar `<picture>`) têm custos diferentes e nenhuma é gratuita.
+
+**Pendente de decisão do dono** antes de qualquer código.
+
+**Os outros itens de CWV seguem abertos:** o `srcset` responsivo (item 22) e o item de descrição acima.
 
 **Nada disso é o item nº 1 da auditoria.** Com o peso real medido, os dois primeiros lugares são de SEO puro: `Product` schema e os titles de PDP.
 
@@ -577,7 +628,7 @@ A versão anterior afirmava *"CLS provável Poor; galeria e cards renderizam sem
 
 5. ✅ **~~Redimensionar as imagens do CDN da Shopify~~ — FEITO em 11/08/2026.** `width=800` (galeria), `400` (cards), `128` (thumbnails), `1200` (`og:image`), com `width`/`height` recalculados junto. Medido: home −88%, catálogo −81%, PDP −61%.
 6. ✅ **~~`width`/`height` em toda `<img>`~~ — FEITO em 11/08/2026, por outro caminho.** O diagnóstico estava errado: `aspect-ratio` no CSS já cobria hero, galeria, cards e thumbs, e os atributos seriam neutralizados pelo `style` inline do `ImageSlot`. A única fonte real de CLS eram as imagens de descrição, corrigidas com `aspect-ratio: 1/1` + `object-fit: contain` e guarda no `verificar:descricao`. Ver seção 10. (O `loading="lazy"` das imagens de descrição já existia.)
-7. **Limitar o `preload` de imagem a uma por página.** Hoje são 4 na home e 7 no catálogo e na PDP; sete preloads disputando banda atrasam o LCP que deveriam acelerar. Esforço: ~15 min.
+7. ✅ **~~Limitar o `preload` de imagem a uma por página~~ — FEITO na home e no catálogo em 11/08/2026.** 4→1 e 7→1, com `fetchPriority="high"` no hero. LCP de ambas medido no Chrome (é a imagem nas duas, não o texto). PDP mantida em 8 por decisão: os 5 thumbnails são de 2,8-5,1 KB e estão acima da dobra. Ganho **modelado** em ~48 ms (home) e ~75 ms (catálogo) — não medido, porque localhost não tem latência. Ver seção 10.
 8. `Organization` schema na home + NAP completo no rodapé.
 9. Breadcrumbs visuais + `BreadcrumbList` schema no catálogo e nas PDPs.
 10. Corrigir a meta description do `/catalogo` (175 → ~158 chars) e expandir a da home (123 → ~157).

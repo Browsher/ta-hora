@@ -16,6 +16,30 @@ export type ImageSlotProps = Omit<MotionProps, "ref"> & {
   maxWidth?:     number    // sets max-width; width is always 100%
   objectFit?:    "cover" | "contain"   // default "cover"; "contain" mostra a imagem INTEIRA (ex: logos)
   className?:    string
+  /**
+   * `loading="lazy"` → a imagem sai do caminho crítico.
+   *
+   * 🔴 O EFEITO PRINCIPAL DESTA PROP NÃO É O LAZY-LOAD, É O PRELOAD.
+   *
+   * Nenhum `<link rel="preload" as="image">` deste site está escrito à mão: o
+   * React 19 emite UM para cada `<img>` renderizada no SSR **que não tenha
+   * `loading="lazy"`**. Medido na PDP em 11/08/2026: 12 imagens, 4 com lazy
+   * (as da descrição), exatamente 8 preloads.
+   *
+   * Ou seja: marcar `lazy` é o único jeito de tirar uma imagem da lista de
+   * preload — não existe "desligar o preload" separadamente.
+   *
+   * ⚠️ NUNCA marque `lazy` na imagem de LCP nem em nada acima da dobra que
+   * importe: além de perder o preload, o navegador passa a esperar o layout
+   * antes de buscá-la. Ver o levantamento na seção 10 do SEO-AUDIT.md.
+   */
+  loading?:      "lazy" | "eager"
+  /**
+   * `fetchPriority="high"` na imagem de LCP: sobe a prioridade dela na fila do
+   * navegador acima das outras imagens da página. Complementa o `loading` — um
+   * tira as concorrentes da frente, o outro adianta a que importa.
+   */
+  fetchPriority?: "high" | "low" | "auto"
 }
 
 export function ImageSlot({
@@ -27,6 +51,8 @@ export function ImageSlot({
   maxWidth,
   objectFit = "cover",
   className,
+  loading,
+  fetchPriority,
   style,
   ...rest
 }: ImageSlotProps) {
@@ -62,6 +88,11 @@ export function ImageSlot({
           <img
             src={src}
             alt={alt}
+            // Omitidos quando não informados: `loading={undefined}` deixa o
+            // default do navegador ("eager"), que é o comportamento de sempre —
+            // nenhum call site existente muda por esta prop ter nascido.
+            {...(loading ? { loading } : {})}
+            {...(fetchPriority ? { fetchPriority } : {})}
             style={{ width: "100%", height: "100%", objectFit, display: "block" }}
           />
         ) : (
