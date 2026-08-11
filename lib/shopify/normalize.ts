@@ -89,6 +89,8 @@ export interface RawProduct {
   resumo?:         { value: string } | null
   /** `variants(first: 1) { nodes { sku } }` — o SKU da variante vendida. */
   variants?:       { nodes: { sku: string | null }[] }
+  /** Metafield aliasado `custom.numero_de_lentes` — alimenta o title derivado. */
+  lentes?:         { value: string } | null
 }
 
 // ─── Formatação de dinheiro (correção M4: respeita currencyCode) ──────────────
@@ -232,6 +234,12 @@ export function normalizeProduct(raw: RawProduct): Product {
     // `?? null` no fim: produto sem variante selecionada (query que não pediu)
     // ou SKU não cadastrado caem no mesmo `null`, e o schema omite o campo.
     sku:             raw.variants?.nodes[0]?.sku?.trim() || null,
+    // CRU ("Lente dupla"), não veredito — ao contrário do `lentes` de
+    // `normalizeProductCard`, que já aplicou `temLenteMultipla` e vira `null`
+    // quando é lente única. Aqui o valor bruto atravessa porque quem decide o
+    // descritor é `lib/seo/tituloProduto.ts`. Mesmo nome, semânticas diferentes —
+    // ver o aviso em `RawProductCard.lentes` no topo deste arquivo.
+    lentes:          raw.lentes?.value?.trim() || null,
     specs,
     // "" / só espaços / ausente → null. Mesma linha do `resumo` em
     // `normalizeProductCard`: é o `|| null` aqui que faz a seção sumir sozinha

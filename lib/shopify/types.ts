@@ -171,6 +171,19 @@ export interface Product {
    * em 11/08/2026) → o schema omite o campo em vez de inventar identificador.
    */
   sku:             string | null
+  /**
+   * `custom.numero_de_lentes` CRU — "Lente única" | "Lente dupla" | "Lente tripla".
+   *
+   * 🔴 MESMO NOME de `ProductCard.lentes`, SEMÂNTICA DIFERENTE. Lá o valor já
+   * passou por `temLenteMultipla` e é `null` quando é lente única (o card só
+   * exibe o que é diferencial). Aqui o valor CHEGA CRU, inclusive "Lente única",
+   * porque quem decide o que vira descritor de title é `lib/seo/tituloProduto.ts`.
+   * Não passe um pelo outro.
+   *
+   * Vem por alias próprio, FORA de `SPEC_METAFIELDS`, para não aparecer na Ficha
+   * Técnica — decisão registrada de 11/08/2026. Ver o comentário na query.
+   */
+  lentes:          string | null
   specs:           Spec[]
   /**
    * Texto de apresentação do produto (`custom.apresentacao`), CRU — com os `\n`

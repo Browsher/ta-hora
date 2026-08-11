@@ -153,6 +153,20 @@ export const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       #
       # ⚠️ SEM CRASE NESTE COMENTÁRIO — ver o aviso logo acima.
       variants(first: 1) { nodes { sku } }
+      # Número de lentes — ADITIVO para o TITLE derivado (feature title-por-spec).
+      # Mesmo metafield que a PRODUCTS_QUERY já pede para os destaques do catálogo.
+      #
+      # 🔴 ALIAS SEPARADO, E NÃO ENTRADA EM SPEC_METAFIELDS — decisão registrada
+      # (11/08/2026). Pôr a chave naquele array a faria aparecer na Ficha Técnica
+      # da PDP, que é mudança VISÍVEL e não foi pedida. O alias entrega o dado ao
+      # title sem tocar na tela.
+      #
+      # Valor CRU aqui: "Lente única" | "Lente dupla" | "Lente tripla" (medido nos
+      # 7 produtos). Quem decide o que vira descritor é lib/seo/tituloProduto.ts —
+      # e "Lente única" não vira nada, porque lente única não é diferencial.
+      #
+      # ⚠️ SEM CRASE NESTE COMENTÁRIO — ver o aviso logo acima.
+      lentes: metafield(namespace: "custom", key: "numero_de_lentes") { value }
       metafields(identifiers: $identifiers) {
         namespace
         key

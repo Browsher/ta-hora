@@ -10,6 +10,7 @@ import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
 import { EventoVerProduto } from "@/components/analytics/EventoVerProduto"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { produtoSchema } from "@/lib/seo/produtoSchema"
+import { tituloProduto } from "@/lib/seo/tituloProduto"
 import { BarraCompraMobile } from "@/components/loja/BarraCompraMobile"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
@@ -115,15 +116,37 @@ export async function generateMetadata(
       // comentário de `ogImage` em lib/shopify/types.ts.
       const foto = produto.ogImage
 
+      // Title DERIVADO das specs (feature title-por-spec) — ver lib/seo/tituloProduto.ts.
+      //
+      // Antes daqui saía `produto.title` puro: "Câmera Segurança A31H", 31
+      // caracteres com o sufixo, competindo por um código de fábrica que ninguém
+      // digita no Google. Agora sai "Câmera Segurança Wi-Fi Full HD Dupla Lente
+      // A31H" (57 com o sufixo), com o código no FIM.
+      //
+      // 🔴 SEM o " | Ta Hora" — quem acrescenta é o `template` do app/layout.tsx.
+      const titulo = tituloProduto(produto)
+
       return {
-        title:       produto.title,
+        title:       titulo,
+        // 🔴 A DESCRIPTION CONTINUA COM `produto.title`, e isso é deliberado: ela
+        // já tem 143 caracteres com o nome curto, e trocar por `titulo` (47 chars
+        // em vez de 21) a empurraria para ~170 — truncada no Google. O nome curto
+        // é o certo aqui; o longo é o certo no title. Não "uniformize".
         description: descricao,
         alternates:  { canonical },
         openGraph: {
           type:     "website",
           locale:   "pt_BR",
           siteName: "Ta Hora",
-          title:    produto.title,
+          // O MESMO title derivado. Aqui o argumento não é busca, é o WhatsApp:
+          // este negócio vende por indicação e afiliado, e a prévia do link é o
+          // que o destinatário lê antes de clicar. "Câmera Segurança Wi-Fi Full
+          // HD Dupla Lente A31H" diz o que é o produto; "Câmera Segurança A31H"
+          // exige já conhecer o modelo. Cabe folgado no limite do WhatsApp.
+          //
+          // Sem sufixo aqui de propósito: o `template` do layout NÃO se aplica ao
+          // openGraph, e o `siteName` logo acima já diz "Ta Hora".
+          title:    titulo,
           description: descricao,
           url:      canonical,
           images: [
