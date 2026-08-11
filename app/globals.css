@@ -636,15 +636,48 @@ body {
 }
 
 /* Imagens da descrição: PREENCHEM a largura da coluna direita (width:100%), sem
-   sobrar preto ao lado, E no TAMANHO/PROPORÇÃO REAL. `height: auto` sem
-   aspect-ratio forçado: nada de esticar/deformar (o aspect-ratio 4/3 anterior
-   esmagava as retrato — 800x1067 virava 458x344). Como as imagens são ~800px
-   naturais e a coluna ~480px, o width:100% reduz (nunca amplia além do natural). */
+   sobrar preto ao lado. Como as imagens são ~800px naturais e a coluna ~480px, o
+   width:100% reduz (nunca amplia além do natural).
+
+   ─── O aspect-ratio VOLTOU em 11/08/2026, e a história importa ───────────────
+
+   Este bloco JÁ TEVE `aspect-ratio: 4/3` e ele foi REMOVIDO por um bom motivo,
+   registrado aqui: esmagava as imagens retrato — uma 800x1067 virava 458x344.
+   Aquela decisão estava certa PARA AQUELES DADOS.
+
+   O que mudou: estas são as ÚNICAS imagens do site sem reserva de espaço. Todo o
+   resto (hero, galeria, cards, thumbs, carrinho) já declara proporção ou tamanho
+   fixo — verificado componente a componente. Com `height: auto` e nenhuma
+   dimensão conhecida, o navegador reserva ZERO altura, a imagem carrega no scroll
+   (são `loading="lazy"`) e salta para a altura cheia empurrando o texto abaixo.
+   São 4 por PDP, em largura total, na coluna que o cliente está lendo.
+
+   As dimensões não podem vir do código: estas imagens NÃO são `product.images` —
+   são arquivos soltos da biblioteca de Files da Shopify, citados no HTML do
+   lojista, e a Storefront API não devolve dimensão para elas.
+
+   Então a proporção foi MEDIDA, não suposta: as 28 imagens de descrição das 7
+   PDPs são todas 800x800 (11/08/2026).
+
+   🔴 DUAS SALVAGUARDAS, porque isto é uma afirmação sobre imagens FUTURAS e o
+   histórico acima prova que retrato já existiu nesta loja:
+
+     1. `object-fit: contain` — se uma retrato voltar, ela aparece INTEIRA com
+        faixa branca ao lado. Nunca esmagada, que era o defeito do 4/3.
+     2. `npm run verificar:descricao` lê o header de cada imagem e FALHA se
+        alguma fugir de 1:1. A premissa deste CSS é verificada, não confiada.
+
+   Se o check falhar: a saída certa provavelmente é remover o aspect-ratio de
+   novo (voltando ao CLS) ou passar a emitir width/height por imagem em
+   sanitizarDescricao. Não "conserte" trocando o 1/1 por outro literal — foi
+   exatamente assim que o 4/3 chegou aqui. */
 .descricao-produto img {
-  width:     100%;
-  max-width: 100%;
-  height:    auto;
-  display:   block;
+  width:        100%;
+  max-width:    100%;
+  height:       auto;
+  aspect-ratio: 1 / 1;
+  object-fit:   contain;
+  display:      block;
 }
 
 .descricao-produto p {

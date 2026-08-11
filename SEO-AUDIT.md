@@ -166,7 +166,7 @@ O `A31H3_4.png` de 10,4 MB chega ao usuário como **153 KB de WebP**. O CDN da S
 
 1. **As imagens são servidas em tamanho ORIGINAL.** `A31H3_4` é 3543×3543 px, exibida numa galeria de ~600 px e em thumbnails de 64 px. A Shopify aceita `&width=` na própria URL e devolve a versão redimensionada de graça — verificado: `&width=800` → 27,9 KB; `&width=400` → 12,6 KB, contra 153 KB da original. **O código passa `foto.url` cru** (`lib/shopify/normalize.ts:106`).
 2. **`preload` em todas as imagens acima da dobra** (4 na home, 7 no catálogo e na PDP), incluindo as que não são o LCP. Sete preloads disputando banda não aceleram o LCP — atrasam.
-3. **Nenhuma `<img>` tem `width`/`height`** nos componentes de galeria e card → cada imagem é fonte de Cumulative Layout Shift. (As miniaturas de carrinho e acessórios têm.)
+3. ~~**Nenhuma `<img>` tem `width`/`height`** → cada imagem é fonte de CLS.~~ **✅ CORRIGIDO NO DIAGNÓSTICO em 11/08/2026 — a premissa era falsa.** A primeira metade é verdadeira (não há atributos), a segunda não decorre dela: atributo é *um* jeito de reservar espaço, `aspect-ratio` no CSS é outro — e melhor, porque é responsivo. Ver o levantamento na seção 10.
 4. **`images: { unoptimized: true }`** (`next.config.ts:8`) desliga o otimizador do Next — sem `srcset`, sem AVIF. Menos grave do que parecia, já que o CDN cobre a conversão de formato, mas ainda custa o `srcset` responsivo.
 
 **Ganho do redimensionamento — ✅ implementado em 11/08/2026.** Números medidos comparando produção com o build local, baixando cada imagem com `Accept: image/webp`:
@@ -186,7 +186,7 @@ Implementado em `lib/shopify/imagens.ts` (módulo novo) + `normalize.ts`, `norma
 | 1 | Anexar `&width=800` (galeria), `&width=400` (cards) e `&width=128` (thumbnails) às URLs do CDN Shopify, com as dimensões `width`/`height` recalculadas junto | ~1h | −53% a −88% de peso de imagem |
 | 2 | Manter `preload` **só na primeira imagem** da galeria/hero; remover das demais | ~15 min | LCP direto |
 | 3 | `loading="lazy"` nas imagens abaixo da dobra (`ImageSlot`, `ProductGallery`, cards) | ~30 min | Reduz payload inicial |
-| 4 | `width`/`height` explícitos em toda `<img>` | ~1h | Zera o CLS de imagem |
+| 4 | ✅ ~~`width`/`height` explícitos em toda `<img>`~~ — **feito de outro jeito, porque o diagnóstico estava errado**: `aspect-ratio: 1/1` + `object-fit: contain` nas imagens de descrição, que eram as ÚNICAS sem reserva de espaço | ~1h | Zera o CLS de imagem |
 | 5 | Reavaliar `images.unoptimized` — decisão registrada no `next.config.ts`, e o CDN já cobre o formato; o que falta é `srcset` | ~4h | Consolidação |
 
 ⚠️ **O item 1 tem um pré-requisito de correção:** os campos `width`/`height` de `ProductImage` são as dimensões **intrínsecas do original**. Redimensionar a URL sem recalculá-los faz o objeto mentir — e `generateMetadata` os emite como `og:image:width`/`og:image:height` (`app/produtos/[handle]/page.tsx:126-127`, hoje declarando 3543×3543). Dimensão de OG que não bate com o arquivo faz o WhatsApp recortar errado ou descartar a prévia, que é exatamente o modo de falha que o comentário daquele arquivo já documenta. Numa loja que vende por indicação e afiliado, é o pior lugar para introduzir um bug.
@@ -488,7 +488,7 @@ Não foi possível rodar o PageSpeed Insights (a API pública respondeu 429 sem 
 | **TTFB** | **Good** | 208-216 ms medidos, cache HIT na Vercel |
 | **FCP** | Provável Good | HTML SSR de 73,5 KB, sem JS bloqueante crítico |
 | **LCP** | **Needs Work** | 0,39-1,47 MB de imagem, com 4-7 `preload` competindo por banda |
-| **CLS** | **Provável Poor (> 0,25)** | Galeria e cards sem `width`/`height` nas `<img>` |
+| **CLS** | ✅ **Corrigido em 11/08/2026** | O diagnóstico anterior ("Poor, galeria e cards sem dimensões") estava errado — ver abaixo |
 | **INP** | Não avaliado | Carrossel, accordion e drawer são candidatos a verificar |
 
 **A tradução em dinheiro, com os benchmarks da literatura:**
@@ -499,7 +499,32 @@ Não foi possível rodar o PageSpeed Insights (a API pública respondeu 429 sem 
 
 **O cálculo, agora com o número certo:** 1,47 MB de imagem numa PDP, em 4G brasileiro (~8 Mbps reais), é da ordem de **1,5 s** só de imagem — não os 26 s que a versão anterior deste documento projetava. O redimensionamento leva isso para ~0,7 MB, algo como **700 ms de ganho de LCP**. Pelo benchmark de 1,1% por 100 ms, é um ganho de conversão na casa de um dígito percentual: real, mas de outra ordem que o erro original sugeria.
 
-**O item de CWV com maior efeito agora é o CLS, não o LCP.** Galeria e cards renderizam sem `width`/`height`, e CLS alto é a métrica que mais penaliza página de produto — o cliente clica no lugar errado quando o layout salta. Os itens 2-4 da seção 1.5 (preload, lazy, dimensões) valem tanto quanto o redimensionamento.
+### ⚠️ Correção de 11/08/2026 — o diagnóstico de CLS estava errado
+
+A versão anterior afirmava *"CLS provável Poor; galeria e cards renderizam sem `width`/`height`"* e recomendava adicionar os atributos em toda `<img>`. **A medição derrubou a premissa em dois pontos:**
+
+**1. `aspect-ratio` no CSS já cobre quase tudo.** Reservar espaço não exige atributo. Levantamento componente a componente:
+
+| Onde | Como reserva espaço | CLS |
+|---|---|---|
+| Hero (LCP da home) | `.hero-palco { aspect-ratio: 16/9 }` | ✅ |
+| Galeria da PDP | `aspectRatio: "1 / 1"` | ✅ |
+| Thumbnails | botão fixo 64×64 | ✅ |
+| Cards do catálogo (`CameraBloco`) | `aspectRatio: "1 / 1"` | ✅ |
+| Cards da vitrine (`ProductCardLink`) | `aspectRatio: "1 / 1"` | ✅ |
+| `ProductGrid` | `aspectRatio: "3/2"` ou `"4/3"` | ✅ |
+| Carrinho / Acessórios | `width`/`height` explícitos | ✅ |
+| **Imagens da descrição** | **nenhuma** (`height: auto`, sem proporção) | ❌ |
+
+**2. Os atributos seriam inócuos no `ImageSlot`.** O `<img>` de lá tem `style={{ width: "100%", height: "100%" }}` — dimensão CSS explícita nos dois eixos **sobrescreve** a proporção derivada dos atributos. Eles entrariam no HTML sem mudar um pixel de layout. A recomendação original teria gerado ~1h de trabalho com efeito zero.
+
+**O CLS real eram as 4 imagens de descrição por PDP**, em largura total, `loading="lazy"`, sem dimensão conhecida: reservam zero altura e saltam ao carregar durante o scroll, empurrando o texto abaixo. Não são `product.images` — são arquivos soltos da biblioteca de Files da Shopify, e a Storefront API não devolve dimensão para elas.
+
+✅ **Corrigido**: as 28 imagens (7 PDPs × 4) foram medidas e são todas **800×800**, então `.descricao-produto img` ganhou `aspect-ratio: 1 / 1` + `object-fit: contain`. O `contain` é a rede de segurança — o mesmo bloco de CSS registra que um `aspect-ratio: 4/3` anterior **esmagava retratos reais** (800×1067), então retrato já existiu nesta loja. `npm run verificar:descricao` agora lê o header de cada imagem e falha se alguma fugir de 1:1: a premissa do CSS é verificada, não confiada.
+
+> **O efeito está provado por MECANISMO, não por NÚMERO.** Confirmei lendo o DOM, o CSS compilado e as dimensões reais dos arquivos; **não medi o valor de CLS antes e depois**. O PageSpeed Insights recusa sem chave de API (429), e não há chave. Enquanto isso, "CLS corrigido" significa "a causa foi removida e verificada", não "o score foi medido em 0". Medir exige criar uma chave do PSI.
+
+**Os outros itens de CWV seguem abertos:** os 4-7 `preload` por página disputando banda (item 7 das prioridades) e o `srcset` responsivo (item 22).
 
 **Nada disso é o item nº 1 da auditoria.** Com o peso real medido, os dois primeiros lugares são de SEO puro: `Product` schema e os titles de PDP.
 
@@ -551,7 +576,7 @@ Não foi possível rodar o PageSpeed Insights (a API pública respondeu 429 sem 
 ### 🟠 Alta prioridade — este mês
 
 5. ✅ **~~Redimensionar as imagens do CDN da Shopify~~ — FEITO em 11/08/2026.** `width=800` (galeria), `400` (cards), `128` (thumbnails), `1200` (`og:image`), com `width`/`height` recalculados junto. Medido: home −88%, catálogo −81%, PDP −61%.
-6. **`width`/`height` em toda `<img>` e `loading="lazy"` abaixo da dobra.** Zera o CLS de imagem — que, com o peso real medido, é a métrica de CWV com maior efeito nesta loja.
+6. ✅ **~~`width`/`height` em toda `<img>`~~ — FEITO em 11/08/2026, por outro caminho.** O diagnóstico estava errado: `aspect-ratio` no CSS já cobria hero, galeria, cards e thumbs, e os atributos seriam neutralizados pelo `style` inline do `ImageSlot`. A única fonte real de CLS eram as imagens de descrição, corrigidas com `aspect-ratio: 1/1` + `object-fit: contain` e guarda no `verificar:descricao`. Ver seção 10. (O `loading="lazy"` das imagens de descrição já existia.)
 7. **Limitar o `preload` de imagem a uma por página.** Hoje são 4 na home e 7 no catálogo e na PDP; sete preloads disputando banda atrasam o LCP que deveriam acelerar. Esforço: ~15 min.
 8. `Organization` schema na home + NAP completo no rodapé.
 9. Breadcrumbs visuais + `BreadcrumbList` schema no catálogo e nas PDPs.
