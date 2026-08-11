@@ -409,10 +409,13 @@ body {
    continuação do preço, não como um segundo CTA competindo com o botão.
 
    ⚠️ Este bloco acrescenta altura à coluna esquerda, que é o alvo do sticky
-   condicional lá embaixo (@media min-height: 640px). O limiar de 640px foi
-   calibrado sobre uma coluna de ~470px MEDIDA. Ao mexer na altura daqui, remedir
-   — se a info passar a galeria, a coluna cresce e o sticky pode parar de
-   disparar, trocando confiança por conversão. */
+   condicional lá embaixo (@media min-height: 760px). Ao mexer na altura daqui,
+   remedir — se a info passar a galeria, a coluna cresce e o limiar do sticky
+   precisa subir junto, senão ele congela uma coluna mais alta que a tela.
+
+   (O limiar já foi 640px, calibrado sobre uma coluna de ~470px. Os dois números
+   estão velhos: a coluna mede 551px só com estes selos, e 716px com o resultado
+   da CalculadoraFrete aberto. Medido em 10/08/2026 — ver o bloco do sticky.) */
 .selos-confianca {
   list-style:  none;
   margin:      0;
@@ -460,8 +463,9 @@ body {
    ⚠️ ALTURA VARIÁVEL — cresce DEPOIS da interação, não no carregamento.
    MEDIDO em 10/08/2026 (A31H, viewport 1920×855, CEP do Norte = 2 opções, o caso
    mais alto): 90px fechado → 254px aberto, levando a coluna de compra de 551px a
-   716px. Ver o cabeçalho de CalculadoraFrete.tsx e o bloco do sticky lá embaixo,
-   cujo limiar de 640px NÃO cobre mais a coluna inteira. */
+   716px. Foi por causa deste bloco que o limiar do sticky subiu de 640 para
+   760px em 11/08/2026 — ver o bloco do sticky lá embaixo e o cabeçalho de
+   CalculadoraFrete.tsx antes de acrescentar altura aqui. */
 .frete-calc {
   padding-top: 16px;
   border-top:  1px solid var(--cor-borda);
@@ -649,28 +653,39 @@ body {
 
 /* Sticky condicional: a coluna esquerda só "congela" quando há LARGURA de 2
    colunas (≥768px) E ALTURA de viewport suficiente para ela INTEIRA caber — senão
-   o botão "Adicionar" grudaria fora da tela (Req 1.4). Com o sub-grid a coluna
-   ficou ~470px (medido), então o limiar min-height cai para 640px: congela em
-   telas normais (viewport ~855px) com o botão sempre visível. Aproximação
-   CSS-only, sem JS de medição. align-self:start é OBRIGATÓRIO — sem ele o item de
-   grid estica e o sticky nunca dispara.
+   o botão "Adicionar" grudaria fora da tela (Req 1.4). Aproximação CSS-only, sem
+   JS de medição. align-self:start é OBRIGATÓRIO — sem ele o item de grid estica e
+   o sticky nunca dispara.
 
-   🔴 O LIMIAR DE 640px FICOU DEFASADO — remedido em 10/08/2026.
-   A coluna não mede mais ~470px: são 551px com os selos e 716px com o resultado
-   da CalculadoraFrete aberto (A31H, viewport 1920×855, CEP do Norte). Com
-   `top: 24px`, a coluna inteira só cabe a partir de 740px de viewport.
+   ─── O limiar: 640px → 760px em 11/08/2026 ──────────────────────────────────
 
-   O que isso quebra, e o que NÃO quebra:
-     ✅ o botão "Adicionar" continua visível a partir de 304px de viewport — ele
-        ocupa 231–280px do topo da coluna, e o que cresceu foi o rodapé dela;
-     ⚠️ entre 640 e 740px de viewport a coluna pina mais alta que a tela, e o
-        rodapé (o resultado do frete) fica inalcançável enquanto pinado.
+   O 640px vinha de uma coluna de ~470px medida antes da CalculadoraFrete. Ela
+   cresceu duas vezes desde então e o limiar não acompanhou, então a regra da
+   primeira linha deste comentário passou a ser FALSA por ~100px: o sticky
+   congelava uma coluna mais alta que a tela.
 
-   Subir o limiar para ~760px restauraria a intenção original ("congela só se
-   couber INTEIRA"), ao custo de desligar o sticky em notebooks de 640–760px.
-   É troca de conversão por completude e está PENDENTE DE DECISÃO do lojista —
-   não mude sozinho. */
-@media (min-width: 768px) and (min-height: 640px) {
+   Medido em 10/08/2026 (A31H, viewport 1920×855, CEP do Norte — 2 opções, o caso
+   mais alto): coluna de 551px fechada e 716px com o resultado do frete aberto.
+   Com `top: 24px`, o que aparece é `viewport − 24`, então a coluna inteira exige
+   740px de viewport. O limiar é 760px para não ficar colado no limite.
+
+   O que estava em jogo — e por que 760 e não "deixa como está":
+     ✅ o botão "Adicionar" NUNCA foi o problema. Ele ocupa 231–280px do topo da
+        coluna e aparece a partir de 304px de viewport; o que cresceu foi o
+        rodapé, que empurra para baixo.
+     🔴 o problema era o RODAPÉ: entre 640 e 740px, o resultado do frete ficava
+        inalcançável enquanto a coluna estivesse pinada. Cortar justamente a
+        resposta de "quanto custa no total" — a objeção que a calculadora existe
+        para responder — custa mais que perder o sticky num notebook baixo.
+        Decisão do lojista em 11/08/2026: sticky é conveniência, informação não.
+
+   ⚠️ 740px É PISO MEDIDO, NÃO TETO. A medição saiu de UMA janela de 1920px de
+   largura, porque o Chrome não obedeceu ao resize durante o teste. As larguras de
+   desktop entre 768 e 1200px NÃO foram conferidas — e são justamente as piores:
+   a coluna de info é mais estreita (`minmax(240px, 1fr)`), o texto quebra mais e
+   a coluna tende a passar de 716px. Se for mexer em altura por aqui, meça NESSAS
+   larguras antes de confiar no 760. */
+@media (min-width: 768px) and (min-height: 760px) {
   .produto-coluna-esquerda {
     position: sticky;
     top: 24px;

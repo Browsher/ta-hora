@@ -35,14 +35,16 @@ import { consultarFrete as eventoConsultarFrete } from "@/lib/analytics/gtag"
 //   botão "Adicionar"      ocupa 231–280px a partir do topo da coluna
 //
 // A coluna é o alvo do sticky condicional (`min-width: 768px` e
-// `min-height: 640px`, em globals.css), que pina com `top: 24px` — ou seja, o
+// `min-height: 760px`, em globals.css), que pina com `top: 24px` — ou seja, o
 // que aparece é `viewport − 24`.
 //
 //   ✅ O botão "Adicionar" continua visível a partir de 304px de viewport.
 //      Ele está no TERÇO DE CIMA da coluna; crescer no rodapé não o empurra.
-//   ⚠️ A coluna INTEIRA só cabe a partir de 740px de viewport. Entre 640 e 740
-//      o sticky pina uma coluna mais alta que a tela e o rodapé dela — que é
-//      justamente o resultado do frete — fica inalcançável enquanto pinado.
+//   ✅ A coluna INTEIRA exige 740px de viewport, e o limiar do sticky subiu de
+//      640 para 760px em 11/08/2026 por causa deste bloco — antes disso, entre
+//      640 e 740 o sticky pinava uma coluna mais alta que a tela e comia o
+//      resultado do frete. Ver o bloco do sticky em globals.css: crescer aqui
+//      dentro pode exigir subir o limiar de novo.
 //
 // 🔴 A ESTIMATIVA ANTERIOR DESTE COMENTÁRIO ESTAVA ERRADA e ficou aqui como
 // aviso: eu havia calculado ~620px a partir do CSS, e o valor real é 716px. A

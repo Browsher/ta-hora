@@ -6,7 +6,7 @@ import { BotaoAdicionar } from "./BotaoAdicionar"
 // Barra de compra fixa no rodapé do MOBILE da PDP.
 //
 // O problema que resolve: o sticky da coluna de compra é
-// `@media (min-width: 768px) and (min-height: 640px)` (globals.css) — abaixo de
+// `@media (min-width: 768px) and (min-height: 760px)` (globals.css) — abaixo de
 // 768px o grid colapsa e NÃO SOBRA NADA. Como a página passou a levar
 // ApresentacaoProduto + FichaTecnica + RecomendadosRelacionados depois do
 // <article>, o cliente rola ~2.000px sem nenhum caminho de compra à vista.
