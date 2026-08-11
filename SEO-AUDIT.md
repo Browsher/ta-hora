@@ -395,7 +395,7 @@ Para um e-commerce, isso é a maior perda de CTR disponível. `Product` schema �
 
 | Tipo | Aplicável a | Status | Prioridade |
 |---|---|---|---|
-| **Product + Offer** | 7 PDPs | **Ausente** | **1 — crítica** |
+| **Product + Offer** | 7 PDPs | ✅ **Implementado (11/08/2026)** | ~~1~~ feito |
 | **Organization** | Home | **Ausente** | **1** |
 | **FAQPage** | Home + `/suporte` | **Ausente** | **1** |
 | **BreadcrumbList** | Catálogo + PDPs | **Ausente** | 2 |
@@ -511,7 +511,7 @@ Não foi possível rodar o PageSpeed Insights (a API pública respondeu 429 sem 
 
 ### 🔴 Crítico — fazer esta semana
 
-1. **Implementar `Product` + `Offer` schema nas 7 PDPs.** É a maior perda de CTR disponível no site: sem ele, o Google não exibe preço nem disponibilidade no resultado de busca, e a loja aparece como link de texto ao lado de concorrentes com preço em destaque. Todos os dados já estão carregados na página — é montar o objeto e emitir. Esforço: ~2h. Ganho típico de CTR para rich result de produto: dois dígitos percentuais.
+1. ✅ **~~Implementar `Product` + `Offer` schema nas 7 PDPs~~ — FEITO em 11/08/2026.** `lib/seo/produtoSchema.ts` (módulo puro) + `components/seo/JsonLd.tsx`, com `npm run verificar:schema` travando a regra do `aggregateRating` em código. **Sem `aggregateRating` e sem `review`** — ver a seção 8. Pendência de cadastro no admin: A31H e A38 estão sem SKU na Shopify (o schema omite o campo corretamente).
 
 2. **Reescrever os 7 titles de PDP**, trocando o código de SKU por descritor com demanda real de busca (seção 1.1). Hoje as páginas que vendem competem por termos que ninguém digita, usando metade dos caracteres disponíveis. Esforço: ~1h + decisão de onde guardar o descritor.
 

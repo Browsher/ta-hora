@@ -8,6 +8,8 @@ import { DescricaoProduto } from "@/components/loja/DescricaoProduto"
 import { ApresentacaoProduto } from "@/components/loja/ApresentacaoProduto"
 import { BotaoAdicionar } from "@/components/loja/BotaoAdicionar"
 import { EventoVerProduto } from "@/components/analytics/EventoVerProduto"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { produtoSchema } from "@/lib/seo/produtoSchema"
 import { BarraCompraMobile } from "@/components/loja/BarraCompraMobile"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
@@ -236,6 +238,16 @@ export default async function ProdutoPage(
       {/* Não renderiza nada — dispara `view_item` na montagem, no browser de
           cada visitante (o HTML desta rota é ISR, cacheado por 5 min). */}
       <EventoVerProduto item={itemGA} />
+
+      {/* JSON-LD `Product` — é o que habilita PREÇO e DISPONIBILIDADE no
+          resultado de busca. Sai no HTML do ISR (Server Component), então
+          acompanha mudança de preço na Shopify pelo mesmo ciclo que já mantém a
+          meta description viva.
+
+          🔴 O objeto NÃO tem `aggregateRating` nem `review`, e isso é decisão
+          registrada — ver o bloco no topo de lib/seo/produtoSchema.ts antes de
+          cogitar adicionar. `npm run verificar:schema` falha se aparecerem. */}
+      <JsonLd data={produtoSchema(produto)} />
 
       <article
         // Layout em globals.css (classes explícitas — o mx-auto do Tailwind não

@@ -1,0 +1,150 @@
+import { SITE_URL } from "@/lib/site"
+import type { Product } from "@/lib/shopify/types"
+
+// JSON-LD `Product` das PDPs — o objeto que faz o Google exibir PREÇO e
+// DISPONIBILIDADE no resultado de busca, em vez de um link de texto puro.
+//
+// Módulo PURO, mesmo padrão de `lib/parcelamento.ts`, `lib/apresentacao.ts` e
+// `lib/shopify/destaques.ts`: sem React, sem `server-only`, sem fetch. Recebe um
+// `Product` e devolve o objeto. Dá para exercitar com `node -e`, e é isso que
+// permite o `npm run verificar:schema` conferir os 7 produtos reais.
+//
+// Quem serializa e emite a <script> é `components/seo/JsonLd.tsx` — a separação
+// existe para este arquivo continuar testável sem DOM.
+//
+// ═══════════════════════════════════════════════════════════════════════════
+// 🔴🔴 NUNCA ADICIONE `aggregateRating` NEM `review` A ESTE OBJETO. 🔴🔴
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Nem "só as estrelas", nem "só a contagem", nem em variante, nem atrás de flag.
+//
+// A tentação é concreta e vai reaparecer: a home exibe 5 depoimentos com nota 4,7
+// e "+10 mil vendas". Eles são TRANSCRIÇÕES DE MERCADO LIVRE E SHOPEE — avaliação
+// coletada por terceiro, sobre a loja daquele marketplace.
+//
+// A política de rich results do Google exige que a avaliação seja coletada pelo
+// PRÓPRIO site ou por parceiro autorizado. Marcar review de marketplace como se
+// fosse nossa é motivo de AÇÃO MANUAL — e ação manual não derruba só a estrela:
+// derruba os rich results do DOMÍNIO INTEIRO, incluindo este `Product` e o
+// `FAQPage` que vem depois.
+//
+// O risco é assimétrico: o ganho seria uma estrela numa PDP; a perda seria todo o
+// domínio, com prazo de reconsideração medido em semanas.
+//
+// O caminho legítimo existe e está na fila (item 18 do SEO-AUDIT.md): coletar
+// avaliação de PRIMEIRA PARTE por e-mail pós-compra. Quando essas existirem, o
+// campo entra — com os dados certos.
+//
+// `npm run verificar:schema` FALHA (exit 1) se qualquer um dos dois aparecer no
+// objeto. A regra está travada em código, não na memória de quem mexer depois.
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Valores canônicos de `schema.org/ItemAvailability`.
+ *
+ * Em URL completa (e não `"InStock"` solto): o Google aceita as duas formas, mas
+ * a URL é a documentada e a que o validador do schema.org resolve sem ambiguidade.
+ */
+const EM_ESTOQUE  = "https://schema.org/InStock"
+const SEM_ESTOQUE = "https://schema.org/OutOfStock"
+
+/** Produto novo e lacrado — a loja não vende usado nem recondicionado. */
+const CONDICAO_NOVO = "https://schema.org/NewCondition"
+
+/**
+ * Monta o JSON-LD `Product` de uma PDP.
+ *
+ * Campos ausentes são OMITIDOS, nunca preenchidos com placeholder: `sku: null`,
+ * `sku: ""` ou uma descrição inventada são piores que a ausência — o Google trata
+ * campo presente como afirmação nossa sobre o produto.
+ */
+export function produtoSchema(produto: Product): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "Product",
+
+    name: produto.title,
+
+    // 🔴 A IMAGEM É A DE 1200 px (`ogImage`), NÃO a da galeria (800). O Google
+    // recomenda a maior resolução disponível, com mínimo de 696 px de largura.
+    // Custo zero: é a MESMA URL do `og:image`, então o CDN serve do mesmo cache.
+    // Produto sem foto → campo omitido (array vazio seria afirmar "não tem imagem").
+    ...(produto.ogImage ? { image: [produto.ogImage.url] } : {}),
+
+    // `custom.resumo` — a linha consultiva do lojista ("Dupla lente com detecção
+    // inteligente, pra quem quer mais controle sem complicar").
+    //
+    // ⚠️ NÃO use `descriptionHtml` nem `apresentacao` aqui, e não é preferência:
+    //   - `product.description` vem VAZIO nos 7 produtos (medido em 11/08/2026) —
+    //     o `descriptionHtml` da loja só tem imagens, nenhum texto.
+    //   - o 1º bloco de `apresentacao` é gancho narrativo ("Você abaixa a porta da
+    //     loja, tranca e vai embora…"): descreve o PROBLEMA do cliente, não o
+    //     produto. Como `description` de schema, seria descrição errada.
+    ...(produto.resumo ? { description: produto.resumo } : {}),
+
+    // Vive na VARIANTE, não no produto. Medido: 5 dos 7 têm (`ES-P9`, `ES-Q6`,
+    // `IC-8177`, `ES-Q8`, `ES-S8`); A31H e A38 estão com `sku: null` na Shopify.
+    // Omitido quando ausente — cadastrar os dois no admin completa o dado.
+    ...(produto.sku ? { sku: produto.sku } : {}),
+
+    // 🔴 `brand` OMITIDO POR DECISÃO REGISTRADA (11/08/2026), não por esquecimento.
+    //
+    // Os dois candidatos foram avaliados e os dois estariam errados:
+    //   - `vendor` da Shopify é "Ta Hora" nos 7 produtos — é o VENDEDOR, não o
+    //     fabricante. Esse fato está declarado abaixo, em `offers.seller`.
+    //   - as tags `icsee`/`eseecloud` (que `ROTULO_MARCA` exibe como "iCSee" e
+    //     "EseeCloud") são os APLICATIVOS que controlam a câmera. As câmeras são
+    //     genéricas; o app não é a marca do produto.
+    //
+    // `brand` é RECOMENDADO, não obrigatório — omitir custa um campo, declarar
+    // errado seria afirmar ao Google um fabricante que não existe.
+
+    offers: {
+      "@type": "Offer",
+
+      // 🔴 `precoNumerico`, JAMAIS `price.price`.
+      //
+      // `price.price` é texto pt-BR formatado — "1.799,90". O schema.org exige
+      // decimal com ponto, então o Google leria isso como **1.79**: erro de mil
+      // vezes no preço, publicado no resultado de busca, sem quebrar build, `tsc`
+      // nem teste. É o mesmo motivo pelo qual `precoNumerico` existe para o
+      // parcelamento (ver lib/shopify/types.ts).
+      price:         produto.precoNumerico.toFixed(2),
+
+      // Código ISO ("BRL"), não o símbolo. `price.currency` é "R$" — símbolo de
+      // exibição, que o schema.org não aceita.
+      priceCurrency: produto.moeda,
+
+      // ⚠️ DEGRADAÇÃO HERDADA, declarada de propósito: `normalizeProduct` aplica
+      // `?? true` em `availableForSale` (fail-open — ver o comentário lá). Se
+      // alguém remover o campo da query, este schema passa a declarar "InStock"
+      // para a loja inteira. É o MESMO comportamento que o botão de compra já
+      // tem hoje; a diferença é que agora essa degradação também fala com o
+      // Google. Quem decide a venda de fato continua sendo `resolverVariante`,
+      // no servidor, no momento da adição.
+      availability:  produto.disponivel ? EM_ESTOQUE : SEM_ESTOQUE,
+
+      itemCondition: CONDICAO_NOVO,
+
+      // URL CANÔNICA — construída de `SITE_URL` + handle, nunca da URL da
+      // requisição. Os links de afiliado chegam com `?ref=<código>`, e uma
+      // `offers.url` carregando a query diria ao Google que cada afiliado tem sua
+      // própria oferta. Mesma razão do canonical (ver app/layout.tsx).
+      url:           `${SITE_URL}/produtos/${produto.handle}`,
+
+      // Aqui, sim, "Ta Hora": o `vendor` da Shopify descreve quem VENDE.
+      seller: { "@type": "Organization", name: "Ta Hora" },
+
+      // 🔴 `priceValidUntil` OMITIDO POR DECISÃO REGISTRADA (11/08/2026).
+      //
+      // O Rich Results Test emite WARNING pela ausência — e o warning fica. Não
+      // bloqueia o rich result, e a alternativa seria carimbar uma data de
+      // validade de preço que a loja não se comprometeu a cumprir. Dado falso
+      // para calar um validador é exatamente o tipo de erro que este site passou
+      // a semana corrigindo (ver o topo do SEO-AUDIT.md).
+    },
+
+    // 🔴 NADA ABAIXO DESTA LINHA. Ver o bloco no topo do arquivo: nem
+    // `aggregateRating`, nem `review`.
+  }
+}

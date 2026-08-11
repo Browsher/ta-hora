@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run verificar:schema:formato && next build",
     "start": "next start",
     "verificar:variantes": "node --env-file=.env.local scripts/verificar-variantes.mjs",
     "verificar:tags": "node --env-file=.env.local scripts/verificar-tags.mjs",
@@ -16,7 +16,9 @@
     "verificar:vitrine": "node --env-file=.env.local scripts/verificar-vitrine.mjs",
     "verificar:afiliado": "node --env-file=.env.local scripts/verificar-afiliado.mjs",
     "verificar:apresentacao": "node --env-file=.env.local scripts/verificar-apresentacao.mjs",
-    "verificar:frete": "node --env-file=.env.local scripts/verificar-frete.mjs"
+    "verificar:frete": "node --env-file=.env.local scripts/verificar-frete.mjs",
+    "verificar:schema": "node --env-file=.env.local scripts/verificar-schema.mjs",
+    "verificar:schema:formato": "node scripts/verificar-schema.mjs --sem-rede"
   },
   "dependencies": {
     "clsx": "^2.1.1",

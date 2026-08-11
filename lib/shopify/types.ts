@@ -148,6 +148,29 @@ export interface Product {
    * `lib/parcelamento.ts`.
    */
   precoNumerico:   number
+  /**
+   * Código ISO da moeda ("BRL"), CRU como a Shopify devolve.
+   *
+   * Existe para o `priceCurrency` do JSON-LD (`lib/seo/produtoSchema.ts`), que
+   * exige o código — `price.currency` é o SÍMBOLO de exibição ("R$") e o
+   * schema.org não o aceita. Mesmo precedente de `precoNumerico`: valor cru para
+   * a máquina, valor formatado para o humano, um não substitui o outro.
+   */
+  moeda:           string
+  /**
+   * `custom.resumo` — a linha consultiva do lojista, a MESMA que o bloco do
+   * `/catalogo` exibe. Na PDP não é exibida: alimenta a `description` do JSON-LD.
+   *
+   * `null` quando ausente ou vazio → o schema OMITE o campo `description`.
+   */
+  resumo:          string | null
+  /**
+   * SKU da variante vendida (`variants.nodes[0].sku`).
+   *
+   * `null` quando não cadastrado na Shopify — hoje o caso de A31H e A38 (medido
+   * em 11/08/2026) → o schema omite o campo em vez de inventar identificador.
+   */
+  sku:             string | null
   specs:           Spec[]
   /**
    * Texto de apresentação do produto (`custom.apresentacao`), CRU — com os `\n`

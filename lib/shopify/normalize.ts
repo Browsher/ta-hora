@@ -81,6 +81,14 @@ export interface RawProduct {
   // Metafield ALIASADO `custom.apresentacao` (feature apresentacao-produto).
   // Opcional: só a PRODUCT_BY_HANDLE_QUERY o seleciona. Ausente → null.
   apresentacao?:   { value: string } | null
+  // ── Aditivos do JSON-LD (feature product-schema) ────────────────────────────
+  // Opcionais pelo mesmo motivo dos demais: só a PRODUCT_BY_HANDLE_QUERY os
+  // seleciona. Ausentes → `resumo`/`sku` normalizam para `null`, e o schema
+  // simplesmente omite os campos correspondentes.
+  /** Metafield aliasado `custom.resumo` — vira a `description` do schema. */
+  resumo?:         { value: string } | null
+  /** `variants(first: 1) { nodes { sku } }` — o SKU da variante vendida. */
+  variants?:       { nodes: { sku: string | null }[] }
 }
 
 // ─── Formatação de dinheiro (correção M4: respeita currencyCode) ──────────────
@@ -215,6 +223,15 @@ export function normalizeProduct(raw: RawProduct): Product {
     // (string numérica finita vinda da Shopify). Aqui alimenta o parcelamento da
     // PDP; não é preço exibido nem valor cobrado. Ver `lib/parcelamento.ts`.
     precoNumerico:   Number(raw.priceRange.minVariantPrice.amount),
+    // Código ISO cru ("BRL") — o `formatMoney` acima o converte no símbolo "R$"
+    // para exibição, e o JSON-LD precisa do código. Ver `moeda` em types.ts.
+    moeda:           raw.priceRange.minVariantPrice.currencyCode,
+    // "" / só espaços / ausente → null, mesma linha do `resumo` de
+    // `normalizeProductCard`. É o `|| null` que faz o schema OMITIR o campo.
+    resumo:          raw.resumo?.value?.trim() || null,
+    // `?? null` no fim: produto sem variante selecionada (query que não pediu)
+    // ou SKU não cadastrado caem no mesmo `null`, e o schema omite o campo.
+    sku:             raw.variants?.nodes[0]?.sku?.trim() || null,
     specs,
     // "" / só espaços / ausente → null. Mesma linha do `resumo` em
     // `normalizeProductCard`: é o `|| null` aqui que faz a seção sumir sozinha

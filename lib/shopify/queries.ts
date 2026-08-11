@@ -130,6 +130,29 @@ export const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       # ⚠️ SEM CRASE NESTE COMENTÁRIO. A query inteira é um template literal do
       # JS: uma crase aqui dentro FECHA a string e o arquivo deixa de compilar.
       apresentacao: metafield(namespace: "custom", key: "apresentacao") { value }
+      # Resumo consultivo (uma linha) — ADITIVO para o JSON-LD Product
+      # (feature product-schema). Mesmo metafield que a PRODUCTS_QUERY já pede
+      # para o bloco do /catalogo; aqui ele vira a description do schema.
+      #
+      # Por que ele, e não descriptionHtml: product.description vem VAZIO nos 7
+      # produtos (medido em 11/08/2026 — o HTML da loja só tem imagens), e o 1º
+      # bloco de apresentacao é gancho narrativo sobre o problema do cliente,
+      # não descrição do produto. Ver lib/seo/produtoSchema.ts.
+      #
+      # ⚠️ SEM CRASE NESTE COMENTÁRIO — ver o aviso logo acima.
+      resumo: metafield(namespace: "custom", key: "resumo") { value }
+      # SKU — ADITIVO para o JSON-LD (feature product-schema). Vive na VARIANTE,
+      # não no produto, e por isso exige esta seleção.
+      #
+      # first: 1 (e não 2, como na PRODUTO_PARA_CARRINHO_QUERY): aqui a pergunta
+      # não é "quantas variantes existem" — essa salvaguarda é de lá, e continua
+      # sendo dela. Aqui só se lê o identificador da variante que a loja vende.
+      #
+      # Medido: 5 dos 7 produtos têm SKU; A31H e A38 vêm null e o schema omite o
+      # campo em vez de inventar.
+      #
+      # ⚠️ SEM CRASE NESTE COMENTÁRIO — ver o aviso logo acima.
+      variants(first: 1) { nodes { sku } }
       metafields(identifiers: $identifiers) {
         namespace
         key
