@@ -59,6 +59,47 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   TextoLegal,
 }
 
+// ─── Espaçamento vertical entre seções ────────────────────────────────────────
+//
+// O vão entre duas seções vizinhas empilha QUATRO paddings: o interno-base da de
+// cima, o wrapper-base, o wrapper-topo e o interno-topo da de baixo. Este helper
+// governa os dois do meio (os dois wrappers); os internos vivem inline em cada
+// componente de seção e NÃO foram tocados.
+//
+// O problema que ele resolve: o valor era um número cru (`?? 80`), sem clamp e
+// sem media query — 80px idênticos em 390px e em 1920px. Como os paddings
+// internos já usam clamp e caem no piso no mobile, o vão padrão dava 352px no
+// desktop contra 288px em 390px: só 18% menor numa tela 3× mais estreita.
+//
+// A fórmula escala o valor QUE VEIO, não só o default — é por isso que ela
+// recebe `v` em vez de existir só no `??`. O `_home.json` traz 160 no rodapé do
+// Hero e 40 na base da VitrineHome; se apenas o default escalasse, esses dois
+// ficariam travados no valor de desktop e as duas maiores folgas da Home não
+// mudariam nada no celular.
+//
+//   piso  = 45% do valor  → o que vale em telas estreitas
+//   fluido= v/12 vw       → cruza o piso e alcança o teto exatamente em 1200px
+//   teto  = v             → O DESKTOP FICA IDÊNTICO AO DE ANTES, byte a byte
+//
+// Os 1200px do teto não são arbitrários: é a largura do container de todas as
+// seções (`maxWidth: 1200`). Acima disso o conteúdo não cresce mais, então o
+// respiro também não precisa crescer.
+//
+// ⚠️ NÃO reduzir o piso de 0.45 sem remedir o TOPO DO HERO. A navbar `flutuante`
+// é `position: fixed` com `top: 12` e `height: 64` (Navbar.tsx) — ela flutua por
+// cima e ocupa os primeiros 76px da tela. O que separa o headline dela é este
+// wrapper (80 → 36px no mobile) somado ao padding interno do Hero
+// (`clamp(72px, 10vw, 128px)` → 72px em 390px): 108px no total, 32px livres
+// abaixo da navbar. Esse colchão de 32px é a margem inteira — um piso menor aqui
+// começa a enfiar o headline debaixo da barra.
+//
+// `v === 0` devolve 0 direto: a Navbar e as páginas legais (TextoLegal) trazem
+// 0/0 explícito no JSON e não podem ganhar clamp nenhum.
+function padVertical(v: number): string | number {
+  if (!v) return 0
+  return `clamp(${Math.round(v * 0.45)}px, ${(v / 12).toFixed(2)}vw, ${v}px)`
+}
+
 // ─── Parallax wrapper ─────────────────────────────────────────────────────────
 
 const PARALLAX_AMOUNTS: Record<string, number> = { sutil: 30, medio: 60, forte: 100, nenhum: 0 }
@@ -193,8 +234,8 @@ export function PreviewContent({ layout, produtosVitrine }: PreviewContentProps)
                   id={`section-${section.id}`}
                   className="relative"
                   style={{
-                    paddingTop: section.paddingTop ?? 80,
-                    paddingBottom: section.paddingBottom ?? 80,
+                    paddingTop: padVertical(section.paddingTop ?? 80),
+                    paddingBottom: padVertical(section.paddingBottom ?? 80),
                     ...(section.content?.sectionBg
                       ? { background: section.content.sectionBg as string }
                       : undefined),
