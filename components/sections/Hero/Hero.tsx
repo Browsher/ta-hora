@@ -5,7 +5,17 @@ import { AnimatePresence, motion, type MotionProps, useReducedMotion } from "fra
 import { buildSectionContainerProps, buildSectionItemProps } from "@/lib/sectionEffectHelpers"
 import { useSectionEffects } from "@/lib/SectionEffectsContext"
 import { useEffectsMode } from "@/lib/EffectsModeContext"
-import { useIsMobile } from "@/lib/useIsMobile"
+// 🔴 SEM `useIsMobile` — E ISSO É O PONTO DESTE ARQUIVO.
+//
+// O Hero é a primeira coisa acima da dobra, então qualquer decisão de layout
+// tomada em JavaScript aparece na cara do visitante: aquele hook só mede a
+// janela DEPOIS da hidratação, então o HTML do servidor sairia num chute e o
+// layout trocaria sozinho ~1s depois. Os dez valores que dependiam dele viraram
+// `@media` pura em `.hero-*` (globals.css) — ver o bloco de comentário lá.
+//
+// As outras seis seções que ainda usam o hook continuam usando: estão abaixo da
+// dobra e o JS já carregou quando o visitante chega nelas. NÃO reintroduzir o
+// hook aqui por simetria — ver `docs/responsividade-pendencias.md`.
 import { useCarousel } from "@/lib/useCarousel"
 import { HighlightBadge } from "@/components/ui/HighlightBadge"
 import { Heading } from "@/components/ui/Heading"
@@ -87,7 +97,6 @@ interface SubProps {
   statsVisible:   boolean
   stats:          { value: string; label: string }[]
   rightContent:   string
-  isMobile:       boolean
   reducedMotion:  boolean
   // Tipo "carrossel"
   bannerCount:      number
@@ -153,8 +162,8 @@ function HeroVideo({
 function HeroTextStack({
   c, se, itemProps, accentColor,
   badgeVisible, primaryButtonVisible, ctaSecVisible, statsVisible, stats,
-  isMobile, align, emailCapture,
-}: Pick<SubProps, "c" | "se" | "itemProps" | "accentColor" | "badgeVisible" | "primaryButtonVisible" | "ctaSecVisible" | "statsVisible" | "stats" | "isMobile"> & {
+  align, emailCapture,
+}: Pick<SubProps, "c" | "se" | "itemProps" | "accentColor" | "badgeVisible" | "primaryButtonVisible" | "ctaSecVisible" | "statsVisible" | "stats"> & {
   align:        "centro" | "esquerda"
   emailCapture: boolean
 }) {
@@ -189,9 +198,9 @@ function HeroTextStack({
         <motion.form
           {...itemProps}
           onSubmit={(e) => e.preventDefault()}
+          className="hero-form"
           style={{
             display:       "flex",
-            flexDirection: isMobile ? "column" : "row",
             gap:           10,
             width:         "100%",
             maxWidth:      480,
@@ -215,11 +224,10 @@ function HeroTextStack({
       ) : (
         <motion.div
           {...itemProps}
+          className="hero-ctas"
           style={{
             display:        "flex",
-            flexDirection:  isMobile ? "column" : "row",
             gap:            12,
-            alignItems:     isMobile ? "stretch" : "center",
             justifyContent: isCenter ? "center" : "flex-start",
             flexWrap:       "wrap",
           }}
@@ -247,9 +255,9 @@ function HeroTextStack({
       {statsVisible && stats.length > 0 && (
         <motion.div
           {...itemProps}
+          className="hero-stats"
           style={{
             display:        "flex",
-            gap:            isMobile ? 24 : 40,
             justifyContent: isCenter ? "center" : "flex-start",
             flexWrap:       "wrap",
             marginTop:      8,
@@ -305,17 +313,16 @@ function HeroSplit(p: SubProps) {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(20px, 5vw, 64px)" }}>
         <motion.div
           {...p.containerProps}
+          className="hero-split"
           style={{
             display:       "flex",
-            flexDirection: p.isMobile ? "column" : "row",
-            gap:           p.isMobile ? 32 : 48,
             alignItems:    "stretch",
           }}
         >
           {/* Esquerda: texto */}
           <div
+            className="hero-split__texto"
             style={{
-              flex:           p.isMobile ? "1 1 auto" : "1 1 0%",
               display:        "flex",
               flexDirection:  "column",
               gap:            24,
@@ -329,9 +336,8 @@ function HeroSplit(p: SubProps) {
           {/* Direita: imagem ou vídeo (50/50) */}
           <motion.div
             {...p.itemProps}
+            className="hero-split__midia"
             style={{
-              flex:         p.isMobile ? "1 1 auto" : "1 1 0%",
-              minHeight:    p.isMobile ? 240 : 420,
               minWidth:     0,
               borderRadius: 24,
               overflow:     "hidden",
@@ -488,7 +494,12 @@ function HeroCarrossel(p: SubProps) {
   // (16/9 → 16/3 é exatamente 3× mais achatado): vira faixa panorâmica em vez de
   // ocupar a tela inteira. No mobile a largura é pequena, e 16/3 daria uma tira de
   // ~73px em 390px — ilegível; lá o full-width volta ao 16/9.
-  const aspectRatio = isFull && !p.isMobile ? "16 / 3" : "16 / 9"
+  //
+  // A regra inteira vive em `.hero-palco` / `.hero-palco--total` (globals.css):
+  // o `heroWidth` do JSON escolhe a CLASSE e a `@media` escolhe a proporção. Era
+  // o único dos dez valores convertidos com uma perna vinda do JSON, e mesmo ele
+  // dispensou custom property.
+  const classePalco = isFull ? "hero-palco hero-palco--total" : "hero-palco"
   const hasArrows = p.showArrows && banners.length > 1
   const hasDots   = p.showDots   && banners.length > 1
 
@@ -512,10 +523,10 @@ function HeroCarrossel(p: SubProps) {
       <motion.div
         {...p.itemProps}
         {...pauseHandlers}
+        className={classePalco}
         style={{
           position:     "relative",
           width:        "100%",
-          aspectRatio,
           overflow:     "hidden",
           borderRadius: isFull ? 0 : 24,
         }}
@@ -611,7 +622,6 @@ export function Hero({
   const c    = { ...DEFAULT_CONTENT, ...content }
   const se   = useSectionEffects()
   const mode = useEffectsMode()
-  const isMobile      = useIsMobile()
   const reducedMotion = useReducedMotion() ?? false
 
   const containerProps = buildSectionContainerProps(se?.sectionEntry, mode)
@@ -644,7 +654,7 @@ export function Hero({
   const subProps: SubProps = {
     c, se, containerProps, itemProps,
     accentColor, badgeVisible, primaryButtonVisible, ctaSecVisible, statsVisible, stats,
-    rightContent, isMobile, reducedMotion,
+    rightContent, reducedMotion,
     bannerCount, autoplay, showArrows, showDots, arrowStyle, heroWidth, bannersClickable,
   }
 

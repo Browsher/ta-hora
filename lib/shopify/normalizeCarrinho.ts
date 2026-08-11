@@ -1,4 +1,5 @@
 import { formatMoney } from "./normalize"
+import { redimensionar, LARGURA_THUMB } from "./imagens"
 import type {
   Money,
   ProductImage,
@@ -138,9 +139,20 @@ export function traduzirAvisos(warnings: RawWarning[] | null | undefined): strin
 
 // ─── Normalizadores ───────────────────────────────────────────────────────────
 
+/**
+ * Miniatura da linha do carrinho, redimensionada.
+ *
+ * 🔴 ESTE ARQUIVO TEM QUE ANDAR JUNTO COM `normalize.ts`. Esta função e a
+ * `normalizeImage` de lá são gêmeas — mesmo corpo, arquivos diferentes — e este
+ * módulo NÃO importa daquele (só o `formatMoney`). Redimensionar só lá deixaria
+ * o drawer como único lugar do site ainda baixando a foto original de 3543 px
+ * para exibi-la a 64: a duplicação que já existia, agora com um bug dentro.
+ *
+ * `LARGURA_THUMB` (128) é o dobro dos 64 px de exibição em `CarrinhoLinha.tsx` —
+ * a mesma largura dos thumbnails da galeria, que também são 64.
+ */
 function normalizeImagemCarrinho(img: RawImagemCarrinho | null | undefined): ProductImage | null {
-  if (!img) return null
-  return { url: img.url, altText: img.altText, width: img.width, height: img.height }
+  return redimensionar(img, LARGURA_THUMB)
 }
 
 function normalizeLinha(raw: RawLinha): LinhaCarrinho {

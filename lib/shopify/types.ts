@@ -117,7 +117,21 @@ export interface Product {
    * Nunca `undefined`: `normalizeProduct` aplica `?? true` (fail-open — ver lá).
    */
   disponivel:      boolean
+  /** Fotos da galeria, redimensionadas para `LARGURA_GALERIA` (ver `imagens.ts`). */
   images:          ProductImage[]
+  /**
+   * A primeira foto do produto em `LARGURA_OG` (1200 px), para o `og:image`.
+   *
+   * Campo PRÓPRIO, e não `images[0]`, porque o Open Graph tem exigência de
+   * tamanho diferente da galeria: 1200 px contra 800. As duas variantes saem do
+   * MESMO original cru em `normalizeProduct` — derivar uma da outra pediria
+   * upscale, que a Shopify não faz, e o `og:image:width` passaria a declarar um
+   * tamanho que o arquivo não tem. Ver o comentário em `normalize.ts`.
+   *
+   * `null` quando o produto não tem foto cadastrada → a PDP cai na arte genérica
+   * do site (`/uploads/og-image.webp`).
+   */
+  ogImage:         ProductImage | null
   price:           FormattedPrice
   /**
    * Mesmo campo (e mesma origem) do `precoNumerico` do `ProductCard` acima, agora

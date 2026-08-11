@@ -102,7 +102,16 @@ export async function generateMetadata(
       // link de produto no WhatsApp aparecia sem prévia nenhuma. Por isso tudo
       // que o raiz define e continua valendo aqui é REPETIDO abaixo. Ao mexer
       // no openGraph do app/layout.tsx, revisar este bloco junto.
-      const foto = produto.images[0]
+      //
+      // 🔴 `ogImage`, NÃO `images[0]`. As fotos da galeria vêm redimensionadas em
+      // 800 px (o tamanho de exibição da PDP) e o Open Graph pede 1200. São duas
+      // variantes da mesma foto, calculadas em `normalizeProduct` a partir do
+      // ORIGINAL — cada uma com as dimensões que de fato tem. Voltar a usar
+      // `images[0]` aqui declararia 800 px num contexto que pede 1200; "consertar"
+      // reescrevendo a largura desta URL declararia 1200 para um arquivo de 800,
+      // que é pior (o WhatsApp recorta errado ou descarta a prévia). Ver o
+      // comentário de `ogImage` em lib/shopify/types.ts.
+      const foto = produto.ogImage
 
       return {
         title:       produto.title,

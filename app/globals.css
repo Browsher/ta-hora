@@ -1367,3 +1367,92 @@ body {
   font-weight: 700;
   color:       var(--cor-texto);
 }
+
+/* ─── Hero — layout responsivo em `@media` pura ───────────────────────────────
+   (passo 2 de `docs/responsividade-pendencias.md`, aplicado SÓ ao Hero)
+
+   Estas classes existem para tirar o layout do Hero do JavaScript. Antes, dez
+   valores saíam de `isMobile ? A : B` dentro de `style={{}}` — e como aquele
+   hook só mede a janela DEPOIS da hidratação, o HTML do servidor saía num chute
+   e o layout trocava na frente do visitante. No Hero isso é visível antes de
+   qualquer outra coisa da página, porque ele é a primeira coisa acima da dobra.
+
+   🔴 SÓ O HERO FOI CONVERTIDO, DE PROPÓSITO. As outras seis seções que ainda
+   usam `useIsMobile` ficam como estão: elas estão abaixo da dobra, e quando o
+   visitante rola até lá o JS já carregou. Não "completar" a conversão por
+   simetria — a ordem e o motivo estão na pendência.
+
+   ⚠️ CADA CLASSE CARREGA SÓ AS PROPRIEDADES QUE ERAM RESPONSIVAS. Todo o resto
+   (o `display: flex`, os `gap` fixos, o `border` com o accent, o `borderRadius`)
+   continua inline no componente. Isso é deliberado: estilo inline vence classe,
+   então as duas camadas convivem sem disputa de especificidade desde que a
+   propriedade não esteja nos dois lugares. Ao mexer aqui, conferir se a chave
+   correspondente continua FORA do objeto inline em `Hero.tsx`.
+
+   Mobile-first com `@media (min-width: 768px)`, mesmo precedente de
+   `.produto-grid`, `.catalogo-bloco` e `.ficha-cards`. Os 768px batem com o
+   breakpoint padrão do `useIsMobile`, então nenhuma largura muda de
+   comportamento em relação ao que existia antes.                              */
+
+/* Form de captura de email (tipo "input-capture"). */
+.hero-form { flex-direction: column; }
+
+/* Botões primário + secundário. `align-items: stretch` no mobile faz os dois
+   ocuparem a largura toda empilhados; no desktop voltam a ser lado a lado. */
+.hero-ctas {
+  flex-direction: column;
+  align-items:    stretch;
+}
+
+/* Linha de números (stat1/2/3). */
+.hero-stats { gap: 24px; }
+
+/* Tipo "split": texto e mídia lado a lado no desktop, empilhados no mobile. */
+.hero-split {
+  flex-direction: column;
+  gap:            32px;
+}
+
+/* As duas colunas do split. `1 1 auto` empilhado (a altura manda) e `1 1 0%`
+   lado a lado (o 50/50 real — com `auto` a coluna de texto ficaria maior que a
+   da imagem). O `min-height` da mídia é o que impede a imagem de colapsar
+   enquanto não carrega. */
+.hero-split__texto { flex: 1 1 auto; }
+.hero-split__midia {
+  flex:       1 1 auto;
+  min-height: 240px;
+}
+
+/* Palco do carrossel de banners. 16/9 é a base dos DOIS casos — o `--total`
+   (full-width) só vira faixa panorâmica 16/3 no desktop. No mobile a largura é
+   pequena e 16/3 daria uma tira de ~73px em 390px, ilegível; por isso o
+   modificador não tem efeito abaixo de 768px.
+
+   🔴 Aqui o JSON escolhe a CLASSE, não o valor: `heroWidth: "total"` decide se
+   o modificador entra. É o que dispensou custom property em toda esta conversão
+   — os outros nove valores são literais estáticos. */
+.hero-palco { aspect-ratio: 16 / 9; }
+
+@media (min-width: 768px) {
+  .hero-form  { flex-direction: row; }
+
+  .hero-ctas {
+    flex-direction: row;
+    align-items:    center;
+  }
+
+  .hero-stats { gap: 40px; }
+
+  .hero-split {
+    flex-direction: row;
+    gap:            48px;
+  }
+
+  .hero-split__texto { flex: 1 1 0%; }
+  .hero-split__midia {
+    flex:       1 1 0%;
+    min-height: 420px;
+  }
+
+  .hero-palco--total { aspect-ratio: 16 / 3; }
+}

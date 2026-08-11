@@ -1,6 +1,7 @@
 import { SPEC_METAFIELDS } from "./specs"
 import { marcaDoProduto, TAG_MAIS_RECURSOS } from "./tags"
 import { temLenteMultipla, temAlarmeSonoro } from "./destaques"
+import { redimensionar, LARGURA_CARD, LARGURA_GALERIA, LARGURA_OG } from "./imagens"
 import type {
   Money,
   FormattedPrice,
@@ -103,9 +104,20 @@ export function formatMoney(m: Money): FormattedPrice {
 
 // ─── Normalizadores ───────────────────────────────────────────────────────────
 
-function normalizeImage(img: RawImage | null): ProductImage | null {
-  if (!img) return null
-  return { url: img.url, altText: img.altText, width: img.width, height: img.height }
+/**
+ * Raw → `ProductImage`, JÁ redimensionada para o contexto de exibição.
+ *
+ * 🔴 `largura` É PARÂMETRO OBRIGATÓRIO, e isso é decisão registrada. Esta função
+ * é chamada pelos DOIS caminhos abaixo — card e galeria — e não tem como saber de
+ * qual veio: a URL, o alt e as dimensões são idênticos nos dois casos. Quem sabe
+ * o tamanho de exibição é o CHAMADOR, então é ele quem informa. Um default aqui
+ * seria a função adivinhando o contexto, que é justamente o erro a evitar.
+ *
+ * O recálculo de `width`/`height` acontece dentro de `redimensionar` — ver lá o
+ * porquê de a URL e as dimensões nunca poderem divergir.
+ */
+function normalizeImage(img: RawImage | null, largura: number): ProductImage | null {
+  return redimensionar(img, largura)
 }
 
 export function normalizeProductCard(raw: RawProductCard): ProductCard {
@@ -114,7 +126,12 @@ export function normalizeProductCard(raw: RawProductCard): ProductCard {
     id:     raw.id,
     handle: raw.handle,
     title:  raw.title,
-    image:  normalizeImage(raw.featuredImage),
+    // Card: `/catalogo`, vitrine da home, recomendados e acessórios. Todos
+    // exibem a ~200-300 px, então 400 cobre tela 2x. (Os acessórios do drawer
+    // aparecem a 44 px e ficam sobredimensionados — são 2 imagens, e dar largura
+    // própria a eles exigiria um segundo construtor de `ProductCard`, que é o
+    // preço errado a pagar. Ver o comentário de "único construtor" em types.ts.)
+    image:  normalizeImage(raw.featuredImage, LARGURA_CARD),
     price:  formatMoney(raw.priceRange.minVariantPrice),
     // ── Derivados no servidor (opção A: cliente recebe o card pronto) ─────────
     marca:        marcaDoProduto(tags),               // Marca | null
@@ -160,8 +177,21 @@ export function normalizeProduct(raw: RawProduct): Product {
   }).filter((s): s is Spec => s !== null)
 
   const images = raw.images.nodes
-    .map(normalizeImage)
+    .map((img) => normalizeImage(img, LARGURA_GALERIA))
     .filter((i): i is ProductImage => i !== null)
+
+  // Imagem do `og:image`, derivada da PRIMEIRA FOTO CRUA — não de `images[0]`.
+  //
+  // 🔴 A ORDEM IMPORTA E A ORIGEM TAMBÉM. O Open Graph pede 1200 px e a galeria
+  // usa 800. Redimensionar `images[0]` (que já é 800) para 1200 seria pedir
+  // upscale: a Shopify não faz upscale, devolveria os mesmos 800 px, e o
+  // `og:image:width` sairia declarando 1200 para um arquivo de 800 — exatamente
+  // a divergência que `redimensionar` existe para impedir. Partindo do cru, as
+  // duas variantes são calculadas do MESMO original, cada uma com as dimensões
+  // que de fato tem.
+  //
+  // `null` quando o produto não tem foto — a PDP cai na arte genérica do site.
+  const ogImage = normalizeImage(raw.images.nodes[0] ?? null, LARGURA_OG)
 
   return {
     id:              raw.id,
@@ -179,6 +209,7 @@ export function normalizeProduct(raw: RawProduct): Product {
     // drawer); fail-closed derruba a venda de tudo.
     disponivel:      raw.availableForSale ?? true,
     images,
+    ogImage,
     price:           formatMoney(raw.priceRange.minVariantPrice),
     // Mesma origem e mesma premissa do `precoNumerico` de `normalizeProductCard`
     // (string numérica finita vinda da Shopify). Aqui alimenta o parcelamento da

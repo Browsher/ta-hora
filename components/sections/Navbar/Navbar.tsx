@@ -71,7 +71,15 @@ export function Navbar({
   const c    = { ...DEFAULT_CONTENT, ...content }
   const se   = useSectionEffects()
   const mode = useEffectsMode()
-  const isMobile = useIsMobile()
+  // 🔴 `padraoSSR: false` — a Navbar é a ÚNICA seção que fica FORA do padrão
+  // mobile-first do hook, e isso é deliberado. Ao contrário das demais, os dois
+  // ramos daqui renderizam elementos DIFERENTES (links de navegação vs. botão
+  // hambúrguer + dropdown, mais abaixo neste arquivo) — com o padrão mobile os
+  // links sumiriam do HTML do servidor e só o hambúrguer sairia, mexendo no que
+  // o Google indexa. Ela paga um flash para não pagar o índice.
+  // O porquê completo, e a condição para ela entrar na inversão, estão no
+  // cabeçalho de `lib/useIsMobile.ts`. NÃO uniformizar sem ler aquele bloco.
+  const isMobile = useIsMobile(768, false)
 
   const navEntryProps = buildNavEntryProps(se?.navEntry, mode)
 
