@@ -131,7 +131,14 @@ As 4 perguntas do `_home.json` são, do ponto de vista de SEO, **melhores que a 
 | "Consigo instalar sozinho ou preciso de técnico?" | **É a proposta de valor inteira do negócio em forma de pergunta.** |
 | "A câmera funciona à noite?" | Pergunta de especificação, altíssima frequência. |
 
-Essas quatro perguntas hoje: (a) não têm FAQPage schema, (b) não estão em heading, (c) não existem como página própria, (d) não estão no `/suporte` marcadas. **Estão renderizadas em HTML e invisíveis para o Google como conteúdo estruturado.** Ver seções 7 e 8.
+Estado dessas quatro perguntas, atualizado em 11/08/2026:
+
+- ✅ **As respostas estão no HTML** — não estavam. Até 11/08/2026 o accordion não renderizava resposta fechada, e as quatro eram invisíveis para qualquer crawler (ver seção 8). Corrigido.
+- ❌ Não estão em heading — as perguntas são `<span>` dentro do botão, não `<h3>`.
+- ❌ Não existem como página própria (o gap de conteúdo da seção 5).
+- ~~Não têm FAQPage schema~~ — **e não vão ter**: o rich result foi extinto (seção 8).
+
+Ver seções 7 e 8.
 
 ---
 
@@ -380,10 +387,13 @@ A resposta atual de "Preciso de internet para a câmera funcionar?" tem 29 palav
 **Oportunidade 3 — snippet de tabela:** comparativo dos 7 modelos no `/catalogo` (resolução, interna/externa, alimentação, visão noturna, preço) em `<table>` HTML real. Serve o usuário *e* é o formato que o Google extrai.
 
 **Checklist de execução:**
-- [ ] Cada pergunta do FAQ vira um `<h3>` real (hoje são componentes de accordion sem heading)
+- [x] ✅ **Respostas do FAQ presentes no HTML** — feito em 11/08/2026 (ver seção 8). Era pré-requisito de tudo abaixo: não há snippet de conteúdo que o crawler não vê.
+- [ ] Cada pergunta do FAQ vira um `<h3>` real (hoje são `<span>` dentro do botão do accordion)
 - [ ] Resposta imediatamente após o heading, 40-60 palavras
-- [ ] `FAQPage` schema (seção 8)
+- [ ] ~~`FAQPage` schema~~ — **retirado**, o rich result não existe mais (seção 8)
 - [ ] Tabela comparativa em `/catalogo` como `<table>` semântica
+
+> ⚠️ **Calibragem honesta sobre esta seção:** com o FAQ rich result extinto, o "featured snippet de FAQ" saiu de cena. O que continua valendo é o **snippet de parágrafo comum** — o Google ainda extrai uma resposta direta do corpo da página para consultas em pergunta. Isso não depende de schema; depende de a resposta estar no HTML (feito), em heading claro, e ter 40-60 palavras. Os itens acima seguem válidos por esse caminho, não pelo do FAQPage.
 
 ---
 
@@ -397,7 +407,7 @@ Para um e-commerce, isso é a maior perda de CTR disponível. `Product` schema �
 |---|---|---|---|
 | **Product + Offer** | 7 PDPs | ✅ **Implementado (11/08/2026)** | ~~1~~ feito |
 | **Organization** | Home | **Ausente** | **1** |
-| **FAQPage** | Home + `/suporte` | **Ausente** | **1** |
+| ~~**FAQPage**~~ | ~~Home + `/suporte`~~ | **Removido da lista** | ❌ ver abaixo |
 | **BreadcrumbList** | Catálogo + PDPs | **Ausente** | 2 |
 | **ItemList** | `/catalogo` | **Ausente** | 2 |
 | **WebSite / SearchAction** | Home | Ausente | 4 (só faz sentido com busca interna) |
@@ -407,7 +417,26 @@ Para um e-commerce, isso é a maior perda de CTR disponível. `Product` schema �
 
 **Product schema — o que implementar em `app/produtos/[handle]/page.tsx`:** todos os dados já estão carregados na página. `produto.title`, `produto.images[0].url`, `produto.descriptionHtml`, `produto.price`, `produto.disponivel` e `marcaDoProduto(produto.tags)` cobrem `name`, `image`, `description`, `offers.price`, `offers.priceCurrency`, `offers.availability`, `brand` e `sku`. **É montar o objeto e emitir um `<script type="application/ld+json">` — não precisa de dado novo.** Como a rota é ISR, o schema acompanha automaticamente mudança de preço na Shopify, pelo mesmo mecanismo que já mantém a meta description viva.
 
-**FAQPage:** as 4 perguntas vivem em `layouts/_home.json` num formato plano (`faq1Question`/`faq1Answer` … `faq4`). O componente `FAQ` já lê esses campos — emitir o JSON-LD ao lado do render é trivial e não duplica fonte de verdade. (Lembrando que os JSONs de layout são editados à mão e nada os sobrescreve.)
+### ❌ FAQPage — RETIRADO DA LISTA (correção de 11/08/2026)
+
+**A primeira versão deste documento classificava `FAQPage` como prioridade 1, prometendo captura de featured snippet. A premissa é falsa, e o erro é meu.**
+
+**O FAQ rich result não existe mais.** O Google restringiu o recurso a sites de governo e saúde em agosto de 2023 e depois o encerrou por completo: hoje ele não aparece na Busca para site nenhum, o suporte saiu do Rich Results Test e do relatório do Search Console, e a API do Search Console encerrou o tipo. A documentação do Google diz que a marcação pode permanecer porque outros sistemas podem consumi-la, mas **não há benefício de busca esperado**.
+
+Ou seja: implementar `FAQPage` neste site produziria zero rich result, e nem seria validável pela mesma ferramenta que validou o `Product`.
+
+**O que foi feito no lugar — e que era o ganho real o tempo todo.** Ao investigar, apareceu um problema estrutural que independe de schema: **as respostas do FAQ da home não estavam no HTML.** Medido no build:
+
+```
+"Preciso de internet para a câmera funcionar?"  → 2× (DOM + payload RSC)
+"...redes de 2.4 GHz."                          → 1× (SÓ no payload RSC)
+```
+
+O `AccordionItem` renderizava a resposta dentro de `{isOpen && …}` com `defaultOpen: false` — resposta fechada não existia no DOM. As 4 respostas da home, que são o conteúdo de cauda longa mais valioso do site ("câmera precisa de internet", "grava sem cartão", "instalo sozinho"), eram invisíveis para Google, Bing e crawlers de LLM. E marcá-las em `FAQPage` seria markup de conteúdo ausente da página — a mesma família de violação do `aggregateRating`.
+
+✅ **Corrigido em 11/08/2026** (`components/sections/FAQ/FAQ.tsx`): a resposta é sempre renderizada e escondida por CSS, com `inert` quando fechada para não regredir acessibilidade. As 4 respostas agora estão no HTML pré-renderizado. Como efeito colateral, o `/suporte` — que usava `type: "grid"` só para contornar isso — voltou a poder escolher o layout pela aparência.
+
+**Ganho:** conteúdo indexável que sobrevive à morte do FAQPage e serve Bing e LLMs sem schema nenhum. **Custo:** ~15 linhas, zero mudança visual.
 
 **Organization:** nome, logo, URL, `sameAs` (Instagram, WhatsApp, lojas de marketplace) e — se houver decisão de expor — CNPJ em `identifier` e telefone em `contactPoint`.
 
@@ -517,7 +546,7 @@ Não foi possível rodar o PageSpeed Insights (a API pública respondeu 429 sem 
 
 3. **Confirmar que o sitemap está submetido no Google Search Console.** 5 min. Sem isso não há como medir nada do que está neste documento.
 
-4. **`FAQPage` schema na home e no `/suporte`**, com as perguntas viradas em `<h3>` reais e as respostas expandidas para 40-60 palavras (seção 7). O conteúdo já existe e é bom — só está invisível.
+4. ✅ **~~`FAQPage` schema na home e no `/suporte`~~ — RETIRADO, e substituído por outra correção.** O FAQ rich result não existe mais desde 2023/2026 (ver seção 8): o schema renderia zero. A investigação revelou o problema real — **as respostas do FAQ da home não estavam no HTML** — e foi isso que se corrigiu em 11/08/2026. Ganho de conteúdo indexável, sem markup.
 
 ### 🟠 Alta prioridade — este mês
 

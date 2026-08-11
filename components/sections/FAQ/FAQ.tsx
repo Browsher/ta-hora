@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { motion, AnimatePresence, type MotionProps } from "framer-motion"
+import { useId, useState } from "react"
+import { motion, type MotionProps } from "framer-motion"
 import { buildSectionContainerProps, buildSectionItemProps } from "@/lib/sectionEffectHelpers"
 import { useSectionEffects } from "@/lib/SectionEffectsContext"
 import { useEffectsMode } from "@/lib/EffectsModeContext"
@@ -89,6 +89,38 @@ interface FAQItem {
 }
 
 // ─── Accordion item (shared by accordion and por-categoria) ──────────────────
+//
+// 🔴 A RESPOSTA É SEMPRE RENDERIZADA. Fechada, ela existe no DOM e é escondida
+// por CSS (`height: 0` + `overflow: hidden`) — NUNCA desmontada. Não troque por
+// renderização condicional (`{isOpen && ...}`) nem por `display: none`.
+//
+// Por quê, medido no build de 11/08/2026 na Home, ANTES desta correção:
+//
+//     "Preciso de internet para a câmera funcionar?"  → 2× (DOM + payload RSC)
+//     "...redes de 2.4 GHz."                          → 1× (SÓ no payload RSC)
+//
+// A pergunta estava no HTML; a RESPOSTA não estava em lugar nenhum que um
+// crawler leia. O `<AnimatePresence>` com `{isOpen && <motion.div>}` e
+// `defaultOpen: false` fazia toda resposta fechada simplesmente não existir —
+// as 4 respostas da Home, que são o conteúdo de cauda longa mais valioso do site
+// ("câmera precisa de internet", "grava sem cartão", "instalo sozinho"),
+// invisíveis para Google, Bing e crawler de LLM.
+//
+// Isto já era conhecido: `layouts/suporte.json` usa `type: "grid"` por causa
+// disso, e o `_nota` de lá dizia "não trocar para accordion sem resolver isso".
+// É este bloco que resolve — e por isso o /suporte voltou a poder escolher o
+// layout pela aparência, não pela mecânica de renderização.
+//
+// Conteúdo em acordeão escondido por CSS é indexado normalmente e é padrão
+// explicitamente aceito pelo Google (seções expansíveis). O que não é aceito, e
+// era o caso aqui, é conteúdo que não existe.
+//
+// ⚠️ `inert` (e não só `overflow: hidden`) é o que impede a regressão de
+// acessibilidade que "renderizar sempre" traria: sem ele, um leitor de tela
+// leria as 4 respostas de uma vez, abertas ou não, e o Tab pararia em links
+// dentro de painéis fechados. `inert` tira o painel fechado da árvore de
+// acessibilidade e do foco SEM tirá-lo do HTML — que é exatamente a combinação
+// que este bloco precisa.
 
 function AccordionItem({
   item,
@@ -105,10 +137,23 @@ function AccordionItem({
   accentColor: string
   isLast:      boolean
 }) {
+  // Ids únicos por instância, para ligar botão ↔ painel (`aria-controls` /
+  // `aria-labelledby`). `useId` e não o `itemKey`: o índice se repete entre dois
+  // FAQs na mesma página, e id duplicado quebra a associação para o leitor de
+  // tela justamente no caso em que ela mais importa.
+  const base     = useId()
+  const botaoId  = `${base}-botao`
+  const painelId = `${base}-painel`
+
   return (
     <div style={{ borderBottom: isLast ? "none" : `1px solid color-mix(in srgb, ${accentColor} 9.41%, transparent)` }}>
       <button
+        id={botaoId}
         onClick={onToggle}
+        // Estado do disclosure para tecnologia assistiva. Sem isto o botão
+        // anuncia só o texto da pergunta, sem dizer se está aberto ou fechado.
+        aria-expanded={isOpen}
+        aria-controls={painelId}
         style={{
           width:          "100%",
           display:        "flex",
@@ -145,22 +190,27 @@ function AccordionItem({
           ▾
         </span>
       </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            key="content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }}
-          >
-            <div style={{ paddingBottom: 20 }}>
-              <Text text={item.answer} size="medio" color="var(--cor-texto-secundario)" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* SEMPRE montado — ver o bloco no topo do arquivo antes de mexer. */}
+      <motion.div
+        id={painelId}
+        role="region"
+        aria-labelledby={botaoId}
+        // Fechado: fora do foco e da árvore de acessibilidade, DENTRO do HTML.
+        inert={!isOpen}
+        // `initial={false}`: sem animação de entrada na montagem. É também o que
+        // faz o SSR emitir o painel já no estado final (fechado = height 0) em
+        // vez de animar do zero no primeiro paint.
+        initial={false}
+        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.25, ease: "easeInOut" }}
+        // `overflow: hidden` é o que esconde de fato — e é ele, não a
+        // desmontagem, que faz o acordeão parecer fechado.
+        style={{ overflow: "hidden" }}
+      >
+        <div style={{ paddingBottom: 20 }}>
+          <Text text={item.answer} size="medio" color="var(--cor-texto-secundario)" />
+        </div>
+      </motion.div>
     </div>
   )
 }
