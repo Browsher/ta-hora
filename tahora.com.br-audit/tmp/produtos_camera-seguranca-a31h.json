@@ -1,0 +1,64 @@
+{
+  "url": "https://www.tahora.com.br/produtos/camera-seguranca-a31h",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31H3_4.png?v=1785431238&amp;width=800\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31H3_4.png?v=1785431238&amp;width=128\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31HLente....",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files...",
+  "is_spa": false,
+  "extracted_text": "Voc\u00ea abaixa a porta da loja, tranca e vai embora. No meio do caminho come\u00e7a aquele filminho: ser\u00e1 que a encomenda chegou e ficou no port\u00e3o, ser\u00e1 que algu\u00e9m bateu depois que sa\u00ed, ser\u00e1 que o quintal t\u00e1 do jeito que deixei.\n\u00c9 um inc\u00f4modo pequeno, mas ele volta todo dia. E o pior \u00e9 quando voc\u00ea chega e descobre que aconteceu alguma coisa l\u00e1 pelas tr\u00eas da tarde, quando dava pra ter visto na hora se tivesse como olhar.\nA A31H foi feita pra esse tipo de lugar: entrada de casa, garagem, frente da loja. E...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Age": "18",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:27:58 GMT",
+    "Etag": "W/\"bn532bt2a21r63\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/produtos/camera-seguranca-a31h",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Powered-By": "Next.js",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "gru1::iad1::f4bmq-1786541297609-f232357ab795",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 2,
+    "processed_count": 2,
+    "total_bytes": 932,
+    "truncated": false,
+    "blocks": [
+      {
+        "index": 1,
+        "size_bytes": 604,
+        "valid": true,
+        "types": [
+          "Offer",
+          "Organization",
+          "Product"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 2,
+        "size_bytes": 328,
+        "valid": true,
+        "types": [
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "types_truncated": false
+      }
+    ]
+  }
+}

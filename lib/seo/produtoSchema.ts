@@ -1,5 +1,7 @@
 import { SITE_URL } from "@/lib/site"
 import { tituloProduto } from "@/lib/seo/tituloProduto"
+import { ORG_ID } from "@/lib/seo/organizacaoSchema"
+import { entregaSchema, devolucaoSchema } from "@/lib/seo/entregaSchema"
 import type { Product } from "@/lib/shopify/types"
 
 // JSON-LD `Product` das PDPs — o objeto que faz o Google exibir PREÇO e
@@ -154,7 +156,28 @@ export function produtoSchema(produto: Product): Record<string, unknown> {
       url:           `${SITE_URL}/produtos/${produto.handle}`,
 
       // Aqui, sim, "Ta Hora": o `vendor` da Shopify descreve quem VENDE.
-      seller: { "@type": "Organization", name: "Ta Hora" },
+      //
+      // O `@id` liga esta oferta à entidade declarada em `organizacaoSchema.ts`
+      // (CNPJ, endereço, telefone, logo, `sameAs`). Sem ele, cada uma das 7 PDPs
+      // afirmava um vendedor anônimo chamado "Ta Hora", sem relação declarada com
+      // a empresa da home. O `name` fica junto de propósito: um bloco que traz só
+      // `@id` depende de o consumidor resolver a referência, e repetir o nome
+      // custa uma linha.
+      seller: { "@type": "Organization", "@id": ORG_ID, name: "Ta Hora" },
+
+      // ─── FRETE E DEVOLUÇÃO ────────────────────────────────────────────────
+      //
+      // Os dois campos que o Merchant Center exige e que o Google usa para exibir
+      // frete e política de devolução junto do preço.
+      //
+      // 🔴 OS NÚMEROS NÃO ESTÃO AQUI NEM EM `entregaSchema.ts`: vêm de
+      // `lib/frete/tabela.ts` (a mesma fonte da calculadora da PDP) e de
+      // `layouts/trocas-e-devolucoes.json`. O motivo está no topo daquele módulo —
+      // frete divergente do cobrado suspende conta no Merchant Center, e a loja
+      // tem 6 zonas com valores de R$ 14,90 a R$ 59,90. Um valor único aqui seria
+      // errado para cinco delas.
+      shippingDetails:         entregaSchema(),
+      hasMerchantReturnPolicy: devolucaoSchema(),
 
       // 🔴 `priceValidUntil` OMITIDO POR DECISÃO REGISTRADA (11/08/2026).
       //

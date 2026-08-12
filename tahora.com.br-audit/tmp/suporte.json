@@ -1,0 +1,43 @@
+{
+  "url": "https://www.tahora.com.br/suporte",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/2d259nkrqxum9.js\"/><script src=\"/_next/static/chunks/3taojcwkjyr_1.js\" async=\"\"></script><script src=\"/_next/static/chunks/3nc6x0_y5iwnk.js\" async=\"\"></script><script src=\"/_next/static/chunks/329...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\"...",
+  "is_spa": false,
+  "extracted_text": "SUPORTE\nComo podemos ajudar?\nEstamos aqui pra tirar suas d\u00favidas antes e depois da compra\nFale com a gente pelo WhatsApp\nFalar no WhatsApp\n\u00c9 o jeito mais r\u00e1pido de resolver. Chame que a gente responde no hor\u00e1rio de atendimento.\nAtendimento: Segunda a Sexta, 9h \u00e0s 18h\nD\u00daVIDAS FREQUENTES\nAs perguntas que a gente mais recebe\nQuanto tempo demora a entrega?\nO prazo aparece no checkout, calculado pelo seu CEP. Enviamos para todo o Brasil.\nQuais as formas de pagamento?\nCart\u00e3o de cr\u00e9dito em at\u00e9 12x, sen...",
+  "publication_date": "2026-07-28",
+  "accessibility_tree": null,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Age": "0",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:27:36 GMT",
+    "Etag": "W/\"bac931384b2d7c111256e76a012cd9f5\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/suporte",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Vercel-Cache": "PRERENDER",
+    "X-Vercel-Id": "gru1::h22xh-1786541256750-12145c0314ee",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 0,
+    "processed_count": 0,
+    "total_bytes": 0,
+    "truncated": false,
+    "blocks": []
+  }
+}

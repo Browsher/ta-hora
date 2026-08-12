@@ -1,0 +1,64 @@
+{
+  "url": "https://www.tahora.com.br/produtos/camera-seguranca-q8",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/Q8_3_4.png?v=1785519409&amp;width=800\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/Q8_3_4.png?v=1785519409&amp;width=128\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/Q8Lente.jpg?...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files...",
+  "is_spa": false,
+  "extracted_text": "C\u00e2mera Seguran\u00e7a Wi-Fi Full HD Dupla Lente Q8\n3x de R$ 75,67 sem juros \u00b7 ou em at\u00e9 12x\n- 3 meses de garantia direto com a loja\n- Nota fiscal em todo pedido\n- 7 dias para devolver sem custo \u00b7 Como funciona\n- Entrega para todo o Brasil\nTem sempre aquele inc\u00f4modo que acontece justo quando voc\u00ea n\u00e3o t\u00e1 em casa. O cachorro do vizinho que entra e revira o saco de lixo, a mo\u00e7ada que senta no seu port\u00e3o de tarde, algu\u00e9m que encosta o carro na sua garagem e some. Voc\u00ea v\u00ea depois e fica com raiva sem ter fe...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Age": "75",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:28:03 GMT",
+    "Etag": "W/\"tqnhunncl51ta2\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/produtos/camera-seguranca-q8",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Powered-By": "Next.js",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "gru1::iad1::29rzg-1786541358781-d1da1ba21cf7",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 2,
+    "processed_count": 2,
+    "total_bytes": 910,
+    "truncated": false,
+    "blocks": [
+      {
+        "index": 1,
+        "size_bytes": 584,
+        "valid": true,
+        "types": [
+          "Offer",
+          "Organization",
+          "Product"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 2,
+        "size_bytes": 326,
+        "valid": true,
+        "types": [
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "types_truncated": false
+      }
+    ]
+  }
+}

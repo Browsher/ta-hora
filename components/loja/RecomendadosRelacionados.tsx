@@ -42,7 +42,17 @@ export function RecomendadosRelacionados({ produtos }: { produtos: ProductCard[]
         classeFaixa="recomendados-grade"
       >
         {produtos.map((p) => (
-          <ProductCardLink key={p.id} product={p} />
+          // `foraDaDobra` SEMPRE: esta faixa fica no fim da PDP, depois da
+          // galeria, da compra, da ficha e da descrição. Nenhum card dela é
+          // visível sem rolar.
+          //
+          // O comentário do `ProductCardLink` já dava os recomendados como
+          // exemplo de consumidor abaixo da dobra desde que a prop nasceu — mas
+          // o call site nunca a passou. O resultado, medido no HTML de produção
+          // em 12/08/2026: 2 imagens de produto recomendado saíam com
+          // `<link rel="preload">` e disputavam banda com a imagem de LCP da
+          // própria página, no celular, antes da primeira pintura.
+          <ProductCardLink key={p.id} product={p} foraDaDobra />
         ))}
       </CarrosselMobile>
     </section>

@@ -29,9 +29,14 @@ export function ProductGallery({ images, title }: { images: ProductImage[]; titl
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {/* Esta é a imagem de LCP da PDP — a maior coisa acima da dobra. Sem
+          `fetchPriority`, ela entrava na fila do navegador junto dos até 10
+          thumbnails abaixo, todos com preload automático do React 19 e todos com
+          a mesma prioridade (medido em 11/08/2026: 8 preloads numa PDP). */}
       <ImageSlot
         src={main.url}
         alt={main.altText ?? title}
+        fetchPriority="high"
         style={{ aspectRatio: "1 / 1", width: "100%" }}
       />
 
@@ -58,7 +63,25 @@ export function ProductGallery({ images, title }: { images: ProductImage[]; titl
                 }`,
               }}
             >
-              <ImageSlot src={urlComLargura(img.url, LARGURA_THUMB)} alt={img.altText ?? ""} borderRadius={0} style={{ width: "100%", height: "100%" }} />
+              {/* 🔴 `low`, NÃO `loading="lazy"`. Os thumbnails ficam ACIMA DA
+                  DOBRA, e o aviso da prop `loading` em ImageSlot é explícito:
+                  lazy ali faz o navegador esperar o layout antes de buscar.
+                  `low` não adia a busca, só tira a imagem da frente do LCP.
+
+                  ⚠️ EFEITO COLATERAL MEDIDO, maior do que o esperado: o React 19
+                  NÃO emite `<link rel="preload">` para imagem com
+                  `fetchPriority="low"`. Ou seja, `low` TAMBÉM tira do preload —
+                  função que o comentário da prop `loading` em ImageSlot atribui
+                  só ao `lazy`. Se aquele texto for a referência de alguém, ele
+                  está incompleto: são dois caminhos para o mesmo efeito, com
+                  consequências diferentes para QUANDO a imagem é buscada.
+
+                  Medido no HTML de produção em 12/08/2026, PDP da A31H: 8
+                  preloads de imagem antes desta mudança, 1 depois (só o LCP, com
+                  `fetchPriority="high"`). Os 5 thumbnails saíram por esta linha;
+                  os 2 recomendados, pelo `foraDaDobra` em
+                  RecomendadosRelacionados.tsx. */}
+              <ImageSlot src={urlComLargura(img.url, LARGURA_THUMB)} alt={img.altText ?? ""} borderRadius={0} fetchPriority="low" style={{ width: "100%", height: "100%" }} />
             </button>
           ))}
         </div>

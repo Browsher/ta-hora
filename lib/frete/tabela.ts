@@ -144,6 +144,30 @@ export function zonaDaUf(uf: UF): Zona {
 }
 
 /**
+ * As 6 zonas, na ordem em que `OPCOES_DA_ZONA` as declara.
+ *
+ * Existe para quem precisa VARRER todas as zonas (o `shippingDetails` do JSON-LD,
+ * em lib/seo/entregaSchema.ts). Não é ordem de exibição de UI — a ordem que
+ * importa para o cliente é a das opções DENTRO da zona, comentada acima.
+ */
+export const ZONAS: readonly Zona[] = [
+  "SP", "SUDESTE", "SUL", "CENTRO_OESTE", "NORDESTE", "NORTE",
+]
+
+/**
+ * As UFs de uma zona.
+ *
+ * 🔴 DERIVADO de `ZONA_DA_UF` por filtro, e não uma segunda lista escrita à mão —
+ * de propósito. Uma cópia manual do mapa poderia divergir dele em silêncio, e o
+ * consumidor deste dado é o JSON-LD que declara ao Google quais estados pagam
+ * qual frete. Mover uma UF de zona lá em cima continua sendo a única edição
+ * necessária.
+ */
+export function ufsDaZona(zona: Zona): UF[] {
+  return (Object.keys(ZONA_DA_UF) as UF[]).filter((uf) => ZONA_DA_UF[uf] === zona)
+}
+
+/**
  * Opções de uma zona. Devolve `[]` só se a zona ficar sem tarifa — hoje nenhuma
  * fica, mas a UI tem o ramo (ver `consultar.ts`), porque desligar uma tarifa no
  * admin é uma edição de um clique.

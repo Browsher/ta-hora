@@ -27,14 +27,34 @@ import type { ProductCard } from "@/lib/shopify/types"
 //
 // Default `false` = comportamento de sempre (eager + preload). Nenhum consumidor
 // existente muda sem pedir.
+// `prioritaria` é ADITIVO e OPT-IN, mesmo molde dos dois acima, e é o PAR do
+// `foraDaDobra`: aquele TIRA a imagem da fila de preload, este a coloca na
+// FRENTE dela.
+//
+// Existe porque tirar as concorrentes não basta no /catalogo. Com 7 cards
+// renderizados no SSR e nenhum marcado, o React 19 emitia 7 preloads de mesma
+// prioridade e o navegador baixava todos em paralelo — inclusive os 3 que nem
+// aparecem na primeira tela do celular. A imagem que É o LCP disputava banda com
+// elas em pé de igualdade.
+//
+// 🔴 SÓ UMA IMAGEM POR PÁGINA DEVE RECEBER. `fetchPriority="high"` é uma ordem
+// RELATIVA: se todos os cards forem prioritários, nenhum é — volta a ser a fila
+// plana de antes, só que com outro nome.
+//
+// ⚠️ NÃO É O MESMO QUE `!foraDaDobra`. Um card pode estar acima da dobra e não ser
+// o LCP (o segundo da linha, no desktop): ele quer preload normal, sem lazy e sem
+// high. Os três estados são distintos, e é por isso que são duas props e não um
+// enum de dois valores.
 export function ProductCardLink({
   product,
   verDetalhes = false,
   foraDaDobra = false,
+  prioritaria = false,
 }: {
   product:      ProductCard
   verDetalhes?: boolean
   foraDaDobra?: boolean
+  prioritaria?: boolean
 }) {
   return (
     <Link
@@ -57,6 +77,7 @@ export function ProductCardLink({
         borderRadius={0}
         objectFit="contain"
         loading={foraDaDobra ? "lazy" : undefined}
+        fetchPriority={prioritaria ? "high" : undefined}
         style={{ aspectRatio: "1 / 1", width: "100%" }}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "12px 16px 18px" }}>

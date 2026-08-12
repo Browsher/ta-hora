@@ -1,0 +1,43 @@
+{
+  "url": "https://www.tahora.com.br/politica-de-privacidade",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/2d259nkrqxum9.js\"/><script src=\"/_next/static/chunks/3taojcwkjyr_1.js\" async=\"\"></script><script src=\"/_next/static/chunks/3nc6x0_y5iwnk.js\" async=\"\"></script><script src=\"/_next/static/chunks/329...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\"...",
+  "is_spa": false,
+  "extracted_text": "LEGAL\nPol\u00edtica de Privacidade\n\u00daltima atualiza\u00e7\u00e3o: 10 de agosto de 2026\nA Ta Hora \u00e9 respons\u00e1vel por esta loja e site, incluindo todas as informa\u00e7\u00f5es, conte\u00fados, funcionalidades, ferramentas, produtos e servi\u00e7os relacionados, com o objetivo de oferecer a voc\u00ea, cliente, uma experi\u00eancia de compra personalizada (os \u201cServi\u00e7os\u201d). A Ta Hora \u00e9 desenvolvida com tecnologia da Shopify, que nos permite disponibilizar os Servi\u00e7os para voc\u00ea. Esta Pol\u00edtica de privacidade descreve como coletamos, usamos e compar...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Age": "0",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:27:41 GMT",
+    "Etag": "W/\"01947f6fe8ac4444525cbffc5ce0821e\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/politica-de-privacidade",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Vercel-Cache": "PRERENDER",
+    "X-Vercel-Id": "gru1::pxx2c-1786541261429-cce40a50d97b",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 0,
+    "processed_count": 0,
+    "total_bytes": 0,
+    "truncated": false,
+    "blocks": []
+  }
+}

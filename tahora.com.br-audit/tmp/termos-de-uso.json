@@ -1,0 +1,43 @@
+{
+  "url": "https://www.tahora.com.br/termos-de-uso",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/2d259nkrqxum9.js\"/><script src=\"/_next/static/chunks/3taojcwkjyr_1.js\" async=\"\"></script><script src=\"/_next/static/chunks/3nc6x0_y5iwnk.js\" async=\"\"></script><script src=\"/_next/static/chunks/329...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\"...",
+  "is_spa": false,
+  "extracted_text": "LEGAL\nTermos de Uso\n\u00daltima atualiza\u00e7\u00e3o: 30 de julho de 2026\nVIS\u00c3O GERAL\nBem-vindo(a) ao Ta Hora! Os termos \u201cn\u00f3s\u201d, \u201cnos\u201d e \u201cnosso\u201d referem-se a Ta Hora. Ta Hora opera esta loja e site, incluindo todas as informa\u00e7\u00f5es, conte\u00fado, recursos, ferramentas, produtos e servi\u00e7os relacionados em Pedidos para fornecer a voc\u00ea, o cliente, uma experi\u00eancia de compra personalizada (os \u201cServi\u00e7os\u201d). Ta Hora \u00e9 operada pela Shopify, o que nos permite fornecer os servi\u00e7os a voc\u00ea.\nOs termos e condi\u00e7\u00f5es abaixo, juntamen...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Age": "0",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:27:50 GMT",
+    "Etag": "W/\"9a3ed0516a6bb470a045b48eadae8604\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/termos-de-uso",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Vercel-Cache": "PRERENDER",
+    "X-Vercel-Id": "gru1::s44jx-1786541270947-52ecc3286dcf",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 0,
+    "processed_count": 0,
+    "total_bytes": 0,
+    "truncated": false,
+    "blocks": []
+  }
+}

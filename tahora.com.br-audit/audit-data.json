@@ -1,0 +1,430 @@
+{
+  "summary": {
+    "health_score": 69,
+    "business_type": "E-commerce (7 SKUs, camaras de seguranca Wi-Fi, Next.js/Vercel)",
+    "top_findings": [
+      "Performance mobile ruim: LCP 4,7s na home e 4,9s na PDP, TBT 1,6-2,2s. Home desktop tira 95 no Lighthouse, entao o gargalo e custo de JS em CPU mobile, nao arquitetura.",
+      "Trust nao esta estruturado: nenhuma PDP tem prova social, nem em texto nem em AggregateRating. Trust foi a dimensao mais baixa nas 9 combinacoes persona x pagina.",
+      "Product schema valido mas minimo: faltam brand, priceValidUntil, shippingDetails, hasMerchantReturnPolicy e gtin/mpn em 7/7 PDPs.",
+      "Nenhum conteudo comparativo entre os 7 modelos, e as specs nao sao comparaveis (Resolucao em vocabulario de marketing, 6 campos identicos 'Sim' nos 7 modelos).",
+      "Mismatch estrategico: head terms sao dominados por listicles e marketplaces. Uma loja de 7 SKUs OEM nao ganha esses termos por otimizacao on-page."
+    ],
+    "quick_wins": [
+      "gtag com strategy=lazyOnload: devolve 600-900ms de main thread por pagina, mudanca de uma linha.",
+      "fetchPriority=high + preload na imagem LCP do catalogo e da PDP, replicando o que a home ja faz certo.",
+      "Corrigir campo 'Linha' da PDP Q8 (mostra EseeCloud em vez de Camera Seguranca Wi-Fi).",
+      "Remover Disallow: /carrinho do robots.txt (a rota nao existe, o carrinho e drawer client-side).",
+      "Redirect apex HTTP direto para https://www (elimina 1 hop da cadeia atual de 2).",
+      "Remover changefreq e priority do sitemap (ignorados pelo Google)."
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 82,
+      "what_works": [
+        "Sitemap valido e declarado no robots.txt, 14/14 URLs em HTTP 200, sem redirect, sem noindex",
+        "Canonicais self-referencing absolutos e corretos em home, catalogo e PDPs",
+        "Redirect apex->www e http->https funcionando (308, sem loop), trailing slash normalizado",
+        "HSTS em 100% das respostas testadas",
+        "404 real com noindex, nao soft-404",
+        "HTML totalmente pre-renderizado (X-Nextjs-Prerender: 1): indexacao nao depende de JS",
+        "TTFB de 10-60ms, edge cache da Vercel funcionando"
+      ],
+      "findings": [
+        {
+          "title": "Nenhum security header alem de HSTS",
+          "severity": "High",
+          "description": "Home, catalogo, PDP e 404 testadas: sem CSP, X-Content-Type-Options, Referrer-Policy, X-Frame-Options e Permissions-Policy.",
+          "recommendation": "Adicionar via headers() no next.config. CSP em report-only primeiro, porque ha GA4 e o CDN do Shopify servindo imagens."
+        },
+        {
+          "title": "IndexNow nao implementado",
+          "severity": "High",
+          "description": "/.well-known/indexnow.txt, /indexnow.txt e /api/indexnow retornam 404.",
+          "recommendation": "Publicar chave estatica e disparar POST na revalidacao de PDP e de preco. Alimenta o indice do Bing, que abastece o Copilot."
+        },
+        {
+          "title": "Cadeia de 2 redirects no apex HTTP",
+          "severity": "Medium",
+          "description": "http://tahora.com.br/ -> https://tahora.com.br/ -> https://www.tahora.com.br/",
+          "recommendation": "Configurar redirect direto no domain settings da Vercel."
+        },
+        {
+          "title": "Regra morta no robots.txt",
+          "severity": "Medium",
+          "description": "Disallow: /carrinho aponta para rota inexistente. /carrinho retorna 404 (X-Matched-Path: /404) porque o carrinho e drawer client-side.",
+          "recommendation": "Remover a regra."
+        },
+        {
+          "title": "Imagens de PDP sem width/height explicitos",
+          "severity": "Low",
+          "description": "Dependem do CSS do container. O CLS medido esta otimo (0,000-0,002), entao e prevencao.",
+          "recommendation": "Confirmar aspect-ratio fixo no container ou migrar para next/image."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 68,
+      "what_works": [
+        "Similaridade textual par-a-par entre as 7 PDPs de 12% a 59% (medida com difflib): a narrativa e genuinamente diferente por produto, nao e template com find-replace",
+        "CNPJ, endereco e telefone no rodape das 14 paginas",
+        "Garantia de 3 meses, nota fiscal e 7 dias para devolucao repetidos em todas as PDPs",
+        "Tom pt-BR coloquial e concreto, adequado ao publico leigo"
+      ],
+      "findings": [
+        {
+          "title": "Bullet de visao noturna identica em 7/7 PDPs",
+          "severity": "Medium",
+          "description": "'Enxergue a noite em cores, e nao so em sombras, com visao noturna colorida' aparece verbatim nas 7 PDPs.",
+          "recommendation": "Variar por modelo usando o dado real de cada um."
+        },
+        {
+          "title": "Bloco 'Vale saber antes de comprar' quase identico em 6/7 PDPs",
+          "severity": "Medium",
+          "description": "Varia apenas 'presa/fixada' e 1-2 detalhes tecnicos. E o principal padrao de conteudo templatizado do catalogo.",
+          "recommendation": "Converter em dado estruturado (ficha tecnica) ou reescrever com specs unicas por modelo."
+        },
+        {
+          "title": "Catalogo com apenas 202 palavras",
+          "severity": "Medium",
+          "description": "H1 mais 7 H2 com nome e preco, sem nenhum texto que ajude o leigo a escolher entre modelos semelhantes.",
+          "recommendation": "Adicionar comparativo e orientacao por caso de uso."
+        },
+        {
+          "title": "Nenhum sinal de Expertise verificavel",
+          "severity": "Medium",
+          "description": "Sem autoria, sem credenciais tecnicas, sem evidencia de teste real dos produtos (fotos ou video proprios).",
+          "recommendation": "Producao propria de fotos e video mostrando os produtos testados, com quem testou e como."
+        },
+        {
+          "title": "Erro de dado na PDP Q8",
+          "severity": "Low",
+          "description": "Campo 'Linha' mostra EseeCloud; nas outras 6 PDPs mostra 'Camera Seguranca Wi-Fi'.",
+          "recommendation": "Corrigir. E visivel ao cliente e sinaliza QA fraco."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 78,
+      "what_works": [
+        "Titles unicos (17-60 chars) e meta descriptions unicas (110-155 chars) nas 14 paginas",
+        "H1 unico por pagina e hierarquia H2/H3 consistente",
+        "Breadcrumbs em texto e em BreadcrumbList JSON-LD nas 7 PDPs e no catalogo",
+        "Open Graph completo e proprio por pagina, com og:image:alt descritivo",
+        "Linkagem interna via produtos relacionados e catalogo linkando as 7 PDPs"
+      ],
+      "findings": [
+        {
+          "title": "Cross-linking parcial entre os 7 SKUs",
+          "severity": "Medium",
+          "description": "'Voce tambem pode gostar' na A31H linka so 2 de 6 outros modelos (amostra 1/7).",
+          "recommendation": "Expandir para comparacao entre modelos proximos, reforcando a malha interna."
+        },
+        {
+          "title": "Cauda longa de modelo perdida na renomeacao do SKU",
+          "severity": "Medium",
+          "description": "O SKU foi renomeado de A31 para A31H. A31 e o nome OEM que fabricante e revendedores usam, e a cauda longa de modelo e justamente o espaco ganhavel para uma loja de 7 SKUs.",
+          "recommendation": "Citar o nome OEM no corpo e nas specs, sem mexer em URL nem em sku. Captura boa parte da busca com baixo risco."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 62,
+      "what_works": [
+        "Product + Offer validos e server-rendered nas 7 PDPs, sem placeholders",
+        "BreadcrumbList correto no catalogo e nas 7 PDPs, posicoes sequenciais e URLs absolutas",
+        "Home com legalName, CNPJ, endereco completo, telefone, email, logo e sameAs",
+        "Nenhum aggregateRating ou review inventado, o que esta correto dado que nao ha avaliacoes coletadas",
+        "Nenhum HowTo (deprecado) nem FAQPage no site"
+      ],
+      "findings": [
+        {
+          "title": "Offer sem brand, priceValidUntil, shippingDetails e hasMerchantReturnPolicy",
+          "severity": "High",
+          "description": "Ausentes em 7/7 PDPs. Nao bloqueiam o rich result basico, mas sao as propriedades que sustentam exibicao de preco, frete e devolucao, e sao exigidas pelo Merchant Center.",
+          "recommendation": "Aplicar os snippets de findings/schema.md. Os prazos ali sao placeholders estruturais e precisam ser conferidos contra a politica real. O frete varia por UF, entao shippingDetails deve refletir faixa, nao tarifa unica."
+        },
+        {
+          "title": "Nenhuma prova social estruturada em nenhuma pagina",
+          "severity": "High",
+          "description": "Sem AggregateRating ou Review nas 7 PDPs. Depoimentos existem apenas na home e sem markup.",
+          "recommendation": "Coletar avaliacoes reais, exibir na PDP e marcar. Nunca marcar avaliacao que nao exista e nao esteja visivel."
+        },
+        {
+          "title": "Sem gtin ou mpn, apenas sku interno",
+          "severity": "Medium",
+          "description": "7/7 PDPs. O Merchant Center desprioriza itens sem identificador de fabricante.",
+          "recommendation": "Adicionar mpn, ou gtin se houver EAN de fabrica."
+        },
+        {
+          "title": "OnlineStore sem @id estavel e Offer.seller como entidade solta",
+          "severity": "Medium",
+          "description": "Offer.seller e {\"@type\":\"Organization\",\"name\":\"Ta Hora\"} sem link para os dados ricos da home.",
+          "recommendation": "Usar @id https://www.tahora.com.br/#organization e referenciar nas PDPs."
+        },
+        {
+          "title": "Paginas institucionais sem JSON-LD",
+          "severity": "Low",
+          "description": "/sobre-nos, /suporte e as paginas de politica nao tem nenhum structured data.",
+          "recommendation": "Estender BreadcrumbList por consistencia."
+        },
+        {
+          "title": "FAQPage: nao implementar",
+          "severity": "Info",
+          "description": "Dois especialistas recomendaram adicionar FAQPage. Descartado: o Google aposentou os rich results de FAQ para todos os sites em 07/05/2026, entao nao ha feature de SERP a capturar.",
+          "recommendation": "Nao criar FAQPage por ganho de SERP. Se /suporte tiver Q&A genuino de usuarios, QAPage e o tipo correto."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 42,
+      "what_works": [
+        "CLS praticamente zero em todas as paginas e dispositivos (0,000-0,002)",
+        "Preload e fetchPriority=high no hero da home implementados corretamente e confirmados como o elemento LCP real",
+        "TTFB de 10-60ms em todas as paginas",
+        "Home desktop com Lighthouse 95, LCP 0,9s e TBT 170ms: a arquitetura esta correta"
+      ],
+      "findings": [
+        {
+          "title": "LCP mobile Poor na home (4,7s) e na PDP (4,9s)",
+          "severity": "High",
+          "description": "Catalogo mobile em 2,7s (Needs Improvement). Dados de laboratorio, Lighthouse 13.4.1 local, sem CrUX por falta de chave do Google.",
+          "recommendation": "Home: a imagem ja esta priorizada, o gargalo e JS bloqueando a main thread antes do paint. Catalogo e PDP: a imagem do CDN Shopify e o LCP e nao tem prioridade."
+        },
+        {
+          "title": "TBT de 1,6 a 2,2s em mobile nas 3 paginas",
+          "severity": "High",
+          "description": "mainthread-work-breakdown de 4,8-6,8s por pagina. O chunk 329j824l1odqw.js e o maior consumidor de main thread, maior que o proprio GA4. INP real nao foi medido (metrica exclusivamente de campo); TBT nesse patamar e sinal forte mas nao confirmado de INP Poor.",
+          "recommendation": "Code-splitting do chunk 329j824l1odqw.js."
+        },
+        {
+          "title": "JS representa 80-90% do peso da pagina",
+          "severity": "High",
+          "description": "733 KB na home, 908 KB no catalogo e na PDP, com dezenas de KB de unused-javascript por pagina.",
+          "recommendation": "Auditar o bundle e remover o nao utilizado."
+        },
+        {
+          "title": "GA4 consome 600-900ms de main thread por pagina",
+          "severity": "Medium",
+          "description": "Alem de 52-62 KB de JS nao usado por pagina.",
+          "recommendation": "strategy=lazyOnload no <Script> do gtag."
+        },
+        {
+          "title": "Imagem LCP do catalogo e da PDP sem fetchPriority nem preload",
+          "severity": "Medium",
+          "description": "Diferente da home, que ja implementa o padrao corretamente.",
+          "recommendation": "Replicar o padrao do hero da home."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 61,
+      "what_works": [
+        "robots.txt permissivo: nenhum crawler de IA bloqueado (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, Bingbot)",
+        "SSR completo: o HTML bruto ja entrega specs, FAQ e schema, sem gap para crawler sem JS",
+        "Specs em texto label:valor, nao apenas em imagem",
+        "FAQ em blocos autocontidos de 134-167 palavras, comprimento ideal para citacao"
+      ],
+      "findings": [
+        {
+          "title": "Sem conteudo comparativo entre os 7 modelos",
+          "severity": "High",
+          "description": "/catalogo tem 219 palavras e nenhuma tabela comparativa. Nenhuma pagina cruza os modelos por caso de uso, que e exatamente o material que um assistente precisa para recomendar um produto.",
+          "recommendation": "Tabela HTML comparando os 7 SKUs por resolucao, alimentacao, interno/externo, alcance IV e FOV, mais um resumo 'melhor para X' por modelo."
+        },
+        {
+          "title": "Specs nao sao comparaveis entre modelos",
+          "severity": "Medium",
+          "description": "Resolucao varia entre HD, Full HD, 4K Ultra HD e 3K Vertical (vocabulario de marketing, nao medida), e os outros 6 campos de spec sao 'Sim' identico nos 7 modelos.",
+          "recommendation": "Converter para unidades objetivas: MP, metros de alcance IV, graus de FOV."
+        },
+        {
+          "title": "Sem presenca de marca verificavel fora do site",
+          "severity": "Medium",
+          "description": "sameAs lista apenas Mercado Livre, Shopee e Instagram. YouTube tem a correlacao mais forte com citacao por IA e a marca nao tem presenca.",
+          "recommendation": "Canal com unboxing e instalacao real dos modelos, adicionado ao sameAs. Resolve tambem o buraco de Expertise."
+        },
+        {
+          "title": "llms.txt ausente",
+          "severity": "Low",
+          "description": "Retorna 404. E opcional e o Google ignora.",
+          "recommendation": "Nao priorizar."
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 72,
+      "what_works": [
+        "Alt text descritivo, especifico e detalhado nas 7 PDPs e no catalogo, bem acima do padrao de e-commerce",
+        "WebP em uso nas imagens proprias",
+        "loading=lazy consistente abaixo da dobra",
+        "CLS praticamente zero, entao o dimensionamento efetivo esta funcionando"
+      ],
+      "findings": [
+        {
+          "title": "Texto essencial embutido em imagem na PDP",
+          "severity": "Medium",
+          "description": "Infograficos '01 Duas lentes, mais seguranca' e '02 Mais cobertura, mais controle' trazem specs reais (Full HD, PTZ, zoom 4x) apenas como pixel. Invisivel para busca e para leitor de tela.",
+          "recommendation": "Migrar para HTML ou duplicar o conteudo em texto abaixo da imagem."
+        },
+        {
+          "title": "img sem width e height explicitos",
+          "severity": "Low",
+          "description": "O CLS medido esta otimo, entao trata-se de prevencao contra regressao futura.",
+          "recommendation": "Definir dimensoes ou migrar para next/image."
+        }
+      ]
+    },
+    {
+      "name": "Search Experience (SXO)",
+      "score": 55,
+      "what_works": [
+        "Tipo de pagina do catalogo (Category/Listing) esta alinhado ao que o SERP premia",
+        "PDP e o tipo correto para buscas de modelo",
+        "Home mobile e desktop entregam H1, prova social e CTAs acima da dobra"
+      ],
+      "findings": [
+        {
+          "title": "Head terms sao inalcancaveis para uma loja de 7 SKUs",
+          "severity": "High",
+          "description": "Camera de seguranca wifi e camera wifi para casa sao entregues quase exclusivamente a listicles (Techtudo), marketplaces (Mercado Livre, Amazon, Magalu) e paginas de categoria de marcas com autoridade (Intelbras, TP-Link). Nenhum ajuste on-page muda isso. Agravante: os modelos sao nomenclaturas OEM revendidas por varios lojistas sob o mesmo nome.",
+          "recommendation": "Redirecionar o esforco para cauda longa por modelo e uso, busca de marca, e conteudo informacional que marketplaces nao atendem com profundidade."
+        },
+        {
+          "title": "Trust e a dimensao mais baixa em todas as 9 combinacoes persona x pagina",
+          "severity": "High",
+          "description": "6 a 14 de 25 em todas. A persona 'cetico em loja desconhecida' na PDP tira 47/100, porque a PDP nao tem nenhuma prova social.",
+          "recommendation": "Prova social real na PDP, marcada com schema. E simultaneamente ganho de SEO e de conversao."
+        },
+        {
+          "title": "Indexacao verificada e sem problema (item encerrado)",
+          "severity": "Info",
+          "description": "site:tahora.com.br nao retornou resultados na verificacao do especialista, que levantou risco de indexacao. Verificado no Search Console em 12/08/2026: as paginas estao indexadas. Era limitacao do metodo de consulta, nao bloqueio, o que e consistente com o especialista tecnico nao ter encontrado nenhum impedimento.",
+          "recommendation": "Nenhuma acao. Acompanhar a contagem de paginas indexadas no GSC (meta 14/14)."
+        },
+        {
+          "title": "CTA principal cortado na dobra mobile da PDP",
+          "severity": "Medium",
+          "description": "Adicionar ao carrinho aparece como faixa de aproximadamente 10px no rodape da viewport mobile.",
+          "recommendation": "CTA sticky no rodape ou bloco imagem/preco mais compacto."
+        }
+      ]
+    },
+    {
+      "name": "Backlinks",
+      "score": null,
+      "what_works": [],
+      "findings": [
+        {
+          "title": "Dados insuficientes para atribuir score",
+          "severity": "High",
+          "description": "Apenas Tier 0 disponivel (Common Crawl e crawler de verificacao). O dominio nao aparece no Common Crawl Web Graph (in_crawl false, release cc-main-2026-jan-feb-mar), o que indica ausencia de crawl e nao autoridade zero, sendo esperado para site novo. DA/PA, referring domains, spam score, ancoras e velocidade de link nao puderam ser medidos.",
+          "recommendation": "Obter chave gratuita da Moz API (2.500 linhas/mes) para destravar DA/PA e spam score."
+        },
+        {
+          "title": "Mencoes de marca nao puderam ser verificadas",
+          "severity": "Medium",
+          "description": "O especialista tentou buscar via Bing, recebeu resposta generica indicando bloqueio anti-bot e descartou o resultado em vez de reportar zero mencoes.",
+          "recommendation": "Rodar manualmente as buscas \"tahora.com.br\" e \"Ta Hora\" camera seguranca -site:tahora.com.br. Converter mencao existente em link e o caminho mais concreto para uma marca nova."
+        }
+      ]
+    },
+    {
+      "name": "Sitemap",
+      "score": 90,
+      "what_works": [
+        "XML valido e declarado no robots.txt",
+        "14/14 URLs retornam 200, sem redirect e sem noindex",
+        "Canonical de cada pagina bate exatamente com o loc correspondente",
+        "Cobertura 1:1 com os links do catalogo, nenhuma pagina orfa",
+        "Hipotese de redirect na home testada e descartada: as duas formas retornam 200 com mesmo Etag"
+      ],
+      "findings": [
+        {
+          "title": "lastmod identico ao milissegundo nas 14 URLs",
+          "severity": "Low",
+          "description": "Todas com 2026-08-12T13:08:38.938Z, o que indica timestamp de build e nao data real de modificacao.",
+          "recommendation": "Usar updatedAt real por pagina ou omitir o campo. Um valor sistematicamente falso pode fazer o Google descontar lastmod no dominio inteiro."
+        },
+        {
+          "title": "changefreq e priority preenchidos",
+          "severity": "Info",
+          "description": "Ambos ignorados pelo Google ha anos.",
+          "recommendation": "Remover para reduzir manutencao."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Fase 0: Verificacao que precede tudo",
+        "timeframe": "Esta semana, cerca de 1h",
+        "items": [
+          "RESOLVIDO em 12/08/2026: indexacao confirmada no Search Console, as paginas estao indexadas. Nenhuma acao necessaria.",
+          "Configurar Google API key (gratuita) para destravar CrUX e PageSpeed, ou seja, CWV de campo e INP real.",
+          "Configurar Moz API key (gratuita) para destravar DA/PA e spam score."
+        ]
+      },
+      {
+        "name": "Fase 1: Correcoes de alto impacto",
+        "timeframe": "Semana 1",
+        "items": [
+          "Performance mobile, na ordem: gtag lazyOnload, depois fetchPriority e preload no LCP de catalogo e PDP, depois code-splitting do chunk 329j824l1odqw.js, depois auditoria de unused-javascript.",
+          "Prova social real nas 7 PDPs, exibida na pagina e marcada com AggregateRating/Review. Nunca marcar avaliacao inexistente.",
+          "Completar Product schema em 7/7 PDPs: brand, priceValidUntil, shippingDetails, hasMerchantReturnPolicy, mpn/gtin e @id ligando Offer.seller a Organization.",
+          "Security headers via headers() no next.config, com CSP em report-only primeiro."
+        ]
+      },
+      {
+        "name": "Fase 2: Conteudo que fecha as lacunas",
+        "timeframe": "Semanas 2-3",
+        "items": [
+          "Tornar as specs comparaveis (MP, metros de alcance IV, graus de FOV) antes de construir qualquer comparativo.",
+          "Pagina comparativa dos 7 modelos em tabela HTML real, com resumo 'melhor para X' por modelo. Resolve catalogo raso, GEO e experiencia de escolha de uma vez.",
+          "Recuperar cauda longa de modelo citando o nome OEM (A31) no corpo e nas specs, sem mexer em URL nem em sku.",
+          "Desduplicar a bullet de visao noturna (7/7) e o bloco 'Vale saber antes de comprar' (6/7).",
+          "Corrigir o campo Linha da PDP Q8.",
+          "Migrar o texto dos infograficos da PDP de imagem para HTML.",
+          "CTA sticky no rodape da PDP mobile."
+        ]
+      },
+      {
+        "name": "Fase 3: Autoridade",
+        "timeframe": "Mes 2 em diante",
+        "items": [
+          "Conteudo de cauda longa ganhavel: camera sem mensalidade, como configurar iCSee, vale a pena por modelo, guias por caso de uso (portaria, pet, obra, loja), cada peca linkando as PDPs relevantes.",
+          "Canal no YouTube com unboxing e instalacao real dos 7 modelos, adicionado ao sameAs. Resolve Expertise e autoridade externa ao mesmo tempo.",
+          "Aquisicao de links legitima: Google Merchant Center, Buscape, Zoom, diretorios setoriais, microinfluenciadores com rel=sponsored. Nada de compra de link, PBN ou troca massiva.",
+          "Buscar e converter mencoes nao linkadas da marca."
+        ]
+      },
+      {
+        "name": "Fase 4: Higiene e monitoramento",
+        "timeframe": "Continuo",
+        "items": [
+          "Implementar IndexNow e disparar na revalidacao de PDP e preco.",
+          "lastmod real por pagina em vez de timestamp de build; remover changefreq e priority.",
+          "Redirect apex HTTP direto para https://www, eliminando 1 hop.",
+          "Remover Disallow: /carrinho do robots.txt.",
+          "width e height explicitos nas img.",
+          "Filtros do catalogo mobile em carrossel horizontal.",
+          "Confirmar o comportamento do reveal-on-scroll com rolagem real.",
+          "Capturar drift baseline apos a Fase 1 para detectar regressao a cada deploy.",
+          "Nao implementar FAQPage: o Google aposentou os rich results de FAQ para todos os sites em 07/05/2026."
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}

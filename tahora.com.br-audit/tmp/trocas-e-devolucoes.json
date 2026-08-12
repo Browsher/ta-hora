@@ -1,0 +1,43 @@
+{
+  "url": "https://www.tahora.com.br/trocas-e-devolucoes",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/2d259nkrqxum9.js\"/><script src=\"/_next/static/chunks/3taojcwkjyr_1.js\" async=\"\"></script><script src=\"/_next/static/chunks/3nc6x0_y5iwnk.js\" async=\"\"></script><script src=\"/_next/static/chunks/329...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\"...",
+  "is_spa": false,
+  "extracted_text": "POL\u00cdTICA\nTrocas e Devolu\u00e7\u00f5es\n\u00daltima atualiza\u00e7\u00e3o: 10 de agosto de 2026\nComprar c\u00e2mera pela internet tem que ser tranquilo. Se algo n\u00e3o sair como voc\u00ea esperava, resolvemos direto com voc\u00ea \u2014 sem assist\u00eancia t\u00e9cnica, sem laudo e sem enrola\u00e7\u00e3o. Abaixo est\u00e3o as regras, os prazos e o passo a passo.\nResumo r\u00e1pido\n- Mudou de ideia: voc\u00ea tem 7 dias corridos ap\u00f3s receber para desistir da compra, sem precisar justificar.\n- Produto com defeito: garantia de 3 meses dada pela nossa loja, com troca direta.\n- Pr...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Age": "7",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:28:04 GMT",
+    "Etag": "W/\"7165d62fdd8690e531c19d302009fa6a\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/trocas-e-devolucoes",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "gru1::2rjz2-1786541284560-4c8cecca4bfc",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 0,
+    "processed_count": 0,
+    "total_bytes": 0,
+    "truncated": false,
+    "blocks": []
+  }
+}

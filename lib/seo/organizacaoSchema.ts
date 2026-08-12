@@ -80,11 +80,34 @@ const PERFIS = [
  * que o schema afirma e o que a página mostra é exatamente o que o Google trata
  * como sinal de baixa confiança.
  */
+/**
+ * Identificador estável desta entidade no grafo do site.
+ *
+ * 🔴 É UMA CHAVE, NÃO UMA URL PARA VISITAR. O fragmento `#organization` não
+ * existe na página; ele só dá um nome a esta entidade para que outro bloco de
+ * JSON-LD possa apontar para ELA em vez de redeclarar os dados.
+ *
+ * Quem usa: `offers.seller` em `produtoSchema.ts`. Sem isto, o vendedor das 7
+ * PDPs é um `Organization` solto com um `name` e nada mais — sete entidades
+ * anônimas que o Google não tem como ligar à empresa com CNPJ, endereço e
+ * `sameAs` declarados aqui. Com isto, é a mesma empresa, dita uma vez.
+ *
+ * ⚠️ MUDAR ESTA STRING QUEBRA A LIGAÇÃO EM SILÊNCIO. Nada valida que o `@id`
+ * referenciado lá corresponde ao declarado aqui — o JSON-LD simplesmente vira
+ * duas entidades de novo, sem erro em lugar nenhum. Por isso a constante é
+ * exportada e importada, em vez de a string ser escrita nos dois arquivos.
+ */
+export const ORG_ID = `${SITE_URL}/#organization`
+
 export function organizacaoSchema(): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     // Subtipo de Organization para varejo online — ver a decisão no topo.
     "@type": "OnlineStore",
+
+    // Ver `ORG_ID` acima: é o que permite o `offers.seller` das PDPs apontar
+    // para esta entidade em vez de repetir uma versão pobre dela.
+    "@id": ORG_ID,
 
     // Nome fantasia e razão social são campos DISTINTOS por desenho: `name` é
     // como a marca é conhecida, `legalName` é o registro na Receita.

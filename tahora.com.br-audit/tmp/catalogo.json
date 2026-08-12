@@ -1,0 +1,54 @@
+{
+  "url": "https://www.tahora.com.br/catalogo",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31H3_4.png?v=1785431238&amp;width=400\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/2d259nkrqxum9.js\"/><script src=\"/_next/static/chunks/3taojcwkjy...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files...",
+  "is_spa": false,
+  "extracted_text": "Mais vendidaiCSee\nC\u00e2mera Seguran\u00e7a A31H\nDupla lente com detec\u00e7\u00e3o inteligente, pra quem quer mais controle sem complicar.\nFull HDLente dupla\nR$185,00\nVer detalhes\nA mais vendida, pra quem quer come\u00e7ar com o essencial, simples e econ\u00f4mica.\nDupla lente pra cobrir dois \u00e2ngulos ao mesmo tempo, sem perder detalhe.\nFormato l\u00e2mpada: rosqueia no bocal e pronto, a instala\u00e7\u00e3o mais f\u00e1cil que existe.\nA mais completa da linha, recursos avan\u00e7ados pra quem n\u00e3o abre m\u00e3o de nada.\nDupla lente com holofote potente,...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Age": "0",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:27:31 GMT",
+    "Etag": "W/\"c92bbc50b5495ed71a53cd4805cd99f4\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/catalogo",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Vercel-Cache": "PRERENDER",
+    "X-Vercel-Id": "gru1::5chmv-1786541251104-f8bd7a67f1d7",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 1,
+    "processed_count": 1,
+    "total_bytes": 217,
+    "truncated": false,
+    "blocks": [
+      {
+        "index": 1,
+        "size_bytes": 217,
+        "valid": true,
+        "types": [
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "types_truncated": false
+      }
+    ]
+  }
+}

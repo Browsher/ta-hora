@@ -1,0 +1,64 @@
+{
+  "url": "https://www.tahora.com.br/produtos/camera-seguranca-a38",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A383_4.png?v=1785431162&amp;width=800\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A383_4.png?v=1785431162&amp;width=128\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A38Lente.png...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files...",
+  "is_spa": false,
+  "extracted_text": "Voc\u00ea vai ver a grava\u00e7\u00e3o depois e n\u00e3o d\u00e1 pra distinguir nada: um vulto na frente do port\u00e3o, uma mancha clara que podia ser o entregador, o vizinho ou ningu\u00e9m. Voc\u00ea olha, aperta o olho, desiste e continua sem saber o que aconteceu ali.\nC\u00e2mera que mostra pouco acaba dando o mesmo trabalho de n\u00e3o ter c\u00e2mera nenhuma. Voc\u00ea continua imaginando em vez de ver.\nA A38 resolve isso pela imagem: 4K Ultra HD, duas lentes trabalhando juntas e refletores potentes pra iluminar a cena. Voc\u00ea abre o aplicativo ICSe...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Age": "64",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:28:02 GMT",
+    "Etag": "W/\"845rdwz76w1qrj\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/produtos/camera-seguranca-a38",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Powered-By": "Next.js",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "gru1::iad1::588bt-1786541347537-fb01aad65860",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 2,
+    "processed_count": 2,
+    "total_bytes": 918,
+    "truncated": false,
+    "blocks": [
+      {
+        "index": 1,
+        "size_bytes": 591,
+        "valid": true,
+        "types": [
+          "Offer",
+          "Organization",
+          "Product"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 2,
+        "size_bytes": 327,
+        "valid": true,
+        "types": [
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "types_truncated": false
+      }
+    ]
+  }
+}

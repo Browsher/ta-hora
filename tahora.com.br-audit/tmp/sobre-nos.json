@@ -1,0 +1,43 @@
+{
+  "url": "https://www.tahora.com.br/sobre-nos",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"/uploads/mercado-libre-thumbnail--1538x1510--b612412b.webp\"/><link rel=\"preload\" as=\"image\" href=\"/uploads/images.png\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/0jm9tnktseht2.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/2d259nkrqxum9.js\"/><script src=\"/_next/...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"/uploads/mercado-libre-thumbnai...",
+  "is_spa": false,
+  "extracted_text": "Voc\u00ea j\u00e1 nos conhece\nEstamos h\u00e1 anos nos maiores marketplaces do Brasil. O Ta Hora \u00e9 o nosso pr\u00f3ximo passo e o seu, com vantagens que antes n\u00e3o eram poss\u00edveis.\nA mesma loja que voc\u00ea j\u00e1 conhece\nAnos de experi\u00eancia nos maiores marketplaces do Brasil\nReputa\u00e7\u00e3o s\u00f3lida em quase todos os e-commerces nacionais\nAgora com descontos maiores, direto com voc\u00ea\nCondi\u00e7\u00f5es de compra que s\u00f3 a nossa plataforma tem\nGarantia de 3 meses direto com a loja\nO que voc\u00ea ganha comprando aqui\nTudo que os marketplaces n\u00e3o de...",
+  "publication_date": "2026-07-15",
+  "accessibility_tree": null,
+  "headers": {
+    "Access-Control-Allow-Origin": "*",
+    "Age": "0",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Disposition": "inline",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:27:34 GMT",
+    "Etag": "W/\"dea224f379c9b63746d77b8b46eca008\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/sobre-nos",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Vercel-Cache": "PRERENDER",
+    "X-Vercel-Id": "gru1::w75cs-1786541254006-ad8cdb177e87",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 0,
+    "processed_count": 0,
+    "total_bytes": 0,
+    "truncated": false,
+    "blocks": []
+  }
+}

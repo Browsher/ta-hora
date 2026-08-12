@@ -1,0 +1,64 @@
+{
+  "url": "https://www.tahora.com.br/produtos/camera-seguranca-es-p9",
+  "status_code": 200,
+  "content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/2bd1ea0f-13b0-47e9-a1c5-1f86eabb1015.png?v=1784220885&amp;width=800\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files/1/0960/8157/6120/files/2bd1ea0f-13b0-47e9-a1c5-1f86eabb1015.png?v=1784220885&amp;width=128\"/><link rel=\"preload\" as=\"image\" href=\"https:/...",
+  "raw_content": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"image\" href=\"https://cdn.shopify.com/s/files...",
+  "is_spa": false,
+  "extracted_text": "Voc\u00ea passa o dia fora e o quintal fica l\u00e1, por conta pr\u00f3pria. A encomenda que ia chegar de tarde, o port\u00e3o que o pessoal da obra ficou de fechar, o cachorro solto no fundo. Voc\u00ea lembra disso l\u00e1 pelas duas da tarde e n\u00e3o tem como conferir nada.\nA\u00ed s\u00f3 resta esperar at\u00e9 a noite pra descobrir o que aconteceu. E quase sempre n\u00e3o aconteceu nada, mas o dia inteiro foi com aquilo martelando.\nA P9 fica na parede da entrada, embaixo do beiral ou na varanda, e te d\u00e1 esse acesso: voc\u00ea abre o aplicativo Esee...",
+  "publication_date": "2026-01-01",
+  "accessibility_tree": null,
+  "headers": {
+    "Age": "31",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Content-Encoding": "br",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": "Wed, 12 Aug 2026 13:28:00 GMT",
+    "Etag": "W/\"tuf83ry3nc1s8l\"",
+    "Server": "Vercel",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "X-Matched-Path": "/produtos/camera-seguranca-es-p9",
+    "X-Nextjs-Prerender": "1",
+    "X-Nextjs-Stale-Time": "300",
+    "X-Powered-By": "Next.js",
+    "X-Vercel-Cache": "HIT",
+    "X-Vercel-Id": "gru1::iad1::67kp7-1786541311571-b03fdacd2e0e",
+    "Transfer-Encoding": "chunked"
+  },
+  "redirect_chain": [],
+  "console_errors": [],
+  "render_diagnostics": [],
+  "render_engine": null,
+  "render_ms": null,
+  "mode_used": "raw",
+  "error": null,
+  "structured_data": {
+    "block_count": 2,
+    "processed_count": 2,
+    "total_bytes": 941,
+    "truncated": false,
+    "blocks": [
+      {
+        "index": 1,
+        "size_bytes": 615,
+        "valid": true,
+        "types": [
+          "Offer",
+          "Organization",
+          "Product"
+        ],
+        "types_truncated": false
+      },
+      {
+        "index": 2,
+        "size_bytes": 326,
+        "valid": true,
+        "types": [
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "types_truncated": false
+      }
+    ]
+  }
+}
