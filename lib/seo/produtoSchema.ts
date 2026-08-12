@@ -1,4 +1,5 @@
 import { SITE_URL } from "@/lib/site"
+import { tituloProduto } from "@/lib/seo/tituloProduto"
 import type { Product } from "@/lib/shopify/types"
 
 // JSON-LD `Product` das PDPs — o objeto que faz o Google exibir PREÇO e
@@ -63,7 +64,27 @@ export function produtoSchema(produto: Product): Record<string, unknown> {
     "@context": "https://schema.org",
     "@type":    "Product",
 
-    name: produto.title,
+    // 🔴 `tituloProduto`, NÃO `produto.title` — e o critério é O QUE A PÁGINA
+    // MOSTRA, não o que a aba do navegador mostra.
+    //
+    // O schema é uma reafirmação em JSON do conteúdo visível; divergência entre
+    // os dois é sinal de baixa confiança para o Google (mesmo argumento já
+    // registrado em organizacaoSchema.ts sobre o rodapé). Desde 12/08/2026 o H1
+    // da PDP exibe este mesmo descritor derivado, então é ele que o `name` deve
+    // afirmar.
+    //
+    // ⚠️ A REGRA É ACOMPANHAR O H1, não o `<title>`. Se algum dia o H1 voltar ao
+    // nome curto, este campo volta junto — e não porque o title mudou. São
+    // perguntas diferentes: o title é o que o Google EXIBE na SERP, o `name` é o
+    // que ele entende que a página descreve.
+    //
+    // Não afeta rich result: o que o Google exibe da PDP vem de `offers` (preço e
+    // disponibilidade). Este campo é identidade, não decoração.
+    //
+    // 🔴 NÃO "uniformize" com a meta description, que continua com o nome curto
+    // por outro motivo, também registrado (ela estouraria 160 chars). Três
+    // consumidores, três decisões — ver app/produtos/[handle]/page.tsx.
+    name: tituloProduto(produto),
 
     // 🔴 A IMAGEM É A DE 1200 px (`ogImage`), NÃO a da galeria (800). O Google
     // recomenda a maior resolução disponível, com mínimo de 696 px de largura.

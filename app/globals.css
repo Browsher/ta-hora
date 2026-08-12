@@ -713,11 +713,24 @@ body {
         Decisão do lojista em 11/08/2026: sticky é conveniência, informação não.
 
    ⚠️ 740px É PISO MEDIDO, NÃO TETO. A medição saiu de UMA janela de 1920px de
-   largura, porque o Chrome não obedeceu ao resize durante o teste. As larguras de
-   desktop entre 768 e 1200px NÃO foram conferidas — e são justamente as piores:
-   a coluna de info é mais estreita (`minmax(240px, 1fr)`), o texto quebra mais e
-   a coluna tende a passar de 716px. Se for mexer em altura por aqui, meça NESSAS
-   larguras antes de confiar no 760. */
+   largura, porque o Chrome não obedeceu ao resize durante o teste.
+
+   ⚠️ CORREÇÃO DE 12/08/2026 — a suspeita da versão anterior deste aviso estava
+   INVERTIDA. Ele dizia que as larguras entre 768 e 1200px seriam "as piores",
+   porque a coluna de info seria mais estreita lá. Ela NÃO é: `minmax(240px, 1fr)`
+   com o `1fr` calculado em 232px a 1920 significa que a coluna TRAVA em 240px em
+   todo o desktop — a largura é constante e quem varia é a FONTE, que cresce com a
+   viewport. Logo o pior caso é a tela MAIS LARGA, não a mais estreita. Medido com
+   elemento espelho: o H1 ocupa 3 linhas de 1375px para cima e 2 linhas abaixo
+   disso. Ao mexer em altura aqui, meça a 1920 primeiro.
+
+   Remedido em 12/08/2026, mesmo caso (A31H, CEP do Acre, 2 opções, build local,
+   1920×911), depois de o H1 receber o descritor completo e ter a fonte reduzida
+   para `clamp(18px, 1.6vw, 22px)`: **559px fechada, 724px com o frete aberto** —
+   contra 551/716 antes. O descritor custou 8px, não os 78px que custaria sem a
+   redução de fonte. Continua abaixo dos 736px que o limiar de 760 disponibiliza,
+   com **12px de folga**. É pouca folga: o próximo item que crescer nesta coluna
+   passa do limite, e aí o 760 sobe junto. */
 @media (min-width: 768px) and (min-height: 760px) {
   .produto-coluna-esquerda {
     position: sticky;

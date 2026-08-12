@@ -10,21 +10,107 @@ Escopo: as 14 URLs do sitemap (home, catálogo, 7 PDPs, 5 páginas institucionai
 
 ---
 
-## SEO Health Score: 66/100
+## SEO Health Score: 66 → **78/100**
 
-| Bloco | Nota | Comentário |
+| Bloco | Antes | Depois | Comentário |
+|---|---|---|---|
+| Metadata e indexação | 92 | 92 | Metadata única em 14/14 desde sempre. As duas descriptions fora de faixa (`/catalogo` 175, home 123) **continuam abertas** — verificado em produção. |
+| Estrutura de headings | 85 | 85 | Respostas do FAQ entraram no DOM, mas as perguntas seguem `<span>` e o `H2 TA Hora` do rodapé continua em 14/14 páginas. |
+| Imagens — alt text | 100 | 100 | Sem alteração. Continua sendo o melhor item do site. |
+| Imagens — performance | 55 | **85** | Redimensionamento pelo CDN em produção (−61% a −88%), `lazy` abaixo da dobra, preload 4→1 e 7→1. Falta `srcset` e a imagem de descrição `lazy` acima da dobra no desktop. |
+| Dados estruturados (Schema) | **0** | **70** | `Product`+`Offer` nas 7 PDPs e `OnlineStore` na home, confirmados no HTML servido. Falta `BreadcrumbList` e `ItemList`. |
+| Estratégia de palavra-chave | 30 | **80** | Os 7 titles saíram do código de fábrica para descritor com demanda, e o H1 acompanhou em 12/08. O que falta aqui é camada informacional, não on-page. |
+| Camada de conteúdo | 10 | 10 | Intocado. 14 URLs, nenhuma informacional. É o item que sobrou como maior gap. |
+| Linkagem interna | 45 | 45 | Intocado. Sem breadcrumbs, home ainda linka 3 das 7 PDPs. |
+| E-E-A-T | 60 | 65 | NAP completo no rodapé (o telefone entrou). Experience e Authority seguem sem trabalho. |
+
+**O que mudou de natureza:** a auditoria original apontava **duas camadas inteiras ausentes** — dados estruturados e conteúdo informacional. Uma delas foi construída hoje. A que sobra é a cara: conteúdo é programa de meses, não tarde de código. O eixo do documento se deslocou de "faltam camadas" para "falta conteúdo, e faltam três acabamentos baratos" (breadcrumbs, headings do FAQ, as duas descriptions).
+
+---
+
+## Antes/depois de 11/08/2026 — verificado no HTML de produção
+
+Tudo abaixo foi conferido **no domínio de produção** com headers de navegador, não no build local. Os 7 commits do dia estão no ar.
+
+### ✅ Fechado
+
+| # | Item | Antes | Depois (produção) |
+|---|---|---|---|
+| 1 | `Product` + `Offer` nas PDPs | 0 blocos JSON-LD no site | 2 blocos na PDP: `Product`, `Offer`, `Organization`. Sem `aggregateRating` — a guarda segurou. |
+| 8 | `Organization` na home | ausente | 1 bloco `OnlineStore` + `PostalAddress`, só na home. Catálogo segue sem JSON-LD (esperado — falta `ItemList`). |
+| 2 | Titles das 7 PDPs | 24-31 chars, SKU puro | **51-60 chars, descritor real** — ver tabela abaixo |
+| 5 | Redimensionamento pelo CDN | `foto.url` cru, 3543 px | `width=800` galeria, `400` cards, `128` thumbs, `1200` no `og:image` |
+| 7 | Preloads | home 4, catálogo 7 | **home 1, catálogo 1**; PDP mantida em 8 por decisão |
+| 4→ | Respostas do FAQ no DOM | pergunta 2×, resposta **1×** (só no payload RSC) | pergunta 2×, **resposta 2×** — está no HTML pré-renderizado |
+| 6 | CLS das imagens de descrição | sem reserva de espaço | `aspect-ratio: 1/1` + `object-fit: contain`, com `npm run verificar:descricao` de guarda |
+| — | NAP no rodapé | nome + endereço | nome + endereço + **telefone** |
+
+**Os 7 titles, como estão agora em produção:**
+
+| URL | Antes | Depois | Chars |
+|---|---|---|---|
+| `…/camera-seguranca-a31h` | Câmera Segurança A31H | Câmera Segurança Wi-Fi Full HD Dupla Lente A31H | 57 |
+| `…/camera-seguranca-es-p9` | Câmera Segurança P9 | Câmera Segurança Wi-Fi HD Interna e Externa P9 | 56 |
+| `…/camera-seguranca-q6` | Câmera Segurança Q6 | Câmera Segurança Wi-Fi Full HD Dupla Lente Q6 | 55 |
+| `…/camera-lampada` | Câmera Lâmpada | Câmera Lâmpada Wi-Fi que Rosqueia no Bocal HD | 55 |
+| `…/camera-seguranca-a38` | Câmera Segurança A38 | Câmera Segurança Wi-Fi 4K Dupla Lente A38 | 51 |
+| `…/camera-seguranca-q8` | Câmera Segurança Q8 | Câmera Segurança Wi-Fi Full HD Dupla Lente Q8 | 55 |
+| `…/camera-seguranca-s8` | Câmera Segurança S8 | Câmera Segurança Wi-Fi 3K Vertical Tripla Lente S8 | 60 |
+
+Todos na faixa de 51-60 chars, todos com descritor **derivado de spec real** — a seção 1.1 alertava que os descritores sugeridos ("externa 360°", "solar") eram suposição a partir do nome; nenhum deles sobreviveu ao contato com a ficha técnica. O que a auditoria chamou de "câmera solar sem fio S8" é, de fato, **3K vertical tripla lente**. A recomendação estava certa no método e errada no conteúdo, e foi o método que valeu.
+
+### 🆕 Dois achados novos desta verificação
+
+1. **A pendência de SKU se resolveu.** O documento registrava que A31H e A38 estavam sem SKU na Shopify e que o schema omitia o campo. Em produção os dois emitem `"sku":"IC-A31H"` e `"sku":"IC-A38"`. Os 7 produtos têm SKU no `Product`. Nada a fazer.
+
+2. ✅ **~~O H1 das PDPs ficou para trás do title~~ — CORRIGIDO em 12/08/2026.** O title dizia "Câmera Segurança Wi-Fi Full HD Dupla Lente A31H" e o H1 dizia "Câmera Segurança A31H": keyword certa na tag que o Google exibe, keyword vazia no elemento que ele usa para entender o tema. Ver abaixo.
+
+### ✅ 12/08/2026 — H1, escala tipográfica e `Product.name`
+
+Três alterações numa só, porque são a mesma decisão.
+
+**1. O H1 recebeu o descritor.** `text={tituloProduto(produto)}` — a MESMA função de `generateMetadata`, não uma segunda string a manter em sincronia. Sai de graça para os 7 produtos e acompanha mudança de spec no admin pelo mesmo ISR que já move o title.
+
+**2. A fonte do H1 caiu — e essa era a causa raiz, não o texto.** A coluna `.produto-info` é `minmax(240px, 1fr)`, e o `1fr` calculado dá 232px a 1920: **ela trava em 240px em todo o desktop**. A fonte, porém, era `clamp(18px, 2.4vw, 30px)` e chegava a 30px — ~13 caracteres por linha, com o nome curto de 21 chars já ocupando 2 linhas. Desproporção que existia antes do descritor. Novo valor: `clamp(18px, 1.6vw, 22px)`, **inline e escopado à PDP** (o `size="pequeno"` do `Heading` é compartilhado com os H3 do site, e a escala é aplicada inline pelo componente — uma classe de CSS perderia a especificidade).
+
+| Estado | Fonte | Linhas do H1 | Coluna fechada | Coluna com frete aberto |
+|---|---|---|---|---|
+| Antes (nome curto, 30px) | 30px | 2 | 551px | 716px |
+| Descritor **sem** reduzir a fonte | 30px | 4 | 629px | ~793px ❌ |
+| **Depois (descritor + 22px)** | 22px | **3** | **559px** | **724px** ✅ |
+
+Medido no build local, A31H, 1920×911, CEP do Acre (2 opções de frete — o caso mais alto). O limiar de sticky de 760px disponibiliza 736px (`top: 24px`): **724px cabem, com 12px de folga.** Pouca folga — o próximo item que crescer nesta coluna empurra o limiar junto, e isso ficou registrado no `globals.css`.
+
+**Uma premissa do `globals.css` estava invertida, e foi corrigida.** O comentário do sticky supunha que as larguras entre 768 e 1200px seriam as piores, "porque a coluna de info é mais estreita lá". Ela não é — é fixa em 240px; quem varia é a fonte, que cresce com a viewport. **O pior caso é a tela mais larga.** Medido com elemento espelho: 3 linhas de 1375px para cima, 2 linhas abaixo disso, inclusive no mobile.
+
+**3. `Product.name` acompanhou o H1.** `lib/seo/produtoSchema.ts` passou de `produto.title` para `tituloProduto(produto)`. O critério registrado no arquivo é **o que a página mostra, não o que a aba mostra**: o schema é uma reafirmação em JSON do conteúdo visível, e divergência entre os dois é sinal de baixa confiança — o mesmo argumento que o `organizacaoSchema.ts` já faz sobre o rodapé. Não muda rich result (o que o Google exibe vem de `offers`); é identidade. `npm run verificar:schema` passa nas 3 camadas, 7 produtos reais conferidos.
+
+**O que deliberadamente NÃO mudou, e por quê:** cards do catálogo e da vitrine (grade estreita), carrinho (vem da API da Shopify, não da rota), meta description (com 47 chars iria a ~170 e truncaria) e **`item_name` do GA4** — este último é o mais importante: o `item_id` é o handle, então o funil não quebraria, mas trocar o nome parte os relatórios em dois rótulos para o mesmo produto, com a metade antiga congelada para sempre.
+
+### ❌ Continua aberto (nenhum destes foi tocado hoje)
+
+| Prioridade | Item | Estado verificado |
 |---|---|---|
-| Metadata e indexação | 92/100 | Excelente. Títulos e descriptions únicos em 14/14 URLs, canonical em todas, OG completo, robots e sitemap corretos. |
-| Estrutura de headings | 85/100 | Um H1 por página, hierarquia limpa. |
-| Imagens — alt text | 100/100 | 100% das imagens com alt descritivo e específico. Raro. |
-| Imagens — performance | 55/100 | Imagens servidas em tamanho original (WebP por negociação). Há ~50-85% de gordura, mas não é emergência. |
-| Dados estruturados (Schema) | **0/100** | **Zero JSON-LD no site inteiro.** E-commerce sem Product schema. **É o problema nº 1.** |
-| Estratégia de palavra-chave | 30/100 | Títulos de PDP usam código de SKU que ninguém busca. |
-| Camada de conteúdo | 10/100 | 14 URLs. Nenhum conteúdo informacional. |
-| Linkagem interna | 45/100 | Sem breadcrumbs, home linka 3 das 7 PDPs. |
-| E-E-A-T | 60/100 | Confiança bem trabalhada; autoridade e experiência quase ausentes. |
+| **Alta** | Breadcrumbs visuais + `BreadcrumbList` | `grep BreadcrumbList` = 0 na home e na PDP |
+| **Alta** | Meta description do `/catalogo` | **175 chars** — inalterada, ainda trunca |
+| **Alta** | Meta description da home | **123 chars** — inalterada, 35 chars vagos |
+| **Alta** | Vídeo de instalação real (Experience) | não existe |
+| Média | Perguntas do FAQ como `<h3>` | seguem `<span>` no botão do accordion |
+| Média | `H2 TA Hora` no rodapé | presente em 14/14 páginas, confirmado |
+| Média | Camada de conteúdo / blog | 14 URLs, zero informacional |
+| Média | Tabela comparativa no `/catalogo` | não existe |
+| Média | Expandir PDPs para 800+ palavras | não iniciado |
+| Média | Vitrine da home 3 → 6 produtos | segue em 3 |
+| Média | PageSpeed Insights com chave de API | CWV continuam inferidos, não medidos |
+| Média | Coleta de avaliação de 1ª parte | não iniciada |
+| Baixa | `ItemList` no `/catalogo` | catálogo tem 0 blocos JSON-LD |
+| Baixa | `srcset` / `images.unoptimized` | `grep srcset` = 0 em produção |
+| Baixa | `Disallow: /*?ref=` no robots.txt | robots inalterado |
+| ⚠️ | Imagem de descrição `lazy` acima da dobra (desktop) | **pendente de decisão do dono** — ver seção 10 |
 
-O site foi construído por alguém que entende de metadata — e isso aparece. O que falta não é ajuste fino: são duas camadas inteiras que não existem (dados estruturados e conteúdo informacional), mais uma faixa de gordura em imagem que vale colher mas não está sangrando.
+**Leitura da lista:** as sete correções de hoje foram todas de **código**. O que sobrou se divide em duas pilhas bem distintas — três acabamentos de meia hora cada (as duas descriptions, o H2 do rodapé, os `<h3>` do FAQ) e o programa de conteúdo, que é de outra ordem de grandeza. Breadcrumbs ficam no meio: é código, mas é componente novo mais schema, não ajuste.
+
+---
 
 ---
 
@@ -45,6 +131,8 @@ O site foi construído por alguém que entende de metadata — e isso aparece. O
 | `/produtos/camera-seguranca-s8` | Câmera Segurança S8 \| Ta Hora | 29 | **Falha** |
 | `/sobre-nos` | Sobre Nós \| Ta Hora | 19 | Precisa melhorar |
 | `/suporte` | Suporte \| Ta Hora | 17 | Precisa melhorar |
+
+> ✅ **Esta tabela é histórica — os 7 titles de PDP foram trocados em 11/08/2026.** Os valores atuais em produção estão na seção "Antes/depois" no topo do documento. O diagnóstico abaixo fica registrado porque explica *por que* a troca valia, e porque o mesmo raciocínio ainda se aplica ao **H1** das PDPs, que não foi tocado.
 
 **Todos únicos, todos com a marca, template `%s | Ta Hora` implementado corretamente em `app/layout.tsx:31`. O problema não é técnico — é de escolha de palavra-chave.**
 
@@ -630,7 +718,7 @@ Ou seja: a provável imagem de LCP da PDP em desktop está marcada `loading="laz
 
 1. ✅ **~~Implementar `Product` + `Offer` schema nas 7 PDPs~~ — FEITO em 11/08/2026.** `lib/seo/produtoSchema.ts` (módulo puro) + `components/seo/JsonLd.tsx`, com `npm run verificar:schema` travando a regra do `aggregateRating` em código. **Sem `aggregateRating` e sem `review`** — ver a seção 8. Pendência de cadastro no admin: A31H e A38 estão sem SKU na Shopify (o schema omite o campo corretamente).
 
-2. **Reescrever os 7 titles de PDP**, trocando o código de SKU por descritor com demanda real de busca (seção 1.1). Hoje as páginas que vendem competem por termos que ninguém digita, usando metade dos caracteres disponíveis. Esforço: ~1h + decisão de onde guardar o descritor.
+2. ✅ **~~Reescrever os 7 titles de PDP~~ — FEITO em 11/08/2026 e confirmado em produção.** Os descritores não foram digitados à mão nem tirados do nome do produto: são **derivados da ficha técnica real**, o que derrubou três das suposições desta auditoria (a "S8 solar" é 3K vertical tripla lente). Os 7 titles ficaram entre 51 e 60 chars. **Sobrou o H1:** a mesma PDP que agora se intitula "Câmera Segurança Wi-Fi Full HD Dupla Lente A31H" ainda exibe `<h1>Câmera Segurança A31H</h1>`. O descritor já está calculado na rota — é reaproveitá-lo. **Este é o item nº 1 restante de SEO on-page.**
 
 3. ✅ **~~Confirmar que o sitemap está submetido no Google Search Console~~ — FEITO em 10/08/2026.** Painel retornou "Sucesso", **14 páginas descobertas** — bate exatamente com as 14 `<loc>` do `sitemap.xml`. É o que torna observável tudo o mais deste documento.
 
@@ -642,6 +730,7 @@ Ou seja: a provável imagem de LCP da PDP em desktop está marcada `loading="laz
 6. ✅ **~~`width`/`height` em toda `<img>`~~ — FEITO em 11/08/2026, por outro caminho.** O diagnóstico estava errado: `aspect-ratio` no CSS já cobria hero, galeria, cards e thumbs, e os atributos seriam neutralizados pelo `style` inline do `ImageSlot`. A única fonte real de CLS eram as imagens de descrição, corrigidas com `aspect-ratio: 1/1` + `object-fit: contain` e guarda no `verificar:descricao`. Ver seção 10. (O `loading="lazy"` das imagens de descrição já existia.)
 7. ✅ **~~Limitar o `preload` de imagem a uma por página~~ — FEITO na home e no catálogo em 11/08/2026.** 4→1 e 7→1, com `fetchPriority="high"` no hero. LCP de ambas medido no Chrome (é a imagem nas duas, não o texto). PDP mantida em 8 por decisão: os 5 thumbnails são de 2,8-5,1 KB e estão acima da dobra. Ganho **modelado** em ~48 ms (home) e ~75 ms (catálogo) — não medido, porque localhost não tem latência. Ver seção 10.
 8. ✅ **~~`Organization` schema na home + NAP completo no rodapé~~ — FEITO em 11/08/2026.** `OnlineStore` na home (ver seção 8) e o **telefone acrescentado ao rodapé** — até então o NAP tinha nome e endereço, sem o "P", que só existia dentro do `/suporte`. Ver seção 2.
+8b. ✅ **~~Levar o descritor do title para o H1 da PDP~~ — FEITO em 12/08/2026.** O H1 passou a usar `tituloProduto(produto)`, a mesma função de `generateMetadata` — não uma segunda string. Junto veio a redução de fonte do H1 (`clamp(18px, 2.4vw, 30px)` → `clamp(18px, 1.6vw, 22px)`, inline e escopada à PDP), e o `Product.name` do schema acompanhou. Ver "Antes/depois" no topo.
 9. Breadcrumbs visuais + `BreadcrumbList` schema no catálogo e nas PDPs.
 10. Corrigir a meta description do `/catalogo` (175 → ~158 chars) e expandir a da home (123 → ~157).
 11. **Gravar o vídeo de instalação real.** É simultaneamente conteúdo, prova de Experience e material de conversão.
@@ -673,4 +762,6 @@ A infraestrutura de SEO deste site é notavelmente boa para um projeto deste por
 
 ---
 
-*Auditoria gerada por `/market-seo` em 11/08/2026, com correção de medição aplicada na mesma data. Medições de peso de imagem e TTFB feitas em requisições reais ao domínio de produção; o peso de imagem foi remedido com headers de navegador (`Accept: image/webp`) após o erro descrito no topo. Números de LCP/CLS/INP permanecem inferidos — o PageSpeed Insights não foi executado (API pública respondeu 429 sem chave).*
+*Auditoria gerada por `/market-seo` em 11/08/2026, com correção de medição e passe de verificação de produção aplicados na mesma data. O passe de verificação conferiu no HTML servido pelo domínio de produção (headers de navegador): blocos JSON-LD e seus `@type`, os 7 titles e suas descriptions, contagem de `rel=preload as=image`, parâmetros `width=` nas URLs do CDN, presença das respostas do FAQ no DOM, hierarquia completa de headings, `srcset`, dimensões de `og:image` e o `robots.txt`.*
+
+*Nota original:* Medições de peso de imagem e TTFB feitas em requisições reais ao domínio de produção; o peso de imagem foi remedido com headers de navegador (`Accept: image/webp`) após o erro descrito no topo. Números de LCP/CLS/INP permanecem inferidos — o PageSpeed Insights não foi executado (API pública respondeu 429 sem chave).*

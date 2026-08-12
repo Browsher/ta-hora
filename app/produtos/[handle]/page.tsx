@@ -295,7 +295,34 @@ export default async function ProdutoPage(
                 quando este bloco sai da tela por cima, a barra entra. Renomear o
                 id exige acertar a prop `alvoId` lá embaixo. */}
             <div className="produto-info" id="produto-compra">
-              <Heading as="h1" size="pequeno" text={produto.title} color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
+              {/* H1 com o MESMO descritor do title (feature title-por-spec) — a
+                  função é a de `generateMetadata`, não uma segunda string.
+                  Antes daqui saía `produto.title`: o title dizia "Câmera
+                  Segurança Wi-Fi Full HD Dupla Lente A31H" e o H1 dizia "Câmera
+                  Segurança A31H" — keyword na tag que o Google EXIBE e keyword
+                  vazia no elemento que ele usa para entender o tema da página.
+
+                  🔴 O `fontSize` inline SOBRESCREVE o `size="pequeno"` do Heading,
+                  e é escopado a esta página de propósito — `SIZE_STYLE.pequeno` é
+                  compartilhado com os H3 do site inteiro. Só o `style` funciona
+                  aqui: o Heading aplica a escala INLINE, então uma classe de CSS
+                  perderia a disputa de especificidade (ver components/ui/Heading.tsx).
+
+                  Por que 22px e não 30px: esta coluna é `minmax(240px, 1fr)` e o
+                  `1fr` calculado dá 232px a 1920 — ou seja, ela TRAVA em 240px em
+                  todo o desktop, enquanto `clamp(18px, 2.4vw, 30px)` crescia até
+                  30px. A 30px cabiam ~13 caracteres por linha, e o nome curto de
+                  21 caracteres já ocupava 2 linhas. O descritor completo levaria a
+                  4 linhas e +78px na coluna — altura que o sticky não tem
+                  sobrando (ver o bloco do sticky em globals.css: a calculadora de
+                  frete aberta já leva a coluna a 716px, contra 736px úteis no
+                  limiar de 760px de altura de viewport).
+
+                  ⚠️ O PIOR CASO É A TELA MAIS LARGA, não a mais estreita — o
+                  inverso do que o comentário do sticky em globals.css supõe. A
+                  coluna é fixa em 240px e é a FONTE que cresce com a viewport. Ao
+                  mexer nesta escala, meça a 1920 antes de 768. */}
+              <Heading as="h1" size="pequeno" style={{ fontSize: "clamp(18px, 1.6vw, 22px)" }} text={tituloProduto(produto)} color="var(--cor-texto)" accentColor="var(--cor-destaque)" />
 
               {/* `installments` pela MESMA função da meta description (ver
                   generateMetadata). `?.texto` → `undefined` quando não há
