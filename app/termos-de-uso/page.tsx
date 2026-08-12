@@ -4,6 +4,7 @@ import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
 import { semNotasInternas } from "@/lib/semNotasInternas"
 import layoutData from "@/layouts/termos-de-uso.json"
+import { metadataPagina } from "@/lib/seo/metadataPagina"
 
 // Rota do site: "Termos de Uso". Mesmo padrão do /suporte — layout RESOLVIDO,
 // renderizado pelo PreviewContent. Estática (○): documento legal, sem Shopify.
@@ -13,13 +14,14 @@ const layout = semNotasInternas(layoutData as unknown as Layout)
 const paleta = layout.globalSettings?.paleta ?? getPaleta(layout.globalSettings?.estilo)
 const fundo = paleta?.fundo ?? "#0D0A08"
 
-export const metadata: Metadata = {
+// Página legal — ver a nota em app/politica-de-privacidade/page.tsx.
+export const metadata: Metadata = metadataPagina({
   // Sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
   title: "Termos de Uso",
+  path:  "/termos-de-uso",
   description:
     "Condições de uso do site do Ta Hora: compras, pagamentos, entrega, responsabilidades e direitos do consumidor.",
-  alternates: { canonical: "/termos-de-uso" },
-}
+})
 
 export default function Page() {
   return (

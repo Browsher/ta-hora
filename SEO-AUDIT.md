@@ -14,7 +14,7 @@ Escopo: as 14 URLs do sitemap (home, catálogo, 7 PDPs, 5 páginas institucionai
 
 | Bloco | Antes | Depois | Comentário |
 |---|---|---|---|
-| Metadata e indexação | 92 | **94** | As duas descriptions fora de faixa foram corrigidas em 12/08 (ambas em 155 chars). O que puxa para baixo agora é o `openGraph` que 6 páginas não declaram e herdam da home. |
+| Metadata e indexação | 92 | **98** | Descriptions corrigidas (ambas em 155 chars) e `openGraph` próprio nas 6 páginas que herdavam o da home, com `canonical == og:url` em 7/7 e guarda em código. É o bloco mais bem resolvido do site. |
 | Estrutura de headings | 85 | **95** | Respostas do FAQ no DOM, perguntas em `<h3>` real e o `H2 TA Hora` do rodapé removido das 14 páginas. |
 | Imagens — alt text | 100 | 100 | Sem alteração. Continua sendo o melhor item do site. |
 | Imagens — performance | 55 | **85** | Redimensionamento pelo CDN em produção (−61% a −88%), `lazy` abaixo da dobra, preload 4→1 e 7→1. Falta `srcset` e a imagem de descrição `lazy` acima da dobra no desktop. |
@@ -120,7 +120,36 @@ Entrou agora na meta description da home. **É o único lugar onde está.**
 >
 > ⚠️ **Nunca escreva "entrega em 24h".** 24h é despacho; entrega é trânsito de transportadora. É a mesma família de erro do "12x sem juros" que o `lib/parcelamento.ts` existe para impedir, e o comentário da constante em `app/layout.tsx` registra isso.
 
-### 🆕 Open Graph: 12 das 14 páginas anunciam a home
+### ✅ 12/08/2026 — Open Graph próprio nas 6 páginas, com guarda
+
+**O que era:** 6 das 14 páginas emitiam `og:url = https://www.tahora.com.br` e o `og:title` da home. **O que é:** cada uma anuncia a si mesma, verificado no HTML servido.
+
+| Página | `og:url` | `og:title` |
+|---|---|---|
+| `/catalogo` | `…/catalogo` | Catálogo de Câmeras de Segurança Wi-Fi |
+| `/sobre-nos` | `…/sobre-nos` | Sobre a Ta Hora — loja com CNPJ e nota fiscal |
+| `/suporte` | `…/suporte` | Suporte Ta Hora — dúvidas sobre câmeras Wi-Fi |
+| `/politica-de-privacidade` | `…/politica-de-privacidade` | Política de Privacidade |
+| `/termos-de-uso` | `…/termos-de-uso` | Termos de Uso |
+| `/trocas-e-devolucoes` | `…/trocas-e-devolucoes` | Trocas e Devoluções |
+
+`canonical == og:url` nas 7 páginas estáticas, conferido uma a uma.
+
+**Por que um helper e não 6 blocos: `openGraph` não é mesclado, é substituído por inteiro.** A documentação do Next diz que objetos aninhados como `openGraph` são sobrescritos pelo último segmento que os definir, e o `mergeMetadata` confirma. Ou seja, `openGraph: { url: "/catalogo" }` **não acrescenta** a url ao bloco herdado — descarta o bloco e emite só a url, deixando a página sem imagem, `siteName`, `locale` e `type`. Preview sem miniatura é pior que preview com a imagem errada. Era isso, e não redundância, que fazia o `openGraph` da PDP repetir tudo o que o raiz define.
+
+`lib/seo/metadataPagina.ts` emite o bloco inteiro uma vez e deriva `canonical` e `og:url` **do mesmo argumento `path`** — divergir deixou de ser possível. A arte de OG virou `OG_IMAGE_PADRAO`, compartilhada com o `app/layout.tsx`, que tinha o mesmo objeto literal duplicado.
+
+**Dois `og:title` receberam texto próprio.** "Sobre Nós" e "Suporte" funcionam como rótulo de aba, ao lado do sufixo da marca — e são manchetes vazias no WhatsApp, onde a pessoa lê o título antes de decidir se clica. As legais ficaram com o título puro: já se descrevem.
+
+**A PDP ficou fora por decisão.** Usa `generateMetadata`, `og:image` por produto e dimensões por foto; o `openGraph` dela já estava próprio e correto. Cabe no helper com um parâmetro, mas a migração é commit próprio.
+
+✅ **`npm run verificar:og`** — lê o HTML pré-renderizado em `.next/server/app`, sem rede e sem servidor, e falha se `og:url` ≠ o esperado, se `og:url` ≠ `canonical`, se faltar `og:title`/`og:description`/`og:image`/`og:site_name`, ou se o `og:title` carregar o sufixo `| Ta Hora` (que o `template` não aplica ao OG e o `og:site_name` já cobre).
+
+**Contraprova executada:** reintroduzindo o `og:url` da home no `/catalogo`, o guarda acusou as duas regras e saiu com **exit 1**; com o defeito removido, exit 0. Roda **depois** do build, porque lê a saída dele — sem `.next/server/app`, avisa e sai com sucesso.
+
+> **Por que este item mereceu guarda e os outros não:** metadata errada é HTML válido. Não quebrou build, não quebrou `tsc`, não quebrou teste, e ficou meses no ar — só apareceu porque alguém foi ler o `<head>` servido procurando outra coisa. É a mesma categoria do `aggregateRating` e da proporção das imagens de descrição, que já têm os seus.
+
+### ~~🆕 Open Graph: 12 das 14 páginas anunciam a home~~ — diagnóstico original (12/08/2026)
 
 Achado durante a verificação das descriptions, **não corrigido**. Só a Home e as 7 PDPs declaram `openGraph` próprio. As demais herdam o do layout raiz inteiro — e isso inclui o `og:url`:
 
@@ -140,8 +169,8 @@ Não afeta busca (o canonical de cada página está correto e é auto-referencia
 | Prioridade | Item | Estado verificado |
 |---|---|---|
 | **Alta** | Breadcrumbs visuais + `BreadcrumbList` | `grep BreadcrumbList` = 0 na home e na PDP |
-| **Alta** | `openGraph` próprio em 6 páginas | 🆕 `og:url` e `og:title` da home vazando para `/catalogo`, `/sobre-nos`, `/suporte` e as 3 legais |
 | **Alta** | Vídeo de instalação real (Experience) | não existe |
+| Baixa | Arte de OG dedicada do `/catalogo` | as 7 páginas compartilham `og-image.webp`; é trabalho de design, não de código |
 | Média | Envio em até 24h no `SelosConfianca` da PDP | 🆕 fato confirmado, hoje só na meta description da home |
 | Média | Camada de conteúdo / blog | 14 URLs, zero informacional |
 | Média | Tabela comparativa no `/catalogo` | não existe |
@@ -154,7 +183,7 @@ Não afeta busca (o canonical de cada página está correto e é auto-referencia
 | Baixa | `Disallow: /*?ref=` no robots.txt | robots inalterado |
 | ⚠️ | Imagem de descrição `lazy` acima da dobra (desktop) | **pendente de decisão do dono** — ver seção 10 |
 
-**Leitura da lista, atualizada em 12/08.** Os três acabamentos que restavam de on-page (as duas descriptions, o `H2` do rodapé, os `<h3>` do FAQ) foram fechados. O que sobra agora tem outra composição: **dois itens de código de porte médio** (breadcrumbs com schema; `openGraph` próprio em 6 páginas) e **o programa de conteúdo**, que é de outra ordem de grandeza e virou, sozinho, o gargalo do score. Não há mais ajuste de meia hora esperando na fila.
+**Leitura da lista, atualizada em 12/08.** Fechou tudo o que era acabamento de on-page (as duas descriptions, o `H2` do rodapé, os `<h3>` do FAQ) e o Open Graph das 6 páginas. **Sobrou um único item de código:** breadcrumbs visuais com `BreadcrumbList` — e depois dele a camada técnica está encerrada. Todo o resto da fila é **conteúdo e prova**: o vídeo de instalação, os artigos, a tabela comparativa, a coleta de avaliação de primeira parte. O gargalo deixou de ser código.
 
 ---
 

@@ -18,7 +18,8 @@
     "verificar:apresentacao": "node --env-file=.env.local scripts/verificar-apresentacao.mjs",
     "verificar:frete": "node --env-file=.env.local scripts/verificar-frete.mjs",
     "verificar:schema": "node --env-file=.env.local scripts/verificar-schema.mjs",
-    "verificar:schema:formato": "node scripts/verificar-schema.mjs --sem-rede"
+    "verificar:schema:formato": "node scripts/verificar-schema.mjs --sem-rede",
+    "verificar:og": "node scripts/verificar-og.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

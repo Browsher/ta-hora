@@ -6,6 +6,7 @@ import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
 import homeData from "@/layouts/_home.json"
 import { SITE_URL } from "@/lib/site"
+import { OG_IMAGE_PADRAO } from "@/lib/seo/metadataPagina"
 import "./globals.css"
 
 // Metadata RAIZ — herdada por toda rota que não declarar a sua.
@@ -79,18 +80,11 @@ export const metadata: Metadata = {
     title:    "Ta Hora — Câmeras de Segurança Wi-Fi Originais",
     // A MESMA constante do `description` acima — ver o bloco lá.
     description: DESCRICAO_HOME,
-    images: [
-      {
-        // Arte dedicada de Open Graph — NÃO é a imagem do Hero (essa segue no
-        // `_home.json`, intocada). As dimensões abaixo são as REAIS do arquivo
-        // — declarar dimensão que não bate faz o WhatsApp recortar errado ou
-        // descartar a prévia.
-        url:    "/uploads/og-image.webp",
-        width:  1200,
-        height: 630,
-        alt:    "Mão segurando celular com a imagem ao vivo de uma câmera Ta Hora apontada para o portão de uma casa, ao lado da chamada “Veja de onde estiver”",
-      },
-    ],
+    // Arte dedicada de Open Graph — NÃO é a imagem do Hero (essa segue no
+    // `_home.json`, intocada). Vive em lib/seo/metadataPagina.ts porque as outras
+    // 6 páginas usam a MESMA arte: era este objeto literal duplicado, com as
+    // mesmas dimensões e o mesmo alt, em cada lugar que precisasse de prévia.
+    images: [OG_IMAGE_PADRAO],
   },
 
   twitter: { card: "summary_large_image" },

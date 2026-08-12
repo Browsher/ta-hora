@@ -4,6 +4,7 @@ import { getPaleta } from "@/lib/estilos"
 import type { Layout } from "@/lib/types"
 import { semNotasInternas } from "@/lib/semNotasInternas"
 import layoutData from "@/layouts/suporte.json"
+import { metadataPagina } from "@/lib/seo/metadataPagina"
 
 // Rota do site: "Suporte". Mesmo padrão do /sobre-nos — o layout já vem RESOLVIDO
 // (navbar/footer/paleta compartilhados embutidos) e cada rota é um Layout completo
@@ -20,12 +21,15 @@ const fundo = paleta?.fundo ?? "#0D0A08"
 
 // Metadata ESTÁTICA (objeto, não generateMetadata): não torna a rota dinâmica.
 // `title` sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
-export const metadata: Metadata = {
+export const metadata: Metadata = metadataPagina({
   title: "Suporte",
+  path:  "/suporte",
+  // `ogTitle` próprio pelo mesmo motivo do /sobre-nos: "Suporte" sozinho não diz
+  // suporte de quê nem para quê na prévia de um link. Ver metadataPagina.ts.
+  ogTitle: "Suporte Ta Hora — dúvidas sobre câmeras Wi-Fi",
   description:
     "Fale com o Ta Hora pelo WhatsApp, e-mail ou Instagram. Tire suas dúvidas sobre entrega, garantia, pagamento e acompanhamento do pedido.",
-  alternates: { canonical: "/suporte" },
-}
+})
 
 export default function Page() {
   return (

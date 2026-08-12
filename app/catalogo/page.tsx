@@ -6,15 +6,21 @@ import { itemDoCard } from "@/lib/analytics/gtag"
 import { StoreShell } from "@/components/loja/StoreShell"
 import { Heading } from "@/components/ui/Heading"
 import { SectionLabel } from "@/components/ui/SectionLabel"
+import { metadataPagina } from "@/lib/seo/metadataPagina"
 
 // ISR: revalida a cada 5 min (preço/estoque frescos sem novo deploy).
 export const revalidate = 300
 
 // Metadata ESTÁTICA (objeto, não generateMetadata): não toca no regime ISR acima.
 // `title` sem sufixo — o "| Ta Hora" vem do `template` do app/layout.tsx.
-// `canonical` colapsa os `?ref=` dos links de afiliado numa URL só.
-export const metadata: Metadata = {
+// `canonical` colapsa os `?ref=` dos links de afiliado numa URL só, e sai do
+// mesmo `path` que o `og:url` (ver lib/seo/metadataPagina.ts).
+//
+// Sem `ogTitle`: "Catálogo de Câmeras de Segurança Wi-Fi" já se descreve sozinho
+// como manchete de link compartilhado.
+export const metadata: Metadata = metadataPagina({
   title: "Catálogo de Câmeras de Segurança Wi-Fi",
+  path:  "/catalogo",
   description:
     // "3x sem juros e em até 12x" — os DOIS tetos, porque são diferentes: 3 é o
     // limite sem acréscimo, 12 é o limite total (com juros do cliente). String
@@ -31,8 +37,7 @@ export const metadata: Metadata = {
     // existe, e reintroduziria a ambiguidade dos dois tetos que este comentário
     // existe para impedir. Cortar preâmbulo é de graça; cortar fato, não.
     "Câmeras de segurança Wi-Fi: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal, 3x sem juros e em até 12x.",
-  alternates: { canonical: "/catalogo" },
-}
+})
 
 export default async function CatalogoPage() {
   let corpo: React.ReactNode
