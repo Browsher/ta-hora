@@ -166,7 +166,84 @@ async function main() {
     return 1
   }
 
+  // ─── Camada 2: UM produto destoando dos demais numa chave ────────────────────
+  //
+  // A camada acima pega a chave que sumiu para TODO MUNDO. Esta pega o oposto: a
+  // chave preenchida em todas as câmeras, mas com UMA fora do padrão.
+  //
+  // 🔴 POR QUE EXISTE: em 12/08/2026 o `custom.linha` da Q8 estava "EseeCloud"
+  // (nome do APLICATIVO) enquanto as outras 6 traziam "Câmera Segurança Wi-Fi".
+  // O erro foi para produção e ficou no ar até uma auditoria de SEO ler as 7 PDPs
+  // lado a lado. Nada quebrou: a ficha renderizou o valor errado com a mesma
+  // confiança com que renderiza o certo. Um dado plausível e errado não tem como
+  // ser detectado por "o campo está preenchido?" — só por comparação entre irmãos.
+  //
+  // A regra: a chave tem exatamente DOIS valores distintos, a maioria reúne 4+
+  // câmeras e a minoria é UMA só. Fora dessa forma o script não opina — `modelo`
+  // (7 valores únicos), `cor` (4 valores) e `tipo_de_resolucao` (4 valores) variam
+  // por natureza e nunca disparam.
+  //
+  // ⚠️ HEURÍSTICA, NÃO VERDADE. Um dia uma câmera pode legitimamente ser a única
+  // com outro diâmetro de lente. Quando isso acontecer, declare a chave em
+  // `DIVERGENCIA_ESPERADA` com o motivo — não afrouxe a regra, e não "conserte" o
+  // dado bom para calar o check.
+  const DIVERGENCIA_ESPERADA = new Set([
+    // Formato: "nome_da_chave",  // por que UM produto divergir aqui é correto
+    // (vazia em 12/08/2026: nas 7 câmeras, a única chave nesta forma era a `linha`
+    // da Q8, que é o bug de verdade.)
+  ])
+
+  // Só as câmeras: os acessórios (cartão, cabo) têm 0/21 e entrariam como um
+  // "(vazio)" gigante em toda chave, afogando o sinal.
+  const comFicha = produtos.filter((p) => (p.metafields ?? []).some(temValor))
+
+  const destoantes = []
+  CHAVES.forEach((key, i) => {
+    if (DIVERGENCIA_ESPERADA.has(key)) return
+
+    const porValor = new Map()
+    for (const p of comFicha) {
+      const mf = (p.metafields ?? [])[i]
+      if (!temValor(mf)) continue
+      const val = String(mf.value).trim()
+      if (!porValor.has(val)) porValor.set(val, [])
+      porValor.get(val).push(p.handle)
+    }
+
+    if (porValor.size !== 2) return
+    const [maioria, minoria] = [...porValor.entries()].sort((a, b) => b[1].length - a[1].length)
+    if (minoria[1].length !== 1 || maioria[1].length < 4) return
+
+    destoantes.push({
+      key,
+      handle:      minoria[1][0],
+      valorErrado: minoria[0],
+      valorComum:  maioria[0],
+      quantos:     maioria[1].length,
+    })
+  })
+
+  if (destoantes.length > 0) {
+    console.error(
+      `✖ ${destoantes.length} campo(s) com UM produto fora do padrão dos demais:\n` +
+        destoantes
+          .map(
+            (d) =>
+              `   • custom.${d.key} — ${d.handle} tem ${JSON.stringify(d.valorErrado)},\n` +
+              `     mas as outras ${d.quantos} câmeras têm ${JSON.stringify(d.valorComum)}`,
+          )
+          .join("\n") +
+        `\n\n  Isto NÃO quebra a ficha: o valor errado renderiza normalmente na PDP e\n` +
+        `  chega ao cliente com cara de dado correto. Confira no admin da Shopify\n` +
+        `  (produto → Metafields) e corrija lá — o valor vem da loja, não do código.\n\n` +
+        `  Se a divergência for LEGÍTIMA, declare a chave em DIVERGENCIA_ESPERADA,\n` +
+        `  neste arquivo, com o motivo.\n`,
+    )
+    return 1
+  }
+
   console.log("✔ Pré-condição OK: todas as 21 chaves têm dado em ao menos uma câmera.")
+  console.log("✔ Nenhum produto destoa dos demais nas chaves de valor uniforme.")
   return 0
 }
 

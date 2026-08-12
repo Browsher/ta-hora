@@ -269,10 +269,16 @@
       ],
       "findings": [
         {
-          "title": "Texto essencial embutido em imagem na PDP",
-          "severity": "Medium",
-          "description": "Infograficos '01 Duas lentes, mais seguranca' e '02 Mais cobertura, mais controle' trazem specs reais (Full HD, PTZ, zoom 4x) apenas como pixel. Invisivel para busca e para leitor de tela.",
-          "recommendation": "Migrar para HTML ou duplicar o conteudo em texto abaixo da imagem."
+          "title": "Chamadas dos infograficos sem equivalente em texto (corrigido para Low)",
+          "severity": "Low",
+          "description": "Rebaixado em 12/08/2026 apos medicao. O achado original afirmava que as specs existiam so como pixel; falso: no HTML da PDP, Full HD aparece 14x, PTZ 4x, zoom 7x, 4x 6x e 1080 4x, todas em texto real vindo da ficha tecnica, e as imagens ja tem alt longo e descritivo. O bloco .descricao-produto e de fato 100% imagem (1 caractere de texto), mas o unico conteudo sem equivalente textual sao as chamadas de marketing 'Duas lentes, mais seguranca' (0x) e 'Mais cobertura, mais controle' (0x).",
+          "recommendation": "Edicao de conteudo na Shopify: colar as chamadas como h3/p acima de cada imagem. O sanitizador ja aceita essas tags, entao nao ha mudanca de codigo. Textos prontos em textos-infograficos-shopify.md."
+        },
+        {
+          "title": "Imagem 01 da Camera Lampada com alt vazio",
+          "severity": "Low",
+          "description": "Unica entre as 28 imagens de descricao do catalogo com alt=\"\". As outras 27 tem alt longo e descritivo.",
+          "recommendation": "Preencher no admin da Shopify seguindo o padrao das demais. Alt vazio declara imagem decorativa: leitor de tela pula e busca por imagem nao indexa."
         },
         {
           "title": "img sem width e height explicitos",
@@ -310,10 +316,10 @@
           "recommendation": "Nenhuma acao. Acompanhar a contagem de paginas indexadas no GSC (meta 14/14)."
         },
         {
-          "title": "CTA principal cortado na dobra mobile da PDP",
-          "severity": "Medium",
-          "description": "Adicionar ao carrinho aparece como faixa de aproximadamente 10px no rodape da viewport mobile.",
-          "recommendation": "CTA sticky no rodape ou bloco imagem/preco mais compacto."
+          "title": "CTA na dobra mobile da PDP (rebaixado: recomendacao ja implementada)",
+          "severity": "Info",
+          "description": "Rebaixado de Medium para Info em 12/08/2026. O CTA in-page aparece como faixa de ~10px na dobra, mas a recomendacao do especialista (CTA sticky no rodape) ja estava implementada: BarraCompraMobile entrou em 10/08 e 11/08, antes da captura de 12/08 10:34, e esta presente no HTML auditado. A barra fica oculta na dobra por desenho, aparecendo so quando .produto-info sai da viewport, para nao competir com o CTA principal. O especialista nao rolou a pagina.",
+          "recommendation": "Nenhuma acao de correcao. Resta apenas a decisao de design sobre a altura do botao in-page na primeira tela do celular."
         }
       ]
     },

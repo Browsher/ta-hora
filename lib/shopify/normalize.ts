@@ -37,6 +37,11 @@ export interface RawProductCard {
   // alteração. Ausentes → normalizam para marca/resumo `null`, maisRecursos `false`.
   tags?:         string[]                   // `product.tags`
   resumo?:       { value: string } | null   // metafield aliasado `custom.resumo`
+  /**
+   * ISO 8601 da última edição do produto no admin. Só a PRODUCTS_QUERY o pede —
+   * é o `lastmod` das PDPs no sitemap. Ver o porquê em `app/sitemap.ts`.
+   */
+  updatedAt?:    string
 
   // ── Destaques do bloco (feature catalogo-destaques) — opcionais pelo MESMO
   //    motivo acima: só a PRODUCTS_QUERY os seleciona.
@@ -153,6 +158,11 @@ export function normalizeProductCard(raw: RawProductCard): ProductCard {
     // a ordem de "Melhor preço" ficaria indefinida — daí o script verificar:resumo
     // e o build seguram a premissa antes de a UI depender dela.
     precoNumerico: Number(raw.priceRange.minVariantPrice.amount),
+
+    // `null` nas queries que não pedem `updatedAt` (acessórios, recomendados,
+    // vitrine) — inerte, do mesmo jeito que `marca`/`resumo`. Quem consome é o
+    // sitemap, que só usa os cards vindos de `getProducts()`.
+    atualizadoEm: raw.updatedAt ?? null,
 
     // ── Destaques do bloco (feature catalogo-destaques) ──────────────────────
     //

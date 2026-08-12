@@ -13,9 +13,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // /api/ são rotas de dados (carrinho, afiliados) e /carrinho não é página
-      // indexável — nenhuma das duas tem conteúdo que sirva a uma busca.
-      disallow: ["/api/", "/carrinho"],
+      // Só `/api/`: rotas de dados (carrinho, afiliados), sem conteúdo que sirva
+      // a uma busca.
+      //
+      // 🔴 `/carrinho` FOI REMOVIDO em 12/08/2026 — era regra morta. Não existe
+      // rota `/carrinho` neste app (`/carrinho` responde 404, com
+      // `X-Matched-Path: /404`): o carrinho é um drawer client-side, e a spec
+      // `carrinho-loja` é toda drawer + Server Actions, sem página própria
+      // planejada. A regra bloqueava um caminho inexistente.
+      //
+      // ⚠️ Se um dia existir uma rota `/carrinho` de verdade, ela volta para cá —
+      // página de carrinho é conteúdo de sessão, não de busca.
+      disallow: ["/api/"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   }

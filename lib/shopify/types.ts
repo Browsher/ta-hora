@@ -58,6 +58,15 @@ export interface ProductCard {
   maisRecursos:  boolean
   /** Chave de ordenação de "Melhor preço" — NUNCA exibido (o preço exibido é `price`). */
   precoNumerico: number
+  /**
+   * ISO 8601 da última edição do produto no admin da Shopify, ou `null` quando a
+   * query de origem não pediu `updatedAt`.
+   *
+   * 🔴 NÃO É PARA EXIBIR. Existe só para o `lastmod` das PDPs no sitemap — data de
+   * edição no admin não é "novidade" para o cliente (corrigir um typo na descrição
+   * atualizaria o campo sem nada ter mudado para quem compra). Ver `app/sitemap.ts`.
+   */
+  atualizadoEm:  string | null
 
   // ── Destaques do bloco (feature catalogo-destaques) ─────────────────────────
   //

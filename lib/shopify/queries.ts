@@ -29,6 +29,20 @@ import { SPEC_METAFIELDS } from "./specs"
 // erro — devolve `null` e o destaque some em SILÊNCIO. As 4 foram confirmadas nos
 // DADOS reais (7/7 câmeras) e ficam travadas por `npm run verificar:destaques`.
 //
+// `updatedAt` é ADITIVO e serve a UM consumidor só: o `lastmod` das PDPs no
+// `app/sitemap.ts`.
+//
+// 🔴 ISSO REVERTE UMA DECISÃO REGISTRADA, de propósito e com autorização do
+// lojista (12/08/2026). O comentário anterior do `sitemap.ts` dizia que "ampliar
+// a query só por causa do sitemap encareceria o /catalogo, que é quem paga por
+// ela" — e a premissa foi verificada, não descartada: `updatedAt` é um ESCALAR do
+// nó de produto, sem connection nova, sem página extra e sem custo de pontos
+// mensurável na Storefront API. O que era caro seria pedir uma connection (outra
+// query, outro N+1); um campo simples no nó que já está sendo lido, não é.
+//
+// A decisão original estava certa para o custo que ela supunha. Mudou a medição,
+// mudou a conclusão — não é atropelo do comentário antigo.
+//
 // ⚠️ `sortKey: MANUAL` acima é a ORDEM MANUAL do lojista — não remova ao editar.
 export const PRODUCTS_QUERY = /* GraphQL */ `
   query Products($handle: String!, $first: Int!) {
@@ -39,6 +53,7 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
           handle
           title
           tags
+          updatedAt
           featuredImage { url altText width height }
           priceRange { minVariantPrice { amount currencyCode } }
           resumo:    metafield(namespace: "custom", key: "resumo")             { value }

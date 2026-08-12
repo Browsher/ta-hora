@@ -163,17 +163,22 @@ Não foi possível medir nesta auditoria (o especialista tentou via Bing, tomou 
 
 ## Fase 4 — Higiene e monitoramento (contínuo)
 
-| Item | Ref. | Nota |
+| Item | Ref. | Status / Nota |
 |---|---|---|
-| IndexNow: publicar chave e disparar na revalidação de PDP/preço | T2 | Alimenta o índice do Bing, que é o que abastece o Copilot |
-| `lastmod` real por página em vez de timestamp de build | Sitemap | Valor sistematicamente falso pode fazer o Google descontar o campo no domínio todo |
-| Remover `changefreq` e `priority` do sitemap | Sitemap | Ignorados pelo Google; menos manutenção |
-| Redirect apex HTTP direto para `https://www.` (elimina 1 hop) | T3 | Domain settings da Vercel |
-| Remover `Disallow: /carrinho` do robots.txt | T4 | A rota não existe — o carrinho é drawer client-side |
-| `width`/`height` explícitos nas `<img>` | T5 | Prevenção: o CLS medido está ótimo (0,000–0,002) |
-| Filtros do catálogo mobile em carrossel horizontal | Visual | Preço e CTA do 1º produto saem da dobra |
-| Confirmar reveal-on-scroll com rolagem real | Visual | Provável artefato de captura, mas checar comportamento em conexão lenta |
-| `/seo drift baseline` após a Fase 1 | — | Passa a detectar regressão de SEO a cada deploy |
+| Remover `Disallow: /carrinho` do robots.txt | T4 | ✅ **Feito 12/08.** Confirmado morto: `/carrinho` responde 404 e a spec `carrinho-loja` é toda drawer + Server Actions, sem página planejada |
+| `lastmod` real em vez de timestamp de build | Sitemap | ✅ **Feito 12/08, híbrido.** 7 PDPs com `updatedAt` real da Shopify (datas distintas de verdade: 05/08 e 11/08); 7 editoriais **sem o campo**, porque não existe fonte honesta — três layouts legais trazem `updatedAt: 1970-01-01` e os outros são cópia manual |
+| Remover `changefreq` e `priority` | Sitemap | ✅ **Feito 12/08.** Zero ocorrências no XML gerado |
+| Check de produto destoante na ficha técnica | C5 | ✅ **Feito 12/08.** Nova camada no `verificar:especificacoes`: falha quando uma chave tem 2 valores, maioria de 4+ e minoria de exatamente 1. Pega o `custom.linha` da Q8 e nada mais nos dados atuais |
+| Corrigir `custom.linha` da Q8 no admin | C5 | ⏳ **Com o lojista.** É metafield da Shopify, não código |
+| Chamadas dos infográficos como texto | Images | ⏳ **Com o lojista.** Textos prontos em `textos-infograficos-shopify.md`; só colar na Shopify, sem deploy |
+| `alt` vazio na imagem 01 da Câmera Lâmpada | Images | ⏳ **Com o lojista.** Única das 28 imagens de descrição sem alt |
+| IndexNow: publicar chave e disparar na revalidação | T2 | Pendente. Alimenta o índice do Bing, que abastece o Copilot |
+| Redirect apex HTTP direto para `https://www.` | T3 | Pendente. Domain settings da Vercel, elimina 1 hop |
+| `width`/`height` explícitos nas `<img>` | T5 | Pendente. Prevenção: o CLS medido está ótimo (0,000–0,002) |
+| Filtros do catálogo mobile em carrossel horizontal | Visual | Pendente. Preço e CTA do 1º produto saem da dobra |
+| Confirmar reveal-on-scroll com rolagem real | Visual | Pendente. Provável artefato de captura |
+| CTA mobile da PDP | Visual | ❌ **Sem ação — achado rebaixado.** O `BarraCompraMobile` já implementava a recomendação antes da auditoria; o especialista não rolou a página. Ver o relatório |
+| `/seo drift baseline` após a Fase 1 | — | Pendente. Passa a detectar regressão de SEO a cada deploy |
 
 **Não fazer:** `FAQPage` schema. Dois especialistas recomendaram; está descartado. O Google aposentou os rich results de FAQ para todos os sites em 07/05/2026 — não há feature de SERP a capturar. Se `/suporte` tiver Q&A genuíno de usuários, `QAPage` é o tipo correto. `llms.txt` também é opcional e o Google ignora — não priorizar.
 

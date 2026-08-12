@@ -154,7 +154,8 @@ Catálogo e PDP em desktop não foram medidos (risco baixo, dado o 95 da home de
 
 Alt text é o ponto alto: descritivo, específico e detalhado nas 7 PDPs e no catálogo — bem acima do padrão de e-commerce. Formatos WebP em uso. Os problemas são de layout e de conteúdo dentro da imagem, não de peso.
 
-- **Medium** — Texto essencial embutido em imagem na PDP: infográficos "01 Duas lentes, mais segurança" e "02 Mais cobertura, mais controle" trazem specs (Full HD, PTZ, zoom 4x) só como pixel. Invisível para busca e para leitor de tela. Migrar para HTML ou duplicar abaixo da imagem.
+- **~~Medium~~ → Low (corrigido em 12/08/2026)** — Texto embutido em imagem na PDP. O achado original dizia que as specs (Full HD, PTZ, zoom 4x) existiam "só como pixel". **Isso é falso, e foi medido:** no HTML da PDP, `Full HD` aparece 14x, `PTZ` 4x, `zoom` 7x, `4x` 6x e `1080` 4x — todas em texto real, vindas da ficha técnica. As imagens da descrição também já têm `alt` longo e descritivo. O bloco `.descricao-produto` é de fato 100% imagem (1 caractere de texto), mas o que realmente não existe em texto nenhum são as duas chamadas de marketing: `"Duas lentes, mais segurança"` (0x) e `"Mais cobertura, mais controle"` (0x). Buraco muito menor que o relatado. Resolvido com edição de conteúdo na Shopify (o sanitizador já aceita `h3`/`p`) — textos prontos em `textos-infograficos-shopify.md`, sem mudança de código.
+- **Low (novo)** — A imagem 01 da Câmera Lâmpada está com `alt=""`, única entre as 28 imagens de descrição do catálogo. Alt vazio declara "decorativa": leitor de tela pula e a busca por imagem não indexa.
 - **Low** — `<img>` sem `width`/`height` explícitos (o CLS medido está ótimo, então é prevenção, não correção).
 
 ---
@@ -237,7 +238,7 @@ Screenshots em `screenshots/` (12 arquivos, 3 páginas × 2 viewports × fold/fu
 - Sem overflow horizontal em nenhuma das 6 capturas
 
 ### Findings
-- **Medium** — PDP mobile: o CTA "Adicionar ao carrinho" aparece como uma faixa de ~10px no rodapé da viewport. Compactar o bloco imagem/preço ou usar CTA sticky.
+- **~~Medium~~ → Informativo (rebaixado em 12/08/2026)** — PDP mobile: o CTA "Adicionar ao carrinho" aparece como faixa de ~10px na dobra. **A recomendação do especialista ("usar CTA sticky no rodapé") já estava implementada quando ele auditou.** O `BarraCompraMobile` entrou em 10/08 12:32 e 11/08 09:50; a captura é de 12/08 10:34, e a barra está presente no HTML capturado. Ela fica escondida na dobra *por desenho* — só aparece quando `.produto-info` sai da viewport, justamente para não competir com o CTA principal. O especialista fotografou a primeira tela e não rolou a página. Sobra apenas a questão de layout de o botão in-page poder estar mais alto na primeira tela do celular, que é decisão de design, não defeito.
 - **Low** — Catálogo mobile: chips de filtro ocupam 2 linhas e empurram preço e "Ver detalhes" do primeiro produto para fora da dobra.
 - **Low** — Home mobile: hero sem foto de produto acima da dobra (o desktop tem).
 - **Informativo** — As capturas full-page da home mostram grandes vãos brancos; provável artefato de reveal-on-scroll que não dispara em captura full-page. Vale confirmar com scroll real; se o mesmo padrão afetar conexões lentas, vira problema real.
