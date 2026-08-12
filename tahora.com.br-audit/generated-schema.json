@@ -1,0 +1,43 @@
+{
+  "_leia_antes": "Proposta para o UNICO finding acionavel do SCHEMA-REPORT.md: Product.image com mais de uma imagem. Tudo o mais no schema em producao ja esta correto e nao deve ser mexido. As URLs abaixo sao reais, extraidas da galeria da PDP da A31H em 12/08/2026.",
+
+  "_finding": "Product.image traz 1 URL (o ogImage, 1200x1200, proporcao 1:1). O Google escolhe melhor a miniatura do rich result com varias imagens e, quando possivel, proporcoes 16:9, 4:3 e 1:1.",
+
+  "_situacao_atual": {
+    "image": [
+      "https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31H3_4.png?v=1785431238&width=1200"
+    ]
+  },
+
+  "_proposta": {
+    "image": [
+      "https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31H3_4.png?v=1785431238&width=1200",
+      "https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31HLente.png?v=1785431236&width=1200",
+      "https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31HEmuso.png?v=1785431236&width=1200",
+      "https://cdn.shopify.com/s/files/1/0960/8157/6120/files/A31HEmbalagem.png?v=1785431236&width=1200"
+    ]
+  },
+
+  "_como_gerar_no_codigo": {
+    "arquivo": "lib/seo/produtoSchema.ts",
+    "hoje": "...(produto.ogImage ? { image: [produto.ogImage.url] } : {}),",
+    "proposto": "...(produto.images.length > 0 ? { image: produto.images.map((i) => urlComLargura(i.url, LARGURA_OG)) } : produto.ogImage ? { image: [produto.ogImage.url] } : {}),",
+    "import_necessario": "import { urlComLargura, LARGURA_OG } from \"@/lib/shopify/imagens\"",
+    "porque_1200": "LARGURA_OG ja e 1200 e e a mesma URL do og:image, entao o CDN serve do mesmo cache. A galeria chega normalizada a 800 (LARGURA_GALERIA), que fica abaixo do recomendado para rich result.",
+    "porque_manter_o_fallback": "Produto sem galeria continua caindo no ogImage, e produto sem foto nenhuma continua OMITINDO o campo. Array vazio seria afirmar 'nao tem imagem'."
+  },
+
+  "_atencao_antes_de_aplicar": {
+    "infografico_na_galeria": "A galeria da A31H tem 5 imagens, e a quinta (A31H_infografico.png) e uma ficha de especificacoes, nao uma foto do produto. Um map() cru sobre produto.images colocaria esse infografico dentro de Product.image. Nao e violacao de politica e o Google tolera, mas a orientacao e que a imagem mostre o produto com clareza. Duas saidas honestas: aceitar (mais simples, risco baixo) ou filtrar por convencao de nome/posicao (mais correto, mais fragil). Confira produto a produto: as outras 6 PDPs podem ter contagem e ordem diferentes.",
+    "verificar_depois": "npm run verificar:schema (com rede) confere os 7 produtos reais. Rode antes de publicar."
+  },
+
+  "_nao_mexer": [
+    "shippingDetails — 11 entradas, valores reais de lib/frete/tabela.ts, cobrindo as 27 UFs",
+    "hasMerchantReturnPolicy — completo para janela finita (7 dias, FreeReturn, ReturnByMail)",
+    "offers.seller.@id — verificado: resolve na OnlineStore da home",
+    "ausencia de brand e priceValidUntil — decisoes registradas em 11/08/2026, ambas corretas",
+    "ausencia de aggregateRating e review — travada por scripts/verificar-schema.mjs",
+    "BreadcrumbList — valido; o ultimo item sem 'item' e o comportamento correto"
+  ]
+}

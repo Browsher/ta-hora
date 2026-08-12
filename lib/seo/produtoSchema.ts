@@ -2,7 +2,8 @@ import { SITE_URL } from "@/lib/site"
 import { tituloProduto } from "@/lib/seo/tituloProduto"
 import { ORG_ID } from "@/lib/seo/organizacaoSchema"
 import { entregaSchema, devolucaoSchema } from "@/lib/seo/entregaSchema"
-import type { Product } from "@/lib/shopify/types"
+import { urlComLargura, LARGURA_OG } from "@/lib/shopify/imagens"
+import type { Product, ProductImage } from "@/lib/shopify/types"
 
 // JSON-LD `Product` das PDPs — o objeto que faz o Google exibir PREÇO e
 // DISPONIBILIDADE no resultado de busca, em vez de um link de texto puro.
@@ -55,6 +56,49 @@ const SEM_ESTOQUE = "https://schema.org/OutOfStock"
 const CONDICAO_NOVO = "https://schema.org/NewCondition"
 
 /**
+ * Reconhece o INFOGRÁFICO de especificações dentro da galeria.
+ *
+ * A galeria de cada câmera tem 5 imagens, e a última é uma ficha técnica
+ * ilustrada — a câmera com textos apontando para cada parte. Ela é ótima na
+ * página e ERRADA em `Product.image`: a orientação do Google é que a imagem
+ * mostre o produto com clareza, e ali entraria uma ficha, não uma foto.
+ *
+ * ─── POR QUE NÃO É POR POSIÇÃO ─────────────────────────────────────────────
+ *
+ * 🔴 Hoje o infográfico é o índice 4 em 7/7, e mesmo assim NÃO usamos a posição.
+ * A ordem da galeria da Shopify muda ARRASTANDO no admin: um arrasto e o filtro
+ * passa a excluir uma foto boa e a publicar a ficha, sem erro em lugar nenhum.
+ *
+ * ─── OS DOIS SINAIS, MEDIDOS NOS 7 PRODUTOS EM 12/08/2026 ──────────────────
+ *
+ *   1. nome do arquivo contém "infografico" — 7/7
+ *      (`A31H_`, `P9_`, `Q6_`, `Lampada_`, `Cinza_`, `Preta_`, `S8_`; note que
+ *      dois usam a COR e não o modelo, então o padrão é o sufixo)
+ *   2. o alt contém "textos apontando" — 7/7
+ *
+ * É `OU`, não `E`, e a assimetria é deliberada: excluir uma foto boa por engano
+ * custa uma imagem a menos no rich result; deixar passar um infográfico publica
+ * ficha técnica como foto de produto. Na dúvida, exclui.
+ *
+ * ⚠️ O NOME DE ARQUIVO DERIVA — dois heros já estão com nome UUID
+ * (`2bd1ea0f-…png`), prova de que reenvio troca o nome. Por isso existe o
+ * segundo sinal, e por isso `npm run verificar:schema` FALHA se algum produto
+ * deixar de ter exatamente 1 imagem reconhecida aqui: a deriva vira erro
+ * barulhento em vez de uma ficha técnica publicada em silêncio.
+ */
+export function ehInfografico(img: ProductImage): boolean {
+  return (
+    img.url.toLowerCase().includes("infografico") ||
+    (img.altText ?? "").toLowerCase().includes("textos apontando")
+  )
+}
+
+/** A galeria sem o infográfico — as fotos que descrevem o produto de fato. */
+function fotosDoProduto(produto: Product): ProductImage[] {
+  return produto.images.filter((img) => !ehInfografico(img))
+}
+
+/**
  * Monta o JSON-LD `Product` de uma PDP.
  *
  * Campos ausentes são OMITIDOS, nunca preenchidos com placeholder: `sku: null`,
@@ -88,11 +132,26 @@ export function produtoSchema(produto: Product): Record<string, unknown> {
     // consumidores, três decisões — ver app/produtos/[handle]/page.tsx.
     name: tituloProduto(produto),
 
-    // 🔴 A IMAGEM É A DE 1200 px (`ogImage`), NÃO a da galeria (800). O Google
-    // recomenda a maior resolução disponível, com mínimo de 696 px de largura.
-    // Custo zero: é a MESMA URL do `og:image`, então o CDN serve do mesmo cache.
-    // Produto sem foto → campo omitido (array vazio seria afirmar "não tem imagem").
-    ...(produto.ogImage ? { image: [produto.ogImage.url] } : {}),
+    // A GALERIA INTEIRA a 1200 px, MENOS o infográfico — ver `ehInfografico`.
+    //
+    // 🔴 SEMPRE 1200, NUNCA os 800 da galeria. O Google recomenda a maior
+    // resolução disponível (mínimo documentado de 696 px de largura), e 1200 é a
+    // MESMA largura do `og:image`: o CDN serve do cache que já existe, então
+    // várias imagens aqui não custam requisição nova nenhuma.
+    //
+    // Por que mais de uma: é `image` que decide a miniatura do rich result, e o
+    // Google escolhe melhor com opções. Antes daqui ia só o `ogImage` (1 URL).
+    //
+    // Fallback em cascata, e a ordem importa:
+    //   galeria sem infográfico → o array
+    //   galeria vazia (ou só infográfico) → o `ogImage` sozinho
+    //   sem foto nenhuma → CAMPO OMITIDO. Array vazio seria afirmar ao Google
+    //   "este produto não tem imagem", que é diferente de não afirmar nada.
+    ...(fotosDoProduto(produto).length > 0
+      ? { image: fotosDoProduto(produto).map((i) => urlComLargura(i.url, LARGURA_OG)) }
+      : produto.ogImage
+        ? { image: [produto.ogImage.url] }
+        : {}),
 
     // `custom.resumo` — a linha consultiva do lojista ("Dupla lente com detecção
     // inteligente, pra quem quer mais controle sem complicar").
@@ -105,9 +164,16 @@ export function produtoSchema(produto: Product): Record<string, unknown> {
     //     produto. Como `description` de schema, seria descrição errada.
     ...(produto.resumo ? { description: produto.resumo } : {}),
 
-    // Vive na VARIANTE, não no produto. Medido: 5 dos 7 têm (`ES-P9`, `ES-Q6`,
-    // `IC-8177`, `ES-Q8`, `ES-S8`); A31H e A38 estão com `sku: null` na Shopify.
-    // Omitido quando ausente — cadastrar os dois no admin completa o dado.
+    // Vive na VARIANTE, não no produto.
+    //
+    // 7/7 preenchidos desde 11/08/2026, quando o lojista cadastrou `IC-A31H` e
+    // `IC-A38` no admin — os dois que faltavam. (Antes disso eram 5: `ES-P9`,
+    // `ES-Q6`, `IC-8177`, `ES-Q8`, `ES-S8`.) Confirmado em produção nas 7 PDPs em
+    // 12/08/2026.
+    //
+    // O `?` continua aqui de propósito: o campo é da variante e pode voltar a
+    // ficar vazio numa edição do admin. Omitido quando ausente — `sku: null` seria
+    // afirmar ao Google que o produto não tem código.
     ...(produto.sku ? { sku: produto.sku } : {}),
 
     // 🔴 `brand` OMITIDO POR DECISÃO REGISTRADA (11/08/2026), não por esquecimento.

@@ -261,7 +261,7 @@ if (SEM_REDE) {
             title
             availableForSale
             priceRange { minVariantPrice { amount currencyCode } }
-            images(first: 1) { nodes { url } }
+            images(first: 30) { nodes { url altText } }
             resumo: metafield(namespace: "custom", key: "resumo") { value }
             variants(first: 1) { nodes { sku } }
           }
@@ -289,7 +289,17 @@ if (SEM_REDE) {
       falhar(`coleção "${COLECAO}" vazia ou não publicada no canal Storefront`)
     }
 
+    // ⚠️ DUPLICAÇÃO DECLARADA de `ehInfografico`, em lib/seo/produtoSchema.ts —
+    // mesma razão das 21 chaves duplicadas no verificar-especificacoes.mjs: este
+    // script roda em Node puro e não importa TypeScript. 🔴 Mudou o critério lá?
+    // Mude aqui. Uma cópia divergente faria este check aprovar exatamente o caso
+    // que ele existe para pegar.
+    const ehInfografico = (img) =>
+      String(img.url).toLowerCase().includes("infografico") ||
+      String(img.altText ?? "").toLowerCase().includes("textos apontando")
+
     const semSku = []
+    const galeriaSuspeita = []
     for (const p of nodes) {
       const obj = montar({
         title:      p.title,
@@ -305,9 +315,38 @@ if (SEM_REDE) {
       if (!obj.sku) semSku.push(p.handle)
       if (!obj.description) falhar(`${p.handle}: sem custom.resumo — o schema sairia sem description`)
       if (!obj.image) falhar(`${p.handle}: sem imagem`)
+
+      // Guarda do filtro de infográfico. Toda câmera tem UM, e é justamente o que
+      // `Product.image` não pode conter. Zero reconhecido = o infográfico mudou de
+      // nome e de alt, e está entrando no schema como se fosse foto do produto.
+      // Dois ou mais = o critério ficou largo demais e está excluindo foto boa.
+      const infograficos = (p.images.nodes ?? []).filter(ehInfografico)
+      const fotos = (p.images.nodes ?? []).length - infograficos.length
+      if (infograficos.length !== 1 || fotos === 0) {
+        galeriaSuspeita.push({ handle: p.handle, achados: infograficos.length, fotos })
+      }
     }
 
     console.log(`  ✓ ${nodes.length} produtos conferidos`)
+
+    if (galeriaSuspeita.length > 0) {
+      falhar(
+        `filtro de infográfico fora do esperado em ${galeriaSuspeita.length} produto(s):\n` +
+          galeriaSuspeita
+            .map(
+              (g) =>
+                `     • ${g.handle}: ${g.achados} infográfico(s) reconhecido(s), ${g.fotos} foto(s) restante(s)`,
+            )
+            .join("\n") +
+          `\n     Esperado: exatamente 1 infográfico e ao menos 1 foto por câmera.\n` +
+          `     0 reconhecido → o infográfico mudou de nome/alt e vai ENTRAR no Product.image\n` +
+          `       como se fosse foto do produto. Renomeie o arquivo com "infografico"\n` +
+          `       no nome, ou ajuste o critério em lib/seo/produtoSchema.ts E aqui.\n` +
+          `     2+ reconhecidos → o critério ficou largo e está excluindo foto legítima.`,
+      )
+    } else {
+      console.log(`  ✓ filtro de infográfico: 1 por câmera, nenhuma galeria só de infográfico`)
+    }
 
     // AVISO, não falha: o schema omite `sku` corretamente quando ausente. Isto é
     // pendência de cadastro no admin, não bug de código.
