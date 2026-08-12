@@ -15,6 +15,38 @@ import "./globals.css"
 // todo link colado no WhatsApp aparecia como texto cru. Para um negócio que vende
 // por indicação e tem programa de afiliados, o Open Graph abaixo é o item de maior
 // consequência deste arquivo.
+
+/**
+ * Description da Home — e fallback de qualquer rota que não declare a sua.
+ *
+ * Constante, e não duas strings literais, porque ela alimenta DOIS campos que
+ * precisam concordar (`description` e `openGraph.description`). Eram duas cópias
+ * idênticas até 12/08/2026, e duas cópias de um fato divergem no dia em que
+ * alguém edita uma — o mesmo argumento de lib/parcelamento.ts.
+ *
+ * 123 → 155 chars em 12/08/2026. A anterior nem continha a palavra "câmera": o
+ * texto começava direto na promessa de instalação, e a keyword central da loja
+ * ficava de fora do campo que o Google exibe abaixo do título.
+ *
+ * 🔴 "ENVIO EM ATÉ 24h" — LEIA ANTES DE ENCURTAR PARA "envio em 24h".
+ *
+ * O fato, confirmado pelo operador em 12/08/2026: o pedido é DESPACHADO em até
+ * 24h APÓS A CONFIRMAÇÃO DO PAGAMENTO. São duas ressalvas, e nenhuma é
+ * decorativa:
+ *   - "até" — 24h é o teto, não o prazo típico. Sem o "até", vira promessa de
+ *     prazo exato, que é o tipo de alegação que gera reclamação quando falha.
+ *   - "após a confirmação do pagamento" — não cabe em 155 chars e está omitido
+ *     AQUI por espaço. Onde houver espaço (bloco de confiança da PDP, /suporte),
+ *     a frase completa é a certa.
+ *
+ * 🔴 E não confunda com PRAZO DE ENTREGA: 24h é o que a loja controla. O trânsito
+ * é da transportadora e varia (a calculadora de frete mostra de 6 a 20 dias
+ * úteis). Escrever "entrega em 24h" seria publicidade enganosa — mesma família
+ * de erro do "12x sem juros" que lib/parcelamento.ts existe para impedir.
+ */
+const DESCRICAO_HOME =
+  "Câmeras de segurança Wi-Fi originais: instale você mesmo em minutos, sem obra e sem técnico. Envio em até 24h, com CNPJ, nota fiscal e 3 meses de garantia."
+
 export const metadata: Metadata = {
   // Torna RELATIVAS todas as URLs de metadata (canonical, imagens de OG) —
   // sem isto o Next emite `og:image` sem origem e nenhum crawler resolve.
@@ -30,8 +62,7 @@ export const metadata: Metadata = {
     // o build, só sai errado na aba e no Google.
     template: "%s | Ta Hora",
   },
-  description:
-    "Você mesmo instala em minutos, sem obra e sem técnico. Loja com CNPJ, nota fiscal e 3 meses de garantia direto com a gente.",
+  description: DESCRICAO_HOME,
 
   // 🔴 O CANONICAL É O ITEM CRÍTICO DESTE ARQUIVO, e a razão é o /afiliados:
   // cada link de afiliado carrega `?ref=` e, sem canonical, o Google vê uma URL
@@ -46,8 +77,8 @@ export const metadata: Metadata = {
     siteName: "Ta Hora",
     url:      "/",
     title:    "Ta Hora — Câmeras de Segurança Wi-Fi Originais",
-    description:
-      "Você mesmo instala em minutos, sem obra e sem técnico. Loja com CNPJ, nota fiscal e 3 meses de garantia direto com a gente.",
+    // A MESMA constante do `description` acima — ver o bloco lá.
+    description: DESCRICAO_HOME,
     images: [
       {
         // Arte dedicada de Open Graph — NÃO é a imagem do Hero (essa segue no

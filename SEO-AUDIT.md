@@ -14,8 +14,8 @@ Escopo: as 14 URLs do sitemap (home, catálogo, 7 PDPs, 5 páginas institucionai
 
 | Bloco | Antes | Depois | Comentário |
 |---|---|---|---|
-| Metadata e indexação | 92 | 92 | Metadata única em 14/14 desde sempre. As duas descriptions fora de faixa (`/catalogo` 175, home 123) **continuam abertas** — verificado em produção. |
-| Estrutura de headings | 85 | 85 | Respostas do FAQ entraram no DOM, mas as perguntas seguem `<span>` e o `H2 TA Hora` do rodapé continua em 14/14 páginas. |
+| Metadata e indexação | 92 | **94** | As duas descriptions fora de faixa foram corrigidas em 12/08 (ambas em 155 chars). O que puxa para baixo agora é o `openGraph` que 6 páginas não declaram e herdam da home. |
+| Estrutura de headings | 85 | **95** | Respostas do FAQ no DOM, perguntas em `<h3>` real e o `H2 TA Hora` do rodapé removido das 14 páginas. |
 | Imagens — alt text | 100 | 100 | Sem alteração. Continua sendo o melhor item do site. |
 | Imagens — performance | 55 | **85** | Redimensionamento pelo CDN em produção (−61% a −88%), `lazy` abaixo da dobra, preload 4→1 e 7→1. Falta `srcset` e a imagem de descrição `lazy` acima da dobra no desktop. |
 | Dados estruturados (Schema) | **0** | **70** | `Product`+`Offer` nas 7 PDPs e `OnlineStore` na home, confirmados no HTML servido. Falta `BreadcrumbList` e `ItemList`. |
@@ -87,16 +87,62 @@ Medido no build local, A31H, 1920×911, CEP do Acre (2 opções de frete — o c
 
 **O que deliberadamente NÃO mudou, e por quê:** cards do catálogo e da vitrine (grade estreita), carrinho (vem da API da Shopify, não da rota), meta description (com 47 chars iria a ~170 e truncaria) e **`item_name` do GA4** — este último é o mais importante: o `item_id` é o handle, então o funil não quebraria, mas trocar o nome parte os relatórios em dois rótulos para o mesmo produto, com a metade antiga congelada para sempre.
 
+### ✅ 12/08/2026 — meta descriptions, H2 do rodapé e headings do FAQ
+
+**`/catalogo`: 175 → 155 chars.** Saíram "Todas as" e "do Ta Hora" (a marca já está no title). **Nenhum fato saiu** — os dois tetos de parcelamento continuam inteiros. A versão que este documento propunha cortava "e em até 12x" para caber um "Veja os modelos."; foi descartada, porque trocaria um fato pelo CTA mais genérico que existe e reintroduziria justamente a ambiguidade entre os dois tetos que o `lib/parcelamento.ts` existe para impedir.
+
+**Home: 123 → 155 chars.** A anterior não continha a palavra "câmera" — começava direto na promessa de instalação, e a keyword central da loja ficava fora do campo que o Google exibe. A nova:
+
+> Câmeras de segurança Wi-Fi originais: instale você mesmo em minutos, sem obra e sem técnico. Envio em até 24h, com CNPJ, nota fiscal e 3 meses de garantia.
+
+Vive numa constante `DESCRICAO_HOME` em `app/layout.tsx`, porque alimenta dois campos que precisam concordar (`description` e `openGraph.description`) — eram duas cópias literais idênticas até aqui.
+
+**`H2 TA Hora` do rodapé → `div`.** Feito pelo `Heading`, que passou a aceitar `as="div"`, em vez de um `<div>` solto no `Footer`: preserva a escala, o parser de `%%destaque%%`, o `motion` e o `data-effect-target`. Medido: `font-size 30px`, `weight 700`, `margin 0`, altura 39px — idênticos ao `h2` anterior.
+
+**Perguntas do FAQ → `<h3>`.** No acordeão o `<h3>` **envolve** o botão (padrão de accordion do WAI-ARIA); heading dentro do botão sumiria da lista de títulos do leitor de tela, e trocar o botão por `<h3 role="button">` perderia o teclado nativo. `aria-expanded`, `aria-controls` e o `inert` do painel intactos. O tipo `grid` (usado pelo `/suporte`) recebeu `<h3>` direto, sem botão a envolver.
+
+| Página | Antes | Depois |
+|---|---|---|
+| Home | h1 ×1, h2 ×7, h3 ×9 | h1 ×1, **h2 ×6**, **h3 ×13** |
+| `/suporte` | h1 ×1, h2 ×2 | h1 ×1, **h2 ×1**, **h3 ×4** |
+
+O nível é relativo ao próprio componente, que já emite um `h2` no `FAQHeader` — nenhum nível pulado em nenhuma das duas páginas.
+
+### 🆕 O envio em até 24h existe e nunca foi publicado
+
+**Confirmado pelo operador em 12/08/2026: o pedido é despachado em até 24h após a confirmação do pagamento.** O fato não aparecia em lugar nenhum do site — nem no rodapé, nem no `/suporte`, nem no bloco de confiança da PDP. A única ocorrência de "24" no repositório era `"Equipe dedicada disponível 24 horas"`, que é atendimento, não expedição.
+
+Entrou agora na meta description da home. **É o único lugar onde está.**
+
+**Por que vale mais do que parece:** é a parte do prazo que a loja controla. O trânsito é da transportadora e varia de 6 a 20 dias úteis conforme o destino (a calculadora de frete já mostra isso). Prazo de expedição é opaco na maioria dos marketplaces — o cliente que compra no Mercado Livre não sabe se o vendedor despacha hoje ou em três dias. Declarar o teto é um diferencial de confiança barato, e é verificável pelo próprio cliente no rastreio.
+
+> 🔎 **Oportunidade, não implementada:** levar "envio em até 24h após a confirmação do pagamento" ao **`SelosConfianca` da PDP**, ao lado da garantia, da nota fiscal e da devolução. Aquele bloco é exatamente o inventário de fatos de confiança da página, é server component (sai no HTML do ISR) e hoje traz "Entrega para todo o Brasil" sem nenhuma noção de tempo. O `/suporte` é o segundo candidato. **Onde houver espaço, use a frase completa, com a ressalva do pagamento** — na meta description ela ficou de fora só por caber em 155 chars.
+>
+> ⚠️ **Nunca escreva "entrega em 24h".** 24h é despacho; entrega é trânsito de transportadora. É a mesma família de erro do "12x sem juros" que o `lib/parcelamento.ts` existe para impedir, e o comentário da constante em `app/layout.tsx` registra isso.
+
+### 🆕 Open Graph: 12 das 14 páginas anunciam a home
+
+Achado durante a verificação das descriptions, **não corrigido**. Só a Home e as 7 PDPs declaram `openGraph` próprio. As demais herdam o do layout raiz inteiro — e isso inclui o `og:url`:
+
+| Página | `og:url` emitido | Correto seria |
+|---|---|---|
+| `/catalogo` | `https://www.tahora.com.br` | `…/catalogo` |
+| `/sobre-nos` | `https://www.tahora.com.br` | `…/sobre-nos` |
+| `/suporte` | `https://www.tahora.com.br` | `…/suporte` |
+| 3 páginas legais | `https://www.tahora.com.br` | a própria URL |
+
+O `og:title` dessas páginas também vem o da home ("Ta Hora — Câmeras de Segurança Wi-Fi Originais"), ignorando o `title` que cada uma declara corretamente. Efeito prático: **um link do `/catalogo` colado no WhatsApp mostra a prévia da home**. Numa loja que vende por indicação e afiliado, é o mesmo tipo de perda que o `openGraph` da PDP foi criado para evitar — o comentário daquele arquivo explica por que ele repete tudo o que o raiz já define. As outras 6 páginas nunca receberam o mesmo tratamento.
+
+Não afeta busca (o canonical de cada página está correto e é auto-referencial). Afeta compartilhamento. Entra como item aberto abaixo.
+
 ### ❌ Continua aberto (nenhum destes foi tocado hoje)
 
 | Prioridade | Item | Estado verificado |
 |---|---|---|
 | **Alta** | Breadcrumbs visuais + `BreadcrumbList` | `grep BreadcrumbList` = 0 na home e na PDP |
-| **Alta** | Meta description do `/catalogo` | **175 chars** — inalterada, ainda trunca |
-| **Alta** | Meta description da home | **123 chars** — inalterada, 35 chars vagos |
+| **Alta** | `openGraph` próprio em 6 páginas | 🆕 `og:url` e `og:title` da home vazando para `/catalogo`, `/sobre-nos`, `/suporte` e as 3 legais |
 | **Alta** | Vídeo de instalação real (Experience) | não existe |
-| Média | Perguntas do FAQ como `<h3>` | seguem `<span>` no botão do accordion |
-| Média | `H2 TA Hora` no rodapé | presente em 14/14 páginas, confirmado |
+| Média | Envio em até 24h no `SelosConfianca` da PDP | 🆕 fato confirmado, hoje só na meta description da home |
 | Média | Camada de conteúdo / blog | 14 URLs, zero informacional |
 | Média | Tabela comparativa no `/catalogo` | não existe |
 | Média | Expandir PDPs para 800+ palavras | não iniciado |
@@ -108,7 +154,7 @@ Medido no build local, A31H, 1920×911, CEP do Acre (2 opções de frete — o c
 | Baixa | `Disallow: /*?ref=` no robots.txt | robots inalterado |
 | ⚠️ | Imagem de descrição `lazy` acima da dobra (desktop) | **pendente de decisão do dono** — ver seção 10 |
 
-**Leitura da lista:** as sete correções de hoje foram todas de **código**. O que sobrou se divide em duas pilhas bem distintas — três acabamentos de meia hora cada (as duas descriptions, o H2 do rodapé, os `<h3>` do FAQ) e o programa de conteúdo, que é de outra ordem de grandeza. Breadcrumbs ficam no meio: é código, mas é componente novo mais schema, não ajuste.
+**Leitura da lista, atualizada em 12/08.** Os três acabamentos que restavam de on-page (as duas descriptions, o `H2` do rodapé, os `<h3>` do FAQ) foram fechados. O que sobra agora tem outra composição: **dois itens de código de porte médio** (breadcrumbs com schema; `openGraph` próprio em 6 páginas) e **o programa de conteúdo**, que é de outra ordem de grandeza e virou, sozinho, o gargalo do score. Não há mais ajuste de meia hora esperando na fila.
 
 ---
 

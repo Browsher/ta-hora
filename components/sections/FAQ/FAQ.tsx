@@ -147,49 +147,73 @@ function AccordionItem({
 
   return (
     <div style={{ borderBottom: isLast ? "none" : `1px solid color-mix(in srgb, ${accentColor} 9.41%, transparent)` }}>
-      <button
-        id={botaoId}
-        onClick={onToggle}
-        // Estado do disclosure para tecnologia assistiva. Sem isto o botão
-        // anuncia só o texto da pergunta, sem dizer se está aberto ou fechado.
-        aria-expanded={isOpen}
-        aria-controls={painelId}
-        style={{
-          width:          "100%",
-          display:        "flex",
-          alignItems:     "center",
-          justifyContent: "space-between",
-          gap:            16,
-          padding:        "18px 0",
-          background:     "none",
-          border:         "none",
-          cursor:         "pointer",
-          textAlign:      "left",
-        }}
-      >
-        <span style={{
-          fontWeight: 600,
-          color:      "var(--cor-texto)",
-          fontSize:   "clamp(14px, 1.8vw, 16px)",
-          lineHeight: 1.5,
-          flex:       1,
-        }}>
-          {item.question}
-        </span>
-        {/* Chevron: CSS rotate on <span>, not on motion element (armadilha #4) */}
-        <span style={{
-          // Chevron = glifo de TEXTO.
-          color:        `var(--cor-destaque-texto-forte, ${accentColor})`,
-          fontSize:     18,
-          flexShrink:   0,
-          display:      "inline-block",
-          transform:    isOpen ? "rotate(180deg)" : "rotate(0deg)",
-          transition:   "transform 0.25s ease",
-          lineHeight:   1,
-        }}>
-          ▾
-        </span>
-      </button>
+      {/* 🔴 O `<h3>` ENVOLVE O BOTÃO — não o substitui, e não fica dentro dele.
+          Essa ordem é o padrão de accordion do WAI-ARIA APG, e cada alternativa
+          quebra alguma coisa:
+            - `<button><h3>…</h3></button>` põe um heading DENTRO de um controle:
+              o leitor de tela anuncia "botão", o heading some da lista de
+              navegação por títulos e é justamente essa lista que se quer ganhar.
+            - trocar o botão por `<h3 role="button">` perderia o comportamento
+              nativo de teclado (Espaço/Enter, foco) que hoje vem de graça.
+          Envolvendo, o texto é heading E o controle continua sendo um `<button>`
+          de verdade, com o `aria-expanded`/`aria-controls` intactos.
+
+          Por que h3 e não h2: o nível é relativo ao PRÓPRIO componente, que já
+          emite um `<h2>` no `FAQHeader` ("Tudo que você precisa saber"). h3 sob
+          h2 não pula nível em nenhuma das duas páginas que usam este FAQ.
+
+          `margin: 0` porque `<h3>` traz margem do user-agent — sem isso o
+          espaçamento do acordeão mudaria. O `padding: 18px 0` do botão continua
+          sendo o que dá o respiro. */}
+      <h3 style={{ margin: 0 }}>
+        <button
+          id={botaoId}
+          onClick={onToggle}
+          // Estado do disclosure para tecnologia assistiva. Sem isto o botão
+          // anuncia só o texto da pergunta, sem dizer se está aberto ou fechado.
+          aria-expanded={isOpen}
+          aria-controls={painelId}
+          style={{
+            width:          "100%",
+            display:        "flex",
+            alignItems:     "center",
+            justifyContent: "space-between",
+            gap:            16,
+            padding:        "18px 0",
+            background:     "none",
+            border:         "none",
+            cursor:         "pointer",
+            textAlign:      "left",
+          }}
+        >
+          {/* Continua `<span>`, e continua com `fontWeight: 600` e o mesmo clamp
+              de tamanho: quem virou heading foi o elemento de FORA. Herdar o
+              tamanho do `<h3>` aqui aumentaria a fonte da pergunta — a troca é
+              semântica, o visual não muda. */}
+          <span style={{
+            fontWeight: 600,
+            color:      "var(--cor-texto)",
+            fontSize:   "clamp(14px, 1.8vw, 16px)",
+            lineHeight: 1.5,
+            flex:       1,
+          }}>
+            {item.question}
+          </span>
+          {/* Chevron: CSS rotate on <span>, not on motion element (armadilha #4) */}
+          <span style={{
+            // Chevron = glifo de TEXTO.
+            color:        `var(--cor-destaque-texto-forte, ${accentColor})`,
+            fontSize:     18,
+            flexShrink:   0,
+            display:      "inline-block",
+            transform:    isOpen ? "rotate(180deg)" : "rotate(0deg)",
+            transition:   "transform 0.25s ease",
+            lineHeight:   1,
+          }}>
+            ▾
+          </span>
+        </button>
+      </h3>
       {/* SEMPRE montado — ver o bloco no topo do arquivo antes de mexer. */}
       <motion.div
         id={painelId}
@@ -340,14 +364,20 @@ function FAQGrid({ c, containerProps, itemProps, accentColor, items, gridMinWidt
                   gap:           12,
                 }}
               >
-                <span style={{
+                {/* `<h3>` pelo mesmo motivo do acordeão — aqui direto, porque no
+                    grid não há botão para envolver: o card não tem estado aberto/
+                    fechado. Mesmo nível (o `FAQHeader` acima é h2) e mesmos
+                    estilos de texto; o `margin: 0` neutraliza a margem que o
+                    user-agent dá ao `<h3>` e preserva o `gap: 12` do card. */}
+                <h3 style={{
+                  margin:     0,
                   fontWeight: 600,
                   color:      "var(--cor-texto)",
                   fontSize:   "clamp(14px, 1.8vw, 16px)",
                   lineHeight: 1.5,
                 }}>
                   {item.question}
-                </span>
+                </h3>
                 <Text text={item.answer} size="pequeno" color="var(--cor-texto-secundario)" />
               </div>
             ))}

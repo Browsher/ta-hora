@@ -9,7 +9,17 @@ import type React from "react"
 // componente) — não tem entry próprio. Ver "Consequência para os átomos" no fase_final.
 
 export type HeadingProps = Omit<MotionProps, "ref"> & {
-  as?:             "h1" | "h2" | "h3"
+  // "div" é DELIBERADO e não é um heading: existe para texto que tem PESO de
+  // título e nenhum papel de estrutura — hoje só o logotipo do rodapé, que era um
+  // `h2` em 14/14 páginas (heading sem conteúdo abaixo, ruído semântico apontado
+  // pelo SEO-AUDIT.md). Renderizar por aqui, e não por um `<div>` solto no
+  // Footer, preserva a escala, o parser de `%%destaque%%`, o `motion` e o
+  // `data-effect-target` — ou seja, o visual e a animação continuam idênticos.
+  //
+  // 🔴 NÃO use "div" para fugir de hierarquia quebrada. Se o texto ENCABEÇA
+  // conteúdo, ele é heading e o nível certo é a correção; "div" é para quando não
+  // encabeça nada.
+  as?:             "h1" | "h2" | "h3" | "div"
   size?:           "grande" | "medio" | "pequeno"
   text?:           string
   color?:          string
@@ -68,8 +78,12 @@ export function Heading({
   // paleta, o comportamento é o de antes. Ver lib/paleta.ts.
   const resolvedHL   = highlightColor ?? `var(--cor-destaque-texto-forte, ${accentColor})`
 
-  // Dynamic tag — ternary avoids TypeScript union issues with motion[as]
-  const Tag = as === "h1" ? motion.h1 : as === "h3" ? motion.h3 : motion.h2
+  // Dynamic tag — ternário explícito evita problemas de união do TS com motion[as]
+  const Tag =
+    as === "h1"  ? motion.h1  :
+    as === "h3"  ? motion.h3  :
+    as === "div" ? motion.div :
+                   motion.h2
 
   return (
     <Tag

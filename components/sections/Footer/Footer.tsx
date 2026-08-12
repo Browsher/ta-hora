@@ -216,8 +216,21 @@ function LogoArea({
   if (logoType === "imagem" && c.logoImage) {
     return <img src={c.logoImage} alt={c.logoText.replace(/%%/g, "") || "Logo"} style={{ height: 32, objectFit: "contain", display: "block" }} />
   }
+  // 🔴 `as="div"`, NÃO `h2` — e a troca é semântica, não visual.
+  //
+  // Este logotipo saía como `<h2>TA Hora</h2>` nas 14 páginas do site, e um
+  // heading promete que existe conteúdo ABAIXO dele pertencendo àquela seção.
+  // Aqui não existe: é a marca no topo do rodapé. Para um crawler, era um H2 vazio
+  // repetido em toda página (apontado no SEO-AUDIT.md, seção 1.3).
+  //
+  // Nada muda na tela: `size="pequeno"` continua dando a mesma escala, o
+  // `%%Hora%%` continua passando pelo parser de destaque e o `data-effect-target`
+  // continua entregando a animação de entrada do rodapé.
+  //
+  // Sem role de heading no lugar: a marca já é anunciada pelo link do topo e pelo
+  // `<title>`; um `role="heading"` reintroduziria exatamente o que se removeu.
   return (
-    <Heading as="h2" size="pequeno" text={c.logoText} accentColor={accentColor} color="var(--cor-texto)" />
+    <Heading as="div" size="pequeno" text={c.logoText} accentColor={accentColor} color="var(--cor-texto)" />
   )
 }
 

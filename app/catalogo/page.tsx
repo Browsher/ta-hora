@@ -20,7 +20,17 @@ export const metadata: Metadata = {
     // limite sem acréscimo, 12 é o limite total (com juros do cliente). String
     // fixa e não `parcelamento()` porque aqui não há produto: é a página da
     // coleção. Ao mexer, ler o bloco no topo de lib/parcelamento.ts.
-    "Todas as câmeras de segurança Wi-Fi do Ta Hora: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal, 3x sem juros e em até 12x.",
+    //
+    // 175 → 155 chars em 12/08/2026. A versão anterior truncava no Google por
+    // ~15 caracteres, e o que se perdia era o FIM da frase — justamente os dois
+    // tetos de parcelamento. Saíram "Todas as" e "do Ta Hora" (a marca já está no
+    // title, pelo `template` do layout); nenhum fato saiu.
+    //
+    // 🔴 O SEO-AUDIT.md propunha cortar "e em até 12x" para caber um "Veja os
+    // modelos." — NÃO faça isso. Trocaria um fato pelo CTA mais genérico que
+    // existe, e reintroduziria a ambiguidade dos dois tetos que este comentário
+    // existe para impedir. Cortar preâmbulo é de graça; cortar fato, não.
+    "Câmeras de segurança Wi-Fi: interna, externa, com holofote, 4K e a que rosqueia no bocal da lâmpada. Originais, com nota fiscal, 3x sem juros e em até 12x.",
   alternates: { canonical: "/catalogo" },
 }
 
