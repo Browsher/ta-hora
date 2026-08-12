@@ -11,6 +11,8 @@ import { EventoVerProduto } from "@/components/analytics/EventoVerProduto"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { produtoSchema } from "@/lib/seo/produtoSchema"
 import { tituloProduto } from "@/lib/seo/tituloProduto"
+import { trilhaDoProduto, trilhaSchema } from "@/lib/seo/trilha"
+import { Trilha } from "@/components/loja/Trilha"
 import { BarraCompraMobile } from "@/components/loja/BarraCompraMobile"
 import { FichaTecnica } from "@/components/loja/FichaTecnica"
 import { RecomendadosRelacionados } from "@/components/loja/RecomendadosRelacionados"
@@ -253,6 +255,11 @@ export default async function ProdutoPage(
     quantity:   1,
   }
 
+  // Calculada UMA vez e passada aos dois consumidores — o `<Trilha>` visível e o
+  // `trilhaSchema`. É o que torna a divergência entre tela e schema impossível em
+  // vez de improvável; ver o bloco no topo de lib/seo/trilha.ts.
+  const trilha = trilhaDoProduto(produto.title, handle)
+
   return (
     // `compensarBarraFixa`: o padding que impede a barra de tapar o rodapé mora
     // no div raiz do StoreShell, não aqui — o rodapé é irmão do <main> e um
@@ -272,12 +279,32 @@ export default async function ProdutoPage(
           cogitar adicionar. `npm run verificar:schema` falha se aparecerem. */}
       <JsonLd data={produtoSchema(produto)} />
 
+      {/* Trilha: `Início > Catálogo > Câmera Segurança A31H`.
+          O MESMO array alimenta o `<nav>` visível e o `BreadcrumbList` abaixo —
+          espelhar não depende de ninguém lembrar. Ver lib/seo/trilha.ts.
+
+          🔴 Nome CURTO no último degrau (`produto.title`), não o descritor de
+          `tituloProduto`: breadcrumb é navegação, e o Google monta o caminho da
+          SERP a partir dos ancestrais — o último item nem chega a ser exibido.
+
+          🔴 IRMÃ do <article>, FORA de `.produto-coluna-esquerda`. A coluna do
+          sticky tem 12px de folga; aqui a trilha custa zero dela. */}
+      <Trilha itens={trilha} />
+      {/* Dois blocos JSON-LD nesta página (Product + BreadcrumbList), de
+          propósito: é válido, o Google lê os dois, e mantém cada módulo de
+          `lib/seo/` testável isoladamente — a premissa do verificar:schema. */}
+      <JsonLd data={trilhaSchema(trilha)} />
+
       <article
         // Layout em globals.css (classes explícitas — o mx-auto do Tailwind não
         // é gerado neste projeto): `produto-grid` = 60/40 centrado com esquerda
         // sticky; `produto-unico` = 1 coluna estreita centrada (sem descrição).
         className={temDescricao ? "produto-grid" : "produto-unico"}
-        style={{ padding: "40px clamp(20px, 5vw, 64px) 72px" }}
+        // `padding-top` 40 → 12 em 12/08/2026, quando a `<Trilha>` entrou acima.
+        // Ela ocupa o espaço que já existia, então a página NÃO ficou mais alta e
+        // a galeria não desceu na dobra do mobile. Ao remover a trilha, devolver
+        // os 40px — senão o topo fica apertado.
+        style={{ padding: "12px clamp(20px, 5vw, 64px) 72px" }}
       >
         {/* Coluna esquerda — bloco de compra. É o alvo do sticky (globals.css).
             No DESKTOP, um sub-grid lado a lado [galeria | info] baixa a altura da

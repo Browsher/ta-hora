@@ -403,6 +403,75 @@ body {
   gap: 20px;
 }
 
+/* ─── Trilha de navegação / breadcrumb (components/loja/Trilha.tsx) ───────────
+   Usada na PDP e no /catalogo. Escala de 13px, a mesma dos `.selos-confianca` e
+   do `installments` do PriceTag: é informação de apoio, não um nível de título.
+
+   🔴 A TRILHA NÃO ENTRA NA COLUNA DO STICKY. Na PDP ela é irmã do
+   `.produto-grid`, acima dele — nunca dentro de `.produto-coluna-esquerda`.
+   Aquela coluna tem 12px de folga contra o limiar de 760px (ver o bloco do
+   sticky lá embaixo); a trilha aqui custa ZERO daquele orçamento, porque o que
+   conta lá é a altura da própria coluna. Se algum dia ela for movida para
+   dentro, o limiar sobe junto.
+
+   O alinhamento reproduz o do `.produto-grid` de propósito (mesmo `max-width`,
+   mesmo `margin-inline` e o MESMO padding horizontal): a trilha tem que nascer
+   na coluna óptica da galeria, não na borda da janela.
+
+   Quebra de linha em vez de truncar: no mobile a trilha completa ocupa no máximo
+   duas linhas de 13px, e truncar o meio esconderia justamente o degrau que dá
+   contexto ("Catálogo"). */
+.trilha {
+  max-width:     1400px;
+  margin-inline: auto;
+  padding:       24px clamp(20px, 5vw, 64px) 0;
+}
+
+/* Alvos de toque ≥ 40px vêm do padding vertical dos links, não da altura da li —
+   assim o texto continua a 13px sem a lista virar uma barra alta. */
+.trilha-lista {
+  list-style: none;
+  margin:     0;
+  padding:    0;
+  display:    flex;
+  flex-wrap:  wrap;
+  align-items: center;
+  gap:        4px 8px;
+  font-size:  13px;
+  line-height: 1.4;
+}
+
+.trilha-item {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.trilha-link {
+  color:           var(--cor-texto-secundario);
+  text-decoration: none;
+  padding:         4px 0;
+}
+
+.trilha-link:hover {
+  color:           var(--cor-texto);
+  text-decoration: underline;
+}
+
+/* A página atual: sem link, com peso um pouco maior para fechar a trilha. Não é
+   heading e não deve parecer um — o H1 da página fica logo abaixo. */
+.trilha-atual {
+  color:      var(--cor-texto);
+  font-weight: 600;
+  padding:    4px 0;
+}
+
+.trilha-separador {
+  color:      var(--cor-texto-fraco, var(--cor-texto-secundario));
+  font-size:  14px;
+  line-height: 1;
+}
+
 /* ─── Selos de confiança da PDP (components/loja/SelosConfianca.tsx) ───────────
    Lista de 4 linhas logo abaixo do botão. Escala tipográfica IGUAL à do
    `installments` do PriceTag (13px, --cor-texto-fraco): o bloco lê como

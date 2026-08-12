@@ -18,10 +18,10 @@ Escopo: as 14 URLs do sitemap (home, catálogo, 7 PDPs, 5 páginas institucionai
 | Estrutura de headings | 85 | **95** | Respostas do FAQ no DOM, perguntas em `<h3>` real e o `H2 TA Hora` do rodapé removido das 14 páginas. |
 | Imagens — alt text | 100 | 100 | Sem alteração. Continua sendo o melhor item do site. |
 | Imagens — performance | 55 | **85** | Redimensionamento pelo CDN em produção (−61% a −88%), `lazy` abaixo da dobra, preload 4→1 e 7→1. Falta `srcset` e a imagem de descrição `lazy` acima da dobra no desktop. |
-| Dados estruturados (Schema) | **0** | **70** | `Product`+`Offer` nas 7 PDPs e `OnlineStore` na home, confirmados no HTML servido. Falta `BreadcrumbList` e `ItemList`. |
+| Dados estruturados (Schema) | **0** | **90** | `Product`+`Offer` nas 7 PDPs, `OnlineStore` na home e `BreadcrumbList` nas PDPs e no catálogo, confirmados no HTML servido. Falta só o `ItemList` do `/catalogo`, que é prioridade baixa. |
 | Estratégia de palavra-chave | 30 | **80** | Os 7 titles saíram do código de fábrica para descritor com demanda, e o H1 acompanhou em 12/08. O que falta aqui é camada informacional, não on-page. |
 | Camada de conteúdo | 10 | 10 | Intocado. 14 URLs, nenhuma informacional. É o item que sobrou como maior gap. |
-| Linkagem interna | 45 | 45 | Intocado. Sem breadcrumbs, home ainda linka 3 das 7 PDPs. |
+| Linkagem interna | 45 | **65** | Breadcrumbs visuais + schema nas PDPs e no catálogo. Seguem abertos: a home linka 3 das 7 PDPs, e não há links contextuais dentro do texto. |
 | E-E-A-T | 60 | 65 | NAP completo no rodapé (o telefone entrou). Experience e Authority seguem sem trabalho. |
 
 **O que mudou de natureza:** a auditoria original apontava **duas camadas inteiras ausentes** — dados estruturados e conteúdo informacional. Uma delas foi construída hoje. A que sobra é a cara: conteúdo é programa de meses, não tarde de código. O eixo do documento se deslocou de "faltam camadas" para "falta conteúdo, e faltam três acabamentos baratos" (breadcrumbs, headings do FAQ, as duas descriptions).
@@ -120,6 +120,32 @@ Entrou agora na meta description da home. **É o único lugar onde está.**
 >
 > ⚠️ **Nunca escreva "entrega em 24h".** 24h é despacho; entrega é trânsito de transportadora. É a mesma família de erro do "12x sem juros" que o `lib/parcelamento.ts` existe para impedir, e o comentário da constante em `app/layout.tsx` registra isso.
 
+### ✅ 12/08/2026 — Breadcrumbs (visual + `BreadcrumbList`)
+
+O último item de código da auditoria. `Início > Catálogo > Câmera Segurança A31H` nas 7 PDPs, `Início > Catálogo` no `/catalogo`.
+
+**Uma fonte para tela e schema.** `lib/seo/trilha.ts` devolve o array; `components/loja/Trilha.tsx` renderiza `<nav>/<ol>` e `trilhaSchema()` emite o `BreadcrumbList` — os dois recebem o **mesmo array**, calculado uma vez na rota. Divergir deixou de ser possível, mesmo desenho do `path` no `metadataPagina.ts`. Importa porque marcação que inventa hierarquia inexistente é a família do `aggregateRating`: ação manual derruba os rich results do domínio inteiro, `Product` das 7 PDPs incluído.
+
+**Nome curto no último degrau**, não o descritor completo. Além de breadcrumb ser navegação (mesma razão dos cards, do carrinho e do `item_name`), o último degrau é o **menos consequente na SERP**: o Google monta o caminho a partir dos ancestrais — o que substitui a URL é `tahora.com.br › Catálogo`, e a página atual já é o título azul logo acima. O descritor ali pagaria custo de layout por um ganho que não é exibido.
+
+**Último elemento sem `item`** no schema, e sem link na tela — é a página atual. As URLs saem de `SITE_URL`, nunca da requisição, senão o `?ref=` do afiliado entraria na trilha.
+
+**Onde ficou, e o que custou.** A trilha é **irmã** do `.produto-grid`, fora de `.produto-coluna-esquerda` — confirmado no DOM (`col.contains(trilha) === false`). Remedido no build local (A31H, 1920×911, CEP do Acre, 2 opções de frete):
+
+| | Antes | Depois |
+|---|---|---|
+| Coluna do sticky, frete aberto | 724px | **724px** |
+| Folga contra os 736px do limiar | 12px | **12px** |
+| Topo da galeria | 130px | 152px |
+
+**O orçamento do sticky não se moveu em um pixel** — era o ponto de pôr a trilha fora do grid. O `padding-top` do `<article>` foi de 40px para 12px para compensar; **o custo líquido não foi zero, foi +22px** de deslocamento da galeria. É uma linha de 13px numa página de 911px, e preferi registrar o número a arredondá-lo para "praticamente nada".
+
+No mobile cabe em **uma linha**: o texto mais longo dos 7 produtos mede 247px, contra 350px disponíveis a 390px de viewport (320px a 360px). O `flex-wrap` fica como rede de segurança, não como comportamento esperado.
+
+`<nav aria-label>` (a página tem três navegações), `<ol>` porque a ordem é a informação, separador `aria-hidden`, último item com `aria-current="page"`.
+
+**Sem guarda novo, por decisão.** O `og:url` mereceu porque a divergência era possível e silenciosa; aqui o array compartilhado já remove o modo de falha. Um script só pegaria quem voltasse a escrever a trilha à mão nos dois lugares.
+
 ### ✅ 12/08/2026 — Open Graph próprio nas 6 páginas, com guarda
 
 **O que era:** 6 das 14 páginas emitiam `og:url = https://www.tahora.com.br` e o `og:title` da home. **O que é:** cada uma anuncia a si mesma, verificado no HTML servido.
@@ -168,7 +194,6 @@ Não afeta busca (o canonical de cada página está correto e é auto-referencia
 
 | Prioridade | Item | Estado verificado |
 |---|---|---|
-| **Alta** | Breadcrumbs visuais + `BreadcrumbList` | `grep BreadcrumbList` = 0 na home e na PDP |
 | **Alta** | Vídeo de instalação real (Experience) | não existe |
 | Baixa | Arte de OG dedicada do `/catalogo` | as 7 páginas compartilham `og-image.webp`; é trabalho de design, não de código |
 | Média | Envio em até 24h no `SelosConfianca` da PDP | 🆕 fato confirmado, hoje só na meta description da home |
@@ -183,7 +208,9 @@ Não afeta busca (o canonical de cada página está correto e é auto-referencia
 | Baixa | `Disallow: /*?ref=` no robots.txt | robots inalterado |
 | ⚠️ | Imagem de descrição `lazy` acima da dobra (desktop) | **pendente de decisão do dono** — ver seção 10 |
 
-**Leitura da lista, atualizada em 12/08.** Fechou tudo o que era acabamento de on-page (as duas descriptions, o `H2` do rodapé, os `<h3>` do FAQ) e o Open Graph das 6 páginas. **Sobrou um único item de código:** breadcrumbs visuais com `BreadcrumbList` — e depois dele a camada técnica está encerrada. Todo o resto da fila é **conteúdo e prova**: o vídeo de instalação, os artigos, a tabela comparativa, a coleta de avaliação de primeira parte. O gargalo deixou de ser código.
+**Leitura da lista, atualizada em 12/08 — a camada técnica está encerrada.** Fecharam os acabamentos de on-page (as duas descriptions, o `H2` do rodapé, os `<h3>` do FAQ), o Open Graph das 6 páginas e os breadcrumbs. **Não sobrou nenhum item de código de prioridade alta.** O que resta da fila inteira é **conteúdo e prova**: o vídeo de instalação, os artigos, a tabela comparativa do catálogo, a coleta de avaliação de primeira parte — mais três itens técnicos de prioridade baixa (`ItemList`, `srcset`, `Disallow: /*?ref=`) e a decisão pendente do `lazy` na imagem de descrição.
+
+A partir daqui, mais código não move o ponteiro. O que move é publicar.
 
 ---
 
@@ -806,7 +833,7 @@ Ou seja: a provável imagem de LCP da PDP em desktop está marcada `loading="laz
 7. ✅ **~~Limitar o `preload` de imagem a uma por página~~ — FEITO na home e no catálogo em 11/08/2026.** 4→1 e 7→1, com `fetchPriority="high"` no hero. LCP de ambas medido no Chrome (é a imagem nas duas, não o texto). PDP mantida em 8 por decisão: os 5 thumbnails são de 2,8-5,1 KB e estão acima da dobra. Ganho **modelado** em ~48 ms (home) e ~75 ms (catálogo) — não medido, porque localhost não tem latência. Ver seção 10.
 8. ✅ **~~`Organization` schema na home + NAP completo no rodapé~~ — FEITO em 11/08/2026.** `OnlineStore` na home (ver seção 8) e o **telefone acrescentado ao rodapé** — até então o NAP tinha nome e endereço, sem o "P", que só existia dentro do `/suporte`. Ver seção 2.
 8b. ✅ **~~Levar o descritor do title para o H1 da PDP~~ — FEITO em 12/08/2026.** O H1 passou a usar `tituloProduto(produto)`, a mesma função de `generateMetadata` — não uma segunda string. Junto veio a redução de fonte do H1 (`clamp(18px, 2.4vw, 30px)` → `clamp(18px, 1.6vw, 22px)`, inline e escopada à PDP), e o `Product.name` do schema acompanhou. Ver "Antes/depois" no topo.
-9. Breadcrumbs visuais + `BreadcrumbList` schema no catálogo e nas PDPs.
+9. ✅ **~~Breadcrumbs visuais + `BreadcrumbList` schema no catálogo e nas PDPs~~ — FEITO em 12/08/2026.** Uma fonte só (`lib/seo/trilha.ts`) para a tela e para o schema; nome curto no último degrau; trilha fora da coluna do sticky, que continua em 724px com 12px de folga. Ver "Antes/depois" no topo.
 10. Corrigir a meta description do `/catalogo` (175 → ~158 chars) e expandir a da home (123 → ~157).
 11. **Gravar o vídeo de instalação real.** É simultaneamente conteúdo, prova de Experience e material de conversão.
 12. Trocar o `H2 TAHora` do rodapé por elemento não-heading.

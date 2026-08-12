@@ -7,6 +7,9 @@ import { StoreShell } from "@/components/loja/StoreShell"
 import { Heading } from "@/components/ui/Heading"
 import { SectionLabel } from "@/components/ui/SectionLabel"
 import { metadataPagina } from "@/lib/seo/metadataPagina"
+import { trilhaDoCatalogo, trilhaSchema } from "@/lib/seo/trilha"
+import { Trilha } from "@/components/loja/Trilha"
+import { JsonLd } from "@/components/seo/JsonLd"
 
 // ISR: revalida a cada 5 min (preço/estoque frescos sem novo deploy).
 export const revalidate = 300
@@ -71,8 +74,15 @@ export default async function CatalogoPage() {
     )
   }
 
+  // Uma fonte para a tela e para o schema — ver lib/seo/trilha.ts.
+  const trilha = trilhaDoCatalogo()
+
   return (
     <StoreShell>
+      {/* `Início > Catálogo`. Alinhada à esquerda, acima do cabeçalho
+          centralizado — a trilha marca posição na hierarquia, não é título. */}
+      <Trilha itens={trilha} />
+      <JsonLd data={trilhaSchema(trilha)} />
       <div
         style={{
           maxWidth:      1200,
