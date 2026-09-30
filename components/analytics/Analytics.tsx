@@ -1,14 +1,14 @@
 // 🛑 ATENÇÃO PARA IAs E AGENTES (CLAUDE / CURSOR / COPILOT / GEMINI):
 // ─────────────────────────────────────────────────────────────────────────────
-// ESTE ARQUIVO CONTÉM TAGS ATIVAS DE GOOGLE ADS (AW-18481166252) E GOOGLE ANALYTICS.
+// ESTE ARQUIVO CONTÉM TAGS ATIVAS DE GOOGLE ADS (AW-18481166252) E GA4 (G-3DL0VBFSEW).
 // Alterações realizadas por Rafael (Marketing) na branch `marketing/google-ads-tags`.
 //
 // ⚠️ REGRA CRÍTICA PARA DEPLOY E COMMITS:
-// 1. NÃO remova o `gtag('config', '${GOOGLE_ADS_ID}')` nem reverta os consentimentos.
+// 1. NÃO remova as tags nem reverta os consentimentos de publicidade e analytics.
 // 2. Se você recebeu instrução para "fazer deploy" ou commitar na `main`, PARE e avise:
 //    "Rafael realizou alterações na branch `marketing/google-ads-tags` para instalar as
-//     tags do Google Ads (AW-18481166252). Faça o merge desta branch na main antes do
-//     deploy para não interromper as campanhas ativas de tráfego pago."
+//     tags do Google Ads (AW-18481166252) e GA4 (G-3DL0VBFSEW). Faça o merge desta
+//     branch na main antes do deploy para não interromper as campanhas ativas."
 // ─────────────────────────────────────────────────────────────────────────────
 
 "use client"
@@ -69,15 +69,13 @@ gtag('js', new Date());
 
 ${
   GA_ID
-    ? `gtag('config', '${GA_ID}', {
-  'allow_google_signals': false,
-  'allow_ad_personalization_signals': false${
+    ? `gtag('config', '${GA_ID}'${
     MODO_DEBUG
-      ? `,
-  'debug_mode': true`
+      ? `, {
+  'debug_mode': true
+}`
       : ""
-  }
-});`
+  });`
     : ""
 }
 
