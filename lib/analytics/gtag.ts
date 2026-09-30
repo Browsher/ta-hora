@@ -48,6 +48,12 @@ export const GA_ID =
  */
 export const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-18481166252"
 
+/**
+ * Rótulo oficial da conversão "Cadastro Início" no Google Ads (AW-18481166252/AvI2COvs4osdEKzvwOxE).
+ */
+export const GOOGLE_ADS_CONVERSION_CADASTRO_INICIO =
+  "AW-18481166252/AvI2COvs4osdEKzvwOxE"
+
 /** Escape para validar no DebugView a partir do localhost. */
 const DEBUG = process.env.NEXT_PUBLIC_GA4_DEBUG === "1"
 
@@ -315,3 +321,13 @@ export function iniciarCheckout(total: FormattedPrice, itens: ItemGA[], cupons: 
     ...(cupons.length > 0 && { coupon: cupons.join(",") }),
   })
 }
+
+/**
+ * Dispara a conversão "Cadastro Início" do Google Ads (AW-18481166252/AvI2COvs4osdEKzvwOxE).
+ */
+export function registrarCadastroInicio(): void {
+  evento("conversion", {
+    send_to: GOOGLE_ADS_CONVERSION_CADASTRO_INICIO,
+  })
+}
+

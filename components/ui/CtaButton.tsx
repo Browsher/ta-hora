@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { buildButtonHoverProps } from "@/lib/sectionEffectHelpers"
 import type { ButtonHover } from "@/lib/types"
 import { tokens } from "@/lib/tokens"
+import { registrarCadastroInicio } from "@/lib/analytics/gtag"
 import type React from "react"
 
 type BtnShape = "quadrado" | "pill" | "reto" | "sublinhado"
@@ -79,6 +80,7 @@ export function CtaButton({
   paddingX    = 32,
   className,
   style,
+  onClick,
   ...rest
 }: CtaButtonProps) {
   const resolvedText = textColor ?? "var(--cor-destaque-texto)"
@@ -107,6 +109,12 @@ export function CtaButton({
         data-effect-target="button"
         className={computedClass}
         style={computedStyle}
+        onClick={(e) => {
+          if (href.includes("afiliados.tahora.com.br")) {
+            registrarCadastroInicio()
+          }
+          onClick?.(e)
+        }}
         {...(fxMotion as MotionProps)}
         {...(rest as MotionProps)}
       >
@@ -121,6 +129,7 @@ export function CtaButton({
       data-effect-target="button"
       className={computedClass}
       style={computedStyle}
+      onClick={onClick}
       {...(fxMotion as MotionProps)}
       {...(rest as MotionProps)}
     >
