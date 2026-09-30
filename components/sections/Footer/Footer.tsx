@@ -11,7 +11,6 @@ import { Text } from "@/components/ui/Text"
 import { Input } from "@/components/ui/Input"
 import { CtaButton } from "@/components/ui/CtaButton"
 import { IconSlot } from "@/components/ui/IconSlot"
-import { registrarCadastroInicio } from "@/lib/analytics/gtag"
 import type { SectionEffects } from "@/lib/types"
 
 // ─── Content ──────────────────────────────────────────────────────────────────
@@ -190,11 +189,6 @@ function FooterLink({
   return (
     <a
       href={href}
-      onClick={() => {
-        if (href.includes("afiliados.tahora.com.br")) {
-          registrarCadastroInicio()
-        }
-      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
